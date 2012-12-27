@@ -1,0 +1,7 @@
+{>"base.dust"/}
+{<js}
+<script src="/js/index.js"></script>
+{/js}
+{<body}
+	Hello World
+{/body}
