@@ -1,6 +1,8 @@
 {>"base.dust"/}
 {<js}
+<!-- TODO: use require.js -->
 <script src="/js/index.js"></script>
+<script src="/js/sockets.js"></script>
 {/js}
 {<body}
 	Hello World

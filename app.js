@@ -4,7 +4,6 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
-   
   , socketConnect = require('./sockets');
 // @formatter:on
 

@@ -27,6 +27,7 @@
 		{/icons}
 
 		{+base_js}
+		<!-- TODO: use require.js -->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js"></script>
