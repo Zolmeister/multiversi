@@ -122,7 +122,7 @@ module.exports = function(socket) {
 		} else if (action === "ban") {
 			room.ban(targetPlayer, player);
 		} else if (action === "start") {
-			room.start(player);
+			room.adrminStart(player);
 		} else {
 			socket.emit("error", "bad call");
 		}

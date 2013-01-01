@@ -12,8 +12,10 @@ function Room() {
 	this.players = [];
 	//list of player objects
 	this.banned = [];
-	this.game = undefined;
+	this.game = new Game(this);
 	this.admin = undefined;
+	//player
+	this.turn = undefined;
 	//player
 	this.started = true;
 	//for private games, change to false
@@ -53,6 +55,9 @@ Room.prototype.add = function(player, callback) {
 		if (callback) {
 			callback(this);
 		}
+		if(this.players.length===3 && this.started){
+			this.newGame();
+		}
 	}
 }
 Room.prototype.remove = function(player) {
@@ -78,15 +83,17 @@ Room.prototype.ban = function(target, banner) {
 		this.banned.push(target);
 	}
 }
-Room.prototype.start = function(starter) {
+Room.prototype.adminStart = function(starter) {
 	if (this.admin === starter && !this.started) {
-		//start game
-        this.game = new Game();
-        this.game.init(this.players);
-		
         this.started = true;
 		this.update("gameState", this.gameState())
 	}
+}
+//only call this with 3 players in players list
+Room.prototype.newGame = function(){
+	this.playing=true;
+    this.game.newGame();
+    this.update("gameState", this.gameState())
 }
 Room.prototype.gameState = function() {
 	var state = {
