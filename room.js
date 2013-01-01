@@ -1,3 +1,5 @@
+var Game = require("./engine");
+
 var roomCnt = 0;
 function nextRoomId() {
 	return roomCnt++;
@@ -10,16 +12,13 @@ function Room() {
 	this.players = [];
 	//list of player objects
 	this.banned = [];
-	this.grid = [[]];
-	//empty grid
+	this.game = undefined;
 	this.admin = undefined;
 	//player
 	this.started = true;
 	//for private games, change to false
 	this.playing = false;
 	//true if 3 players
-	this.turn = undefined;
-	//player
 }
 
 //TODO: do this more efficiently (perhaps using map/clone)
@@ -82,7 +81,10 @@ Room.prototype.ban = function(target, banner) {
 Room.prototype.start = function(starter) {
 	if (this.admin === starter && !this.started) {
 		//start game
-		this.started = true;
+        this.game = new Game();
+        this.game.init(this.players);
+		
+        this.started = true;
 		this.update("gameState", this.gameState())
 	}
 }
@@ -90,7 +92,7 @@ Room.prototype.gameState = function() {
 	var state = {
 		started : this.started,
 		playing : this.playing,
-		turn : this.turn
+		turn : this.game.turn
 	}
 	return state;
 }
