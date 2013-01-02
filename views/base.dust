@@ -7,7 +7,7 @@
 
 		{+meta}
 		<meta charset="utf-8">
-		<meta name="description" content="Mtultiversi.">
+		<meta name="description" content="Multiversi.">
 		<meta name="keywords" content="game">
 		{/meta}
 		{+meta_extra/}

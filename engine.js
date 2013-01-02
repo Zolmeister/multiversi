@@ -205,11 +205,15 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 //returns list of possible moves
 Game.prototype.generateMoves = function(start) {
 
-    var spaces = [];
+    if (this.room.turn !== this.room.me) {
+        return undefined;
+    }
+
+    var spaces = {};
 
     for (var direction in directions) {
         var move = this.generateMoveInDirection(start, direction);
-        spaces.push(move);
+        spaces[[move.i, move.j]] = true;
     }
 
     return spaces;
