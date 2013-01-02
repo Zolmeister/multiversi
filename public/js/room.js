@@ -1,54 +1,52 @@
 //client side room object
-var Room = function(connect){
-	this.players;
-	this.turn;
-	this.connect=connect;
+var Room = function(connect) {
+	this.players=[];
+	this.turn=0;
+	this.connect = connect;
 	this.socket = this.connect.socket;
 	var self = this;
-	this.socket.on("update", function(data){
-		console.log("udpate")
-		console.log(data)
-		var target =data.target;
-		var data = data.data;
-		
-		if(target==="players"){
-			self.players=data;
-			if(self.players.length===3)
-				self.game.newGame();
-			if(self.me){
-				self.setMe();
-			}
-		}
-		else if(target ==="gameState"){
-			if(data.playing){
-				self.turn = self.players[data.turn];
-				console.log("turn")
-				console.log(self.turn)
-				self.renderer.draw();
-			}
-		}
-		else if (target==="me"){
-			self.me=data;
-			self.setMe();
-		}
-	})
-	this.socket.on("move", function(data){
-		console.log("move")
-		console.log(data);
-		self.game.move(data.start, data.end);
-		self.renderer.draw();
-	})
+	this.socket.on("update", function(data) {
+		self.update(data);
+	});
+	this.socket.on("move", function(data) {
+		self.move(data);
+	});
 	this.game = new Game(this);
 	this.renderer = new Render("#mv-canvas", this);
-	this.me;
+	this.me=-1;
+	//my player id
 }
-Room.prototype.setMe = function(){
-	for (var i=0;i<this.players.length;i++){
-		if(this.players[i].id==this.me)
-			this.me = this.players[i];
-	}
+
+Room.prototype.currentPlayerId = function(){
+	return this.players[this.turn].id;
 }
-Room.prototype.move = function(data){
+
+Room.prototype.move = function(data) {
+	console.log("move");
+	console.log(data);
+	this.game.move(data.start, data.end);
 	this.renderer.draw();
-	move(data);
+}
+
+Room.prototype.update = function(data) {
+	var target = data.target;
+	var data = data.data;
+
+	if (target === "players") {
+		this.players = data;
+	} else if (target === "gameState") {
+		if (data.playing) {
+			this.turn=data.turn;
+			console.log("turn")
+			console.log(this.turn)
+			this.renderer.draw();
+		}
+	} else if (target === "me") {
+		this.me = data;
+		this.renderer.draw();
+	} else if (target === "board") {
+		console.log("update grid")
+		this.game.grid = data;
+		this.renderer.draw();
+	}
 }

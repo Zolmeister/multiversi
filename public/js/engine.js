@@ -39,12 +39,12 @@ Game.prototype.newBoard = function() {
 
 Game.prototype.newGame = function() {
 	this.grid = this.newBoard();
-	this.grid[3][3] = this.room.players[0];
-	this.grid[5][4] = this.room.players[0];
-	this.grid[4][2] = this.room.players[1];
-	this.grid[4][4] = this.room.players[1];
-	this.grid[3][4] = this.room.players[2];
-	this.grid[5][3] = this.room.players[2];
+	this.grid[3][3] = this.room.players[0].id;
+	this.grid[5][4] = this.room.players[0].id;
+	this.grid[4][2] = this.room.players[1].id;
+	this.grid[4][4] = this.room.players[1].id;
+	this.grid[3][4] = this.room.players[2].id;
+	this.grid[5][3] = this.room.players[2].id;
 }
 
 Game.prototype.spaceInDirection = function(start, direction) {
@@ -150,6 +150,7 @@ Game.prototype.directionFrom = function(start, end) {
 }
 
 // returns possible move in direction
+//TODO: check redundant code against Game.spacesFrom
 Game.prototype.generateMoveInDirection = function(start, direction) {
     
     if (direction >= 6 || direction < 0) {
@@ -168,9 +169,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
             break;
         }
         nextValue = this.grid[nextSpace.i][nextSpace.j];
-        if(!nextSpace)
-        	break;
-        if (nextValue === this.room.turn || nextValue === -2) {
+        if (nextValue === this.room.currentPlayerId() || nextValue === -2) {
             return undefined;
         } else if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
             return undefined;
@@ -195,7 +194,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 //returns list of possible moves
 //Only called by client
 Game.prototype.generateMoves = function(start) {
-    if (this.room.turn.id !== this.room.me.id) {
+    if (this.room.players[this.room.turn].id !== this.room.me) {
     	console.log("not your turn");
         return undefined;
     }
@@ -208,6 +207,11 @@ Game.prototype.generateMoves = function(start) {
         }
     }
     return spaces;
+}
+
+//TODO: move to room?
+Game.prototype.currentPlayerId = function(){
+	return this.room.players[this.room.turn].id;
 }
 
 // returns array of spaces in straight line from start to end, if possible
@@ -231,7 +235,7 @@ Game.prototype.spacesFrom = function(start, end) {
         }
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
-        if (nextValue == this.room.turn || nextValue == -2) {
+        if (nextValue == this.room.currentPlayerId() || nextValue == -2) {
             return undefined;
         } else {
             spaces.push(nextSpace);
@@ -246,7 +250,7 @@ Game.prototype.spacesFrom = function(start, end) {
 }
 
 Game.prototype.validateMove = function(start, end) {
-	if (this.grid[start.i][start.j] !== this.room.turn) {
+	if (this.grid[start.i][start.j] !== this.room.currentPlayerId()) {
 		return false;
 	}
 	if (this.grid[end.i][end.j] !== -1) {
@@ -258,7 +262,7 @@ Game.prototype.validateMove = function(start, end) {
         return false;
     }
 
-    var space = generateMoveInDirection(start, direction);
+    var space = this.generateMoveInDirection(start, direction);
     if (space.i === end.i && space.j === end.j) {
         return true;
     }
@@ -274,7 +278,7 @@ Game.prototype.move = function(start, end) {
     }
     for (var i = 0; i < spaces.length; i++) {
         var space = spaces[i];
-        this.grid[space.i][space.j] = this.room.turn;
+        this.grid[space.i][space.j] = this.room.currentPlayerId();
     }
 }
 
@@ -283,7 +287,7 @@ Game.prototype.getScore = function(player) {
     var score = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
-            if (this.grid[i][j] === player) {
+            if (this.grid[i][j] === player.id) {
                 score++;
             }
         }
@@ -292,11 +296,11 @@ Game.prototype.getScore = function(player) {
 }
 
 //replace grid instances of playerFrom, to playerTO
-Game.prototype.replacePlayer = function(playerFrom, playerTo){
+Game.prototype.replacePlayer = function(playerFromId, playerToId){
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
-            if (this.grid[i][j] === playerFrom) {
-                this.grid[i][j] === playerTo;
+            if (this.grid[i][j] === playerFromId) {
+                this.grid[i][j] === playerToId;
             }
         }
     }

@@ -5,7 +5,8 @@ var Room = require('./room');
 function Player(id, socket) {
 	this.id = id;
 	this.socket = socket;
-	this.color
+	//this.color
+	//color is now based on index in player list
 	this.bot = false;
 }
 
@@ -50,7 +51,7 @@ module.exports = function(socket) {
 		//data: {}
 		var open = [];
 		for (var i in Games) {
-			if (Games[i].players.length < 3 && Games[i].started) {
+			if (!Games[i].playing && Games[i].isPublic) {
 				//private games that have started become public
 				open.push({
 					roomId : i,
