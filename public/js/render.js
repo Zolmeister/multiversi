@@ -122,7 +122,7 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 
 Render.prototype.onClick = function(e) {
 	console.log("clicked")
-	self = this.renderer;
+	var self = this.renderer;
     var clicked = self.getCursorPosition(e);
     var space = self.spaceAt(clicked.x, clicked.y);
     try {
@@ -133,6 +133,11 @@ Render.prototype.onClick = function(e) {
     } catch(e) {
     	console.log("2")
         return; 
+    }
+
+    // Zoli: fix this
+    if (self.room.turn !== self.room.me) {
+        return;
     }
 
 	console.log(self.game.grid[space.i][space.j])

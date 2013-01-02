@@ -185,6 +185,8 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 
     if (space && space.i === start.i && space.j === start.j) {
         return undefined;
+    } else if (space && this.grid[space.i][space.j] !== -1) {
+        return undefined;
     }
 
     return space;
