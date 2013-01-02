@@ -137,6 +137,10 @@ Room.prototype.sendAll = function(name, data) {//send to all players
 	}
 }
 Room.prototype.move = function(data, player) {
+	if(player.id!==this.currentPlayerId()){
+		console.log("tried to move, but not your turn");
+		return;
+	}
 	console.log("move")
 	var valid = this.game.validateMove(data.start, data.end);
 	if (!valid) {
@@ -171,6 +175,7 @@ Room.prototype.adminStart = function(starter) {
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
 	this.playing = true;
+	this.started = true;
 	this.game.newGame();
 	this.turn = 0;
 	this.update("gameState", this.gameState());
