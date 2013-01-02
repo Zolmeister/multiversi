@@ -155,10 +155,9 @@ Render.prototype.onClick = function(e) {
         if (!self.possibleMoves[[space.i, space.j]]) {
             return;
         }
-		
+	
+        // Send move to server
 		self.game.move(self.clickedSpace, space);
-		move(self.clickedSpace, space);
-        // TODO: Send move to server
         
         self.possibleMoves = {};
         self.clickedSpace = {

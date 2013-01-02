@@ -80,10 +80,17 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
+    if (space.i < 0 || space.i > 8 || space.j < 0 || space.j > 7) {
+        return undefined;
+    }
+
 	return space;
 }
 
 Game.prototype.directionFrom = function(start, end) {
+
+    // Down-left and down-right not working
+    // check Game.spacesFrom() from Game.move()
 
 	var di = end.i - start.i;
 	var dj = end.j - start.j;
@@ -95,79 +102,49 @@ Game.prototype.directionFrom = function(start, end) {
 			return directions.up;
 		}
 	} else if (di < 0) {
-		// up-left
-		if (dj < 0) {
-			if (di % 2 === 0) {
-				if (dj === di / 2) {
-					return directions.upLeft;
-				}
-			} else {
-				if (start.i % 2 === 1) {
-					if (dj === (di - 1) / 2) {
-						return directions.upLeft;
-					}
-				} else {
-					if (dj === (di + 1) / 2) {
-						return directions.upLeft;
-					}
-				}
-			}
-		}
-		// down-left
-        else if (dj > 0) {
-			if (di % 2 === 0) {
-				if (dj == di / -2) {
-					return directions.downLeft;
-				}
-			} else {
-				if (start.i % 2 === 1) {
-					if (dj === (di + 1) / -2) {
-						return directions.downLeft;
-					}
-				} else {
-					if (dj === (di - 1) / -2) {
-						return directions.downLeft;
-					}
-				}
-			}
-		}
+        if (di % 2 === 0) {
+            if (dj === di / 2) {
+                return directions.upLeft;
+            } else if (dj == di / -2) {
+                return directions.downLeft;
+            }
+        } else {
+            if (start.i % 2 === 1) {
+                if (dj === (di - 1) / 2) {
+                    return directions.upLeft;
+                } else if (dj === (di + 1) / -2) {
+                    return directions.downLeft;
+                }
+            } else {
+                if (dj === (di + 1) / 2) {
+                    return directions.upLeft;
+                } else if (dj === (di - 1) / -2) {
+                    return directions.downLeft;
+                }
+            }
+        }
 	} else {
-		// up-right
-		if (dj < 0) {
-			if (di % 2 === 0) {
-				if (dj == di / -2) {
-					return directions.upRight;
-				}
-			} else {
-				if (start.i % 2 === 1) {
-					if (dj === (di + 1) / -2) {
-						return directions.upRight;
-					}
-				} else {
-					if (dj === (di - 1) / -2) {
-						return directions.upRight;
-					}
-				}
-			}
-		}
-		// down-right
-        else if (dj > 0) {
-			if (di % 2 === 0) {
-				if (dj == di / 2) {
-					return directions.downRight;
-				}
-			} else {
-				if (start.i % 2 === 1) {
-					if (dj == (di - 1) / 2) {
-						return directions.downRight;
-					}
-				} else {
-					if (dj == (di + 1) / 2) {
-						return directions.downRight;
-					}
-				}
-			}
-		}
+        if (di % 2 === 0) {
+            if (dj == di / -2) {
+                return directions.upRight;
+            } else if (dj == di / 2) {
+                return directions.downRight;
+            }
+        } else {
+            if (start.i % 2 === 1) {
+                if (dj === (di + 1) / -2) {
+                    return directions.upRight;
+                } else if (dj == (di - 1) / 2) {
+                    return directions.downRight;
+                }
+            } else {
+                if (dj === (di - 1) / -2) {
+                    return directions.upRight;
+                } else if (dj == (di + 1) / 2) {
+                    return directions.downRight;
+                }
+            }
+        }
 	}
 
 	return undefined;
@@ -184,16 +161,21 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         j : start.j
     };
     var nextSpace = {}, nextValue;
-    while (nextSpace) {
+    while (true) {
         nextSpace = this.spaceInDirection(space, direction);
+        if (!nextSpace) {
+            break;
+        }
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
         if (nextValue === this.room.turn || nextValue === -2) {
             nextSpace = undefined;
-        }
-        
-        if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
+            space = undefined;
+            break;
+        } else if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
             nextSpace = undefined;
+            space = undefined;
+            break;
         }
         
         space = nextSpace;
@@ -202,6 +184,11 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
             break;
         }
     }
+
+    if (space && space.i === start.i && space.j === start.j) {
+        return undefined;
+    }
+
     return space;
 }
 
@@ -225,7 +212,7 @@ Game.prototype.generateMoves = function(start) {
 // returns array of spaces in straight line from start to end, if possible
 Game.prototype.spacesFrom = function(start, end) {
     var direction = this.directionFrom(start, end);
-    if (!direction) {
+    if (direction === undefined) {
         return undefined;
     }
 
@@ -237,7 +224,10 @@ Game.prototype.spacesFrom = function(start, end) {
     var nextSpace = {}, nextValue;
 
     while (true) {
-        nextSpace = spaceInDirection(space, direction);
+        nextSpace = this.spaceInDirection(space, direction);
+        if (!nextSpace) {
+            break;
+        }
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
         if (nextValue == this.room.turn || nextValue == -2) {
@@ -279,8 +269,8 @@ Game.prototype.validateMove = function(start, end) {
 Game.prototype.move = function(start, end) {
 	// Make grid changes
     var spaces = this.spacesFrom(start, end);
-    console.log(spaces)
-    for (var space in spaces) {
+    for (var i = 0; i < spaces.length; i++) {
+        var space = spaces[i];
         this.grid[space.i][space.j] = this.room.turn;
     }
 }
