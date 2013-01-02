@@ -135,8 +135,7 @@ Render.prototype.onClick = function(e) {
         return; 
     }
 
-    // Zoli: fix this
-    if (self.room.turn !== self.room.me) {
+    if (self.room.turn.id !== self.room.me.id) {
         return;
     }
 
