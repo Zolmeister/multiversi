@@ -1,3 +1,4 @@
+
 //room: {players: [list of player Objects], turn: player object}
 function Game(room) {
 	this.room = room;
@@ -12,6 +13,7 @@ var directions = {
 	down : 4,
 	downRight : 5
 }
+
 // Util
 Game.prototype.newBoard = function() {
 	var grid = new Array(9);
@@ -89,9 +91,6 @@ Game.prototype.spaceInDirection = function(start, direction) {
 
 Game.prototype.directionFrom = function(start, end) {
 
-    // Down-left and down-right not working
-    // check Game.spacesFrom() from Game.move()
-
 	var di = end.i - start.i;
 	var dj = end.j - start.j;
 
@@ -152,6 +151,7 @@ Game.prototype.directionFrom = function(start, end) {
 
 // returns possible move in direction
 Game.prototype.generateMoveInDirection = function(start, direction) {
+    
     if (direction >= 6 || direction < 0) {
         return undefined;
     }
@@ -161,6 +161,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         j : start.j
     };
     var nextSpace = {}, nextValue;
+    
     while (true) {
         nextSpace = this.spaceInDirection(space, direction);
         if (!nextSpace) {
@@ -169,13 +170,9 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
         if (nextValue === this.room.turn || nextValue === -2) {
-            nextSpace = undefined;
-            space = undefined;
-            break;
+            return undefined;
         } else if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
-            nextSpace = undefined;
-            space = undefined;
-            break;
+            return undefined;
         }
         
         space = nextSpace;
@@ -231,9 +228,7 @@ Game.prototype.spacesFrom = function(start, end) {
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
         if (nextValue == this.room.turn || nextValue == -2) {
-            nextSpace = undefined;
-            spaces = undefined;
-            break;
+            return undefined;
         } else {
             spaces.push(nextSpace);
             space = nextSpace;
