@@ -176,7 +176,7 @@ Game.prototype.directionFrom = function(start, end) {
 // returns possible move in direction
 Game.prototype.generateMoveInDirection = function(start, direction) {
 
-    if (direction >= 6 || direction <= 0) {
+    if (direction >= 6 || direction < 0) {
         return undefined;
     }
 
@@ -187,15 +187,17 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
     var nextSpace = {}, nextValue;
     while (nextSpace) {
         nextSpace = this.spaceInDirection(space, direction);
-        if(!nextSpace)
-        	break;
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         
-        if (nextValue == this.room.turn || nextValue == -2) {
+        if (nextValue === this.room.turn || nextValue === -2) {
             nextSpace = undefined;
-        } else {
-            space = nextSpace;
         }
+        
+        if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
+            nextSpace = undefined;
+        }
+        
+        space = nextSpace;
 
         if (nextValue == -1) {
             break;
@@ -214,9 +216,11 @@ Game.prototype.generateMoves = function(start) {
 
     var spaces = {};
 
-    for (var direction in directions) {
+    for (var direction = 0; direction < 6; direction++) {
         var move = this.generateMoveInDirection(start, direction);
-        spaces[[move.i, move.j]] = true;
+        if (move) {
+            spaces[[move.i, move.j]] = true;
+        }
     }
     return spaces;
 }
@@ -233,7 +237,7 @@ Game.prototype.spacesFrom = function(start, end) {
         i : start.i,
         j : start.j
     };
-    var spaces = [space];
+    var spaces = [];
     var nextSpace = {}, nextValue;
 
     while (true) {

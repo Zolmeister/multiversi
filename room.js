@@ -1,4 +1,4 @@
-var Game = require("./engine");
+var Game = require("./public/js/engine");
 
 var roomCnt = 0;
 function nextRoomId() {
