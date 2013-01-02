@@ -6,3 +6,8 @@ var Room = function(){
 	this.renderer = new Render("#mv-canvas", this);
 	this.me;
 }
+
+Room.prototype.move = function(data){
+	this.renderer.draw();
+	move(data);
+}

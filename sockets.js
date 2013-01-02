@@ -131,7 +131,7 @@ module.exports = function(socket) {
 	socket.on("move", function(data) {
 		//data: {start: {i: , j: }, end: {i: , j: }}
 		if (room) {
-			room.play(data, player);
+			room.move(data, player);
 		}
 	})
 }

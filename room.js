@@ -67,8 +67,9 @@ Room.prototype.remove = function(player) {
 		this.update("players", this.publicPlayerList());
 	}
 }
-Room.prototype.play = function(data, player) {
+Room.prototype.move = function(data, player) {
 	//TODO: fill this in
+	this.game.move
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {

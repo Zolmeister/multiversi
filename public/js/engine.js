@@ -281,9 +281,8 @@ Game.prototype.move = function(start, end) {
     for (var space in spaces) {
         this.grid[space.i][space.j] = this.room.turn;
     }
-
-	//tell room move
-	// if game end, tell room
+	this.room.move({start:start, end: end});
+	// TODO: if game end, tell room
 }
 
 //return player score (go through grid and calc, dont keep track)
