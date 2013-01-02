@@ -185,11 +185,12 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         j : start.j
     };
     var nextSpace = {}, nextValue;
-	nextSpace = this.spaceInDirection(space, direction);
     while (nextSpace) {
-        
-        nextValue = this.grid[nextSpace.i][nextSpace.j];
         nextSpace = this.spaceInDirection(space, direction);
+        if(!nextSpace)
+        	break;
+        nextValue = this.grid[nextSpace.i][nextSpace.j];
+        
         if (nextValue == this.room.turn || nextValue == -2) {
             nextSpace = undefined;
         } else {
