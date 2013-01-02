@@ -258,12 +258,12 @@ Game.prototype.validateMove = function(start, end) {
 	}
 	
     var direction = this.directionFrom(start, end);
-    if (!direction) {
+    if (direction === undefined) {
         return false;
     }
 
     var space = this.generateMoveInDirection(start, direction);
-    if (space.i === end.i && space.j === end.j) {
+    if (space && space.i === end.i && space.j === end.j) {
         return true;
     }
     return false;
