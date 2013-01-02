@@ -194,7 +194,6 @@ Render.prototype.draw = function () {
             
             if (this.possibleMoves[[i, j]]) {
                 fill = this.colors[this.room.players.indexOf(this.room.me)].moveColor;
-                console.log(fill);
             }
 
             if (i == 4 && j == 3) {

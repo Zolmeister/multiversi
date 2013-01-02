@@ -175,7 +175,6 @@ Game.prototype.directionFrom = function(start, end) {
 
 // returns possible move in direction
 Game.prototype.generateMoveInDirection = function(start, direction) {
-
     if (direction >= 6 || direction <= 0) {
         return undefined;
     }
@@ -206,16 +205,16 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 
 //returns list of possible moves
 Game.prototype.generateMoves = function(start) {
-
     if (this.room.turn !== this.room.me) {
     	console.log("not your turn");
         return undefined;
     }
 
     var spaces = {};
-
     for (var direction in directions) {
-        var move = this.generateMoveInDirection(start, direction);
+        var move = this.generateMoveInDirection(start, directions[direction]);
+        if(!move)
+        	continue;
         spaces[[move.i, move.j]] = true;
     }
     return spaces;
@@ -273,7 +272,6 @@ Game.prototype.validateMove = function(start, end) {
     if (space.i === end.i && space.j === end.j) {
         return true;
     }
-
     return false;
 }
 
