@@ -2,6 +2,7 @@
 var Render = function(canvasId, room) {
     this.canvas = $(canvasId)[0];
     this.context = this.canvas.getContext("2d");
+    this.canvas.renderer=this;
     $(this.canvas).on("click", this.onClick, false);
 
 	this.room = room;
