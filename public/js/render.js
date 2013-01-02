@@ -1,16 +1,20 @@
 
-var Render = function() {
-    this.game = undefined;
-    this.canvas = undefined;
-    this.context = undefined;
+var Render = function(canvasId, room) {
+    this.canvas = $(canvasId)[0];
+    this.context = this.canvas.getContext("2d");
+    $(this.canvas).on("click", this.onClick, false);
 
+	this.room = room;
+    this.game = room.game;
+    
     this.hexShape = {
         radius : 36,
         apothem : 31,
         smallRadius : 33,
         smallApothem : 28.6
     }
-
+	this.centerSpace = this.hexSpaceCenter(4, 3);
+	
     this.xOffset = this.hexShape.radius + 1;
     this.yOffset = 2 * this.hexShape.apothem + 1;
 
@@ -33,16 +37,6 @@ var Render = function() {
         activeColor : "#66d",
         moveColor : "#dde"
     }];
-}
-
-Render.prototype.init = function(canvasId, game) {
-    // Zoli: call with "#mv-canvas"
-    this.canvas = $(canvasId)[0];
-    this.context = canvas.getContext("2d");
-    this.canvas.on("click", this.onClick, false);
-
-    this.game = game;
-    this.centerSpace = this.hexSpaceCenter(4, 3);
 }
 
 // Util
@@ -187,7 +181,7 @@ Render.prototype.draw = function () {
             
             // Fill
             if (this.game.grid[i][j] !== -1) {
-                var colors = this.colors[this.game.roomplayers.indexOf(this.game.grid[i][j])];
+                var colors = this.colors[this.room.players.indexOf(this.game.grid[i][j])];
                 if (i === this.clickedSpace.i && j === this.clickedSpace.j) {
                     fill = colors.activeColor;
                 } else {
@@ -196,7 +190,7 @@ Render.prototype.draw = function () {
             }
             
             if (this.possibleMoves[[i, j]]) {
-                fill = this.colors[this.game.room.players.indexOf(this.game.room.me)].moveColor;
+                fill = this.colors[this.room.players.indexOf(this.game.room.me)].moveColor;
             }
 
             if (i == 4 && j == 3) {
@@ -205,9 +199,9 @@ Render.prototype.draw = function () {
             
             // Draw Hex Spaces
             if ((i == 4 && j == 2) || ((j == 3 || j == 4) && (i >=3 && i <= 5))) {
-                this.drawHexSpace(space.x, space.y, hexShape.smallRadius, fill);
+                this.drawHexSpace(space.x, space.y, this.hexShape.smallRadius, fill);
             } else {
-                this.drawHexSpace(space.x, space.y, hexShape.radius, fill);
+                this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
             }
         }
     }

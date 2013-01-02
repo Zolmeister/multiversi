@@ -33,8 +33,8 @@ Game.prototype.newBoard = function() {
 		}
 	}
 }
-//players: list of 3 player objects
-Game.prototype.newGame = function(players) {
+
+Game.prototype.newGame = function() {
 	this.grid = this.newBoard();
 	this.grid[3][3] = this.room.players[0];
 	this.grid[5][4] = this.room.players[0];
