@@ -167,7 +167,8 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
             break;
         }
         nextValue = this.grid[nextSpace.i][nextSpace.j];
-        
+        if(!nextSpace)
+        	break;
         if (nextValue === this.room.turn || nextValue === -2) {
             nextSpace = undefined;
             space = undefined;
