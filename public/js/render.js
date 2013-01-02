@@ -149,13 +149,15 @@ Render.prototype.onClick = function(e) {
     } else if (self.clickedSpace.i == space.i && self.clickedSpace.j == space.j) {
         self.clickedSpace.i = -1;
         self.clickedSpace.j = -1;
-        self.suggestions = undefined;
+        self.possibleMoves = {};
     } else {
         // Validate locally
         if (!self.possibleMoves[[space.i, space.j]]) {
             return;
         }
-
+		
+		self.game.move(self.clickedSpace, space);
+		move(self.clickedSpace, space);
         // TODO: Send move to server
         
         self.possibleMoves = {};
@@ -170,7 +172,8 @@ Render.prototype.onClick = function(e) {
 
 // Draw
 Render.prototype.draw = function () {
-    this.canvas.width = this.canvas.width;//clear canvas
+    // clear canvas
+    this.canvas.width = this.canvas.width;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
 
