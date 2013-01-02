@@ -1,49 +1,40 @@
-//TODO: make this a self contained library?
-var socket = io.connect();
+var Connect = function() {
+	this.socket = io.connect();
+	this.socket.on("error", function(data) {
+		console.error(data);
+	})
+	this.join = function join(roomId) {
+		this.socket.emit("join", {
+			room : roomId
+		});
+	}
 
-socket.on("update", function(data) {
-	console.log("update:");
-	console.log(data);
-})
+	this.getRooms = function getRooms(callback) {
+		this.socket.emit("getRooms");
+		this.socket.on("rooms", callback)
+	}
 
-socket.on("rooms", function(data) {
-	console.log("rooms:");
-	console.log(data);
-})
+	this.leaveRoom = function leaveRoom() {
+		this.socket.emit("leaveRoom");
+	}
 
-socket.on("error", function(data) {
-	console.error(data);
-})
-function join(roomId) {
-	socket.emit("join", {
-		room : roomId
-	});
-}
+	this.createGame = function createGame(isPrivate, bots) {
+		isPrivate = isPrivate || false;
+		bots = bots || false;
+		this.socket.emit("createGame", {
+			isPrivate : isPrivate,
+			bots : bots
+		});
+	}
 
-function getRooms() {
-	socket.emit("getRooms");
-}
+	this.roomAdmin = function roomAdmin(action, target) {
+		this.socket.emit("roomAdmin", {
+			action : action,
+			target : target
+		});
+	}
 
-function leaveRoom() {
-	socket.emit("leaveRoom");
-}
-
-function createGame(isPrivate, bots) {
-	isPrivate = isPrivate || false;
-	bots = bots || false;
-	socket.emit("createGame", {
-		isPrivate : isPrivate,
-		bots : bots
-	});
-}
-
-function roomAdmin(action, target) {
-	socket.emit("roomAdmin", {
-		action : action,
-		target : target
-	});
-}
-
-function move(data) {
-	socket.emit("move", data);
+	this.move = function move(data) {
+		this.socket.emit("move", data);
+	}
 }

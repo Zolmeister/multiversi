@@ -15,8 +15,8 @@ function Room() {
 	this.game = new Game(this);
 	this.admin = undefined;
 	//player
-	this.turn = undefined;
-	//player
+	this.turn = 0;
+	//player index
 	this.started = true;
 	//for private games, change to false
 	this.playing = false;
@@ -50,8 +50,8 @@ Room.prototype.update = function(target, data) {
 Room.prototype.add = function(player, callback) {
 	if (this.players.length < 3 && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
 		this.players.push(player);
-
 		this.update("players", this.publicPlayerList());
+		this.players[this.players.length-1].socket.emit("update",{target : "me", data: player.id})
 		if (callback) {
 			callback(this);
 		}
@@ -69,7 +69,13 @@ Room.prototype.remove = function(player) {
 }
 Room.prototype.move = function(data, player) {
 	//TODO: fill this in
-	this.game.move
+	console.log("move")
+	this.game.move(data.start, data.end);
+	for (var i in this.players) {
+		this.players[i].socket.emit("move", data);
+	}
+	this.turn = ++this.turn%3;
+	this.update("gameState", this.gameState())
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {
@@ -94,13 +100,15 @@ Room.prototype.adminStart = function(starter) {
 Room.prototype.newGame = function(){
 	this.playing=true;
     this.game.newGame();
+    this.turn=0;
     this.update("gameState", this.gameState())
 }
+//TODO: make more efficient
 Room.prototype.gameState = function() {
 	var state = {
 		started : this.started,
 		playing : this.playing,
-		turn : this.game.turn
+		turn : this.turn
 	}
 	return state;
 }

@@ -194,8 +194,9 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 }
 
 //returns list of possible moves
+//Only called by client
 Game.prototype.generateMoves = function(start) {
-    if (this.room.turn !== this.room.me) {
+    if (this.room.turn.id !== this.room.me.id) {
     	console.log("not your turn");
         return undefined;
     }
@@ -270,6 +271,10 @@ Game.prototype.validateMove = function(start, end) {
 Game.prototype.move = function(start, end) {
 	// Make grid changes
     var spaces = this.spacesFrom(start, end);
+    if(!spaces){
+		console.log("no spaces");
+		return;    	
+    }
     for (var i = 0; i < spaces.length; i++) {
         var space = spaces[i];
         this.grid[space.i][space.j] = this.room.turn;
@@ -299,4 +304,6 @@ Game.prototype.replacePlayer = function(playerFrom, playerTo){
         }
     }
 }
-
+if(typeof module == "undefined")
+	module={}
+module.exports = Game;

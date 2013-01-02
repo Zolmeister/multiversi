@@ -121,20 +121,22 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.onClick = function(e) {
+	console.log("clicked")
 	self = this.renderer;
     var clicked = self.getCursorPosition(e);
     var space = self.spaceAt(clicked.x, clicked.y);
-
     try {
         if (self.game.grid[space.i][space.j] == -2) {
+        	console.log("1")
             return;
         }
     } catch(e) {
+    	console.log("2")
         return; 
     }
 
-
-    if (self.clickedSpace.i === -1 && self.clickedSpace.j === -1) {
+	console.log(self.game.grid[space.i][space.j])
+    if (self.game.grid[space.i][space.j].id === self.room.me.id && self.clickedSpace.i === -1 && self.clickedSpace.j === -1) {
         self.clickedSpace.i = space.i;
         self.clickedSpace.j = space.j;
 
@@ -158,6 +160,7 @@ Render.prototype.onClick = function(e) {
 	
         // Send move to server
 		self.game.move(self.clickedSpace, space);
+        self.room.connect.move({start: self.clickedSpace, end: space});
         
         self.possibleMoves = {};
         self.clickedSpace = {
@@ -168,7 +171,15 @@ Render.prototype.onClick = function(e) {
     
     self.draw();
 }
-
+//TODO: move this to room, and fix all code that compares objects
+Render.prototype.index= function(id){
+	for(var i=0;i<this.room.players.length;i++){
+		if(this.room.players[i].id===id){
+			return i
+		}
+	}
+	return -1;
+}
 // Draw
 Render.prototype.draw = function () {
     // clear canvas
@@ -186,7 +197,8 @@ Render.prototype.draw = function () {
             
             // Fill
             if (this.game.grid[i][j] !== -1) {
-                var colors = this.colors[this.room.players.indexOf(this.game.grid[i][j])];
+            	var index = this.index(this.game.grid[i][j].id)
+                var colors = this.colors[index];
                 if (i === this.clickedSpace.i && j === this.clickedSpace.j) {
                     fill = colors.activeColor;
                 } else {
@@ -195,7 +207,8 @@ Render.prototype.draw = function () {
             }
             
             if (this.possibleMoves[[i, j]]) {
-                fill = this.colors[this.room.players.indexOf(this.room.me)].moveColor;
+            	var index = this.index(this.room.me.id)
+                fill = this.colors[index].moveColor;
             }
 
             if (i == 4 && j == 3) {
