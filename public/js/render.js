@@ -14,7 +14,7 @@ var Render = function(canvasId, room) {
         smallRadius : 33,
         smallApothem : 28.6
     }
-	this.centerSpace = this.hexSpaceCenter(4, 3);
+	
 	
     this.xOffset = this.hexShape.radius + 1;
     this.yOffset = 2 * this.hexShape.apothem + 1;
@@ -38,6 +38,8 @@ var Render = function(canvasId, room) {
         activeColor : "#66d",
         moveColor : "#dde"
     }];
+    
+    this.centerSpace = this.hexSpaceCenter(4, 3);
 }
 
 // Util
@@ -119,12 +121,12 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.onClick = function(e) {
-
-    var clicked = this.getCursorPosition(e);
-    var space = this.spaceAt(clicked.x, clicked.y);
+	self = this.renderer;
+    var clicked = self.getCursorPosition(e);
+    var space = self.spaceAt(clicked.x, clicked.y);
 
     try {
-        if (this.game.grid[space.i][space.j] == -2) {
+        if (self.game.grid[space.i][space.j] == -2) {
             return;
         }
     } catch(e) {
@@ -132,43 +134,43 @@ Render.prototype.onClick = function(e) {
     }
 
 
-    if (this.clickedSpace.i === -1 && this.clickedSpace.j === -1) {
-        this.clickedSpace.i = space.i;
-        this.clickedSpace.j = space.j;
+    if (self.clickedSpace.i === -1 && self.clickedSpace.j === -1) {
+        self.clickedSpace.i = space.i;
+        self.clickedSpace.j = space.j;
 
-        this.possibleMoves = this.game.generateMoves(space);
-        if (!this.possibleMoves) {
+        self.possibleMoves = self.game.generateMoves(space);
+        
+        if (!self.possibleMoves) {
             // means it's not client's turn, do nothing
-            this.possibleMoves = {};
+            self.possibleMoves = {};
             return;
         }
     
-    } else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
-        this.clickedSpace.i = -1;
-        this.clickedSpace.j = -1;
-        this.suggestions = undefined;
+    } else if (self.clickedSpace.i == space.i && self.clickedSpace.j == space.j) {
+        self.clickedSpace.i = -1;
+        self.clickedSpace.j = -1;
+        self.suggestions = undefined;
     } else {
         // Validate locally
-        if (!this.possibleMoves[[space.i, space.j]]) {
+        if (!self.possibleMoves[[space.i, space.j]]) {
             return;
         }
 
         // TODO: Send move to server
         
-        this.possibleMoves = {};
-        this.clickedSpace = {
+        self.possibleMoves = {};
+        self.clickedSpace = {
             i : -1, 
             j : -1
         }
     }
-
-    this.canvas.width = this.canvas.width;
-    this.draw();
+    
+    self.draw();
 }
 
 // Draw
 Render.prototype.draw = function () {
-    
+    this.canvas.width = this.canvas.width;//clear canvas
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
 
@@ -191,7 +193,8 @@ Render.prototype.draw = function () {
             }
             
             if (this.possibleMoves[[i, j]]) {
-                fill = this.colors[this.room.players.indexOf(this.game.room.me)].moveColor;
+                fill = this.colors[this.room.players.indexOf(this.room.me)].moveColor;
+                console.log(fill);
             }
 
             if (i == 4 && j == 3) {

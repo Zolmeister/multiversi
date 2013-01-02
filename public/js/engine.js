@@ -185,11 +185,11 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         j : start.j
     };
     var nextSpace = {}, nextValue;
-
+	nextSpace = this.spaceInDirection(space, direction);
     while (nextSpace) {
-        nextSpace = spaceInDirection(space, direction);
-        nextValue = this.grid[nextSpace.i][nextSpace.j];
         
+        nextValue = this.grid[nextSpace.i][nextSpace.j];
+        nextSpace = this.spaceInDirection(space, direction);
         if (nextValue == this.room.turn || nextValue == -2) {
             nextSpace = undefined;
         } else {
@@ -207,6 +207,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 Game.prototype.generateMoves = function(start) {
 
     if (this.room.turn !== this.room.me) {
+    	console.log("not your turn");
         return undefined;
     }
 
@@ -216,7 +217,6 @@ Game.prototype.generateMoves = function(start) {
         var move = this.generateMoveInDirection(start, direction);
         spaces[[move.i, move.j]] = true;
     }
-
     return spaces;
 }
 
