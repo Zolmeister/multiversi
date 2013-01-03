@@ -283,7 +283,13 @@ Game.prototype.move = function(start, end) {
 }
 
 //return array of player scores in turn order
+//return [0, 0, 0] when not 3 players
 Game.prototype.getScores = function() {
+
+    if (this.room.players.length !== 3) {
+        return [0, 0, 0];
+    }
+
     var scores = {};
     for (var i = 0; i < 3; i++) {
         scores[this.room.players[i].id] = 0;
