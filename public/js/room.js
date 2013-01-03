@@ -35,19 +35,17 @@ Room.prototype.update = function(data) {
 	if (target === "players") {
 		this.players = data;
 	} else if (target === "gameState") {
-		if (data.playing) {
-			this.turn=data.turn;
-			console.log("turn")
-			console.log(this.turn)
-			this.renderer.draw();
+		this.turn=data.turn;
+		console.log("turn")
+		console.log(this.turn)
+		this.renderer.draw();
 
-            $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
-            $("#p" + this.turn).css('font-weight', 'bold');
+        $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
+        $("#p" + this.turn).css('font-weight', 'bold');
 
-            for (var i = 0; i < 3; i++) {
-                $("#p" + i + "-score").html(data.scores[i]);
-            }
-		}
+        for (var i = 0; i < 3; i++) {
+            $("#p" + i + "-score").html(data.scores[i]);
+        }
 	} else if (target === "me") {
 		this.me = data;
 		this.renderer.draw();
