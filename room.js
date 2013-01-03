@@ -34,21 +34,18 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
 	var playerList = [];
 	for (var i in this.players) {
 		var p = this.players[i];
-		if (!p) {
-			playerList.push(undefined);
-			continue;
-		}
-
 		var player = {
 			id : p.id,
 			//color : p.color,
 			//color is now based on index in player list
-			bot : p.bot
+			bot : p.bot,
+			removed : p.removed
 		}
 		playerList.push(player);
 	}
 	return playerList;
 }
+
 Room.prototype.update = function(target, data) {
 	console.log(target)
 	console.log(data)
@@ -69,7 +66,7 @@ Room.prototype.add = function(player, callback) {
 			//pop left
 			var slot = undefined;
 			for (var i = 0; i < this.players.length; i++) {
-				if (!this.players[i]) {//check if player has been removed from game
+				if (this.players[i].removed) {//check if player has been removed from game
 					slot = i;
 					break;
 				}
@@ -113,7 +110,7 @@ Room.prototype.add = function(player, callback) {
 	}
 }
 Room.prototype.remove = function(player) {
-	var index = this.players.indexOf(player)
+	var index = this.players.indexOf(player);
 	if (index !== -1) {
 		this.playing = false;
 		if (this.players.length < 3) {//if game is not full yet
@@ -121,8 +118,9 @@ Room.prototype.remove = function(player) {
 			//remove player from player list
 		} else {//open up player slot for replacement
 			this.openIds.push(this.players[index].id);
-			this.players[index] = undefined;
-			//relaced with undefined
+			//this.players[index] = this.removedPlayer();
+			this.players[index].removed = true;
+			//dont actually remove player
 		}
 
 		this.update("gameState", this.gameState());
@@ -131,8 +129,6 @@ Room.prototype.remove = function(player) {
 }
 Room.prototype.sendAll = function(name, data) {//send to all players
 	for (var i in this.players) {
-		if (!this.players[i])
-			continue;
 		this.players[i].socket.emit(name, data);
 	}
 }

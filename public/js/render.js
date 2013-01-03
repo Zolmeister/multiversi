@@ -186,7 +186,7 @@ Render.prototype.onClick = function(e) {
 //TODO: move this to room, and fix all code that compares objects
 Render.prototype.index = function(id) {
 	for (var i = 0; i < this.room.players.length; i++) {
-		if (this.room.players[i] && this.room.players[i].id === id) {
+		if (this.room.players[i].id === id) {
 			return i
 		}
 	}
