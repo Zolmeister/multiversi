@@ -40,10 +40,15 @@ Room.prototype.update = function(data) {
 			console.log("turn")
 			console.log(this.turn)
 			this.renderer.draw();
+
+            $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
+            $("#p" + this.turn).css('font-weight', 'bold');
 		}
 	} else if (target === "me") {
 		this.me = data;
 		this.renderer.draw();
+        $("#p" + this.renderer.index(this.me) + "-name").html("(you)");
+
 	} else if (target === "board") {
 		console.log("update grid")
 		this.game.grid = data;
