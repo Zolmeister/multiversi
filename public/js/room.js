@@ -43,6 +43,10 @@ Room.prototype.update = function(data) {
 
             $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
             $("#p" + this.turn).css('font-weight', 'bold');
+
+            for (var i = 0; i < 3; i++) {
+                $("#p" + i + "-score").html(data.scores[i]);
+            }
 		}
 	} else if (target === "me") {
 		this.me = data;

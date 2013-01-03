@@ -186,7 +186,8 @@ Room.prototype.gameState = function() {
 	var state = {
 		isPublic : this.isPublic,
 		playing : this.playing,
-		turn : this.turn
+		turn : this.turn,
+        scores : this.game.getScores()
 	}
 	return state;
 }

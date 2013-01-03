@@ -282,17 +282,25 @@ Game.prototype.move = function(start, end) {
     }
 }
 
-//return player score (go through grid and calc, dont keep track)
-Game.prototype.getScore = function(player) {
-    var score = 0;
+//return array of player scores in turn order
+Game.prototype.getScores = function() {
+    var scores = {};
+    for (var i = 0; i < 3; i++) {
+        scores[this.room.players[i].id] = 0;
+    }
+
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
-            if (this.grid[i][j] === player.id) {
-                score++;
+            var id = this.grid[i][j];
+            if (id === -1 || id === -2) {
+                continue;
             }
+            scores[id]++;
         }
     }
-    return score;
+    return [scores[this.room.players[0].id],
+            scores[this.room.players[1].id],
+            scores[this.room.players[2].id]];
 }
 
 //replace grid instances of playerFrom, to playerTO
