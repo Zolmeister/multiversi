@@ -1,9 +1,9 @@
 
+var RulesSet = RulesSet || require('./rulesset.js');
 //room: {players: [list of player Objects], turn: player object}
-function Game(room, rules) {
+function Game(room) {
 	this.room = room;
-    //this.rules = new RulesSet();
-    this.rules = rules;
+    this.rules = new RulesSet();
 	this.grid = this.rules.newBoard();
 };
 
@@ -174,6 +174,7 @@ Game.prototype.generateMoves = function(start) {
         if (spaces) {
             var space = spaces[spaces.length - 1];
             moves[[space.i, space.j]] = spaces;
+            moves[[space.i, space.j]].move = {i: space.i, j:space.j};
         }
     }
     return moves;

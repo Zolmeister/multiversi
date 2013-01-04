@@ -1,4 +1,3 @@
-var RulesSet = require("./public/js/rulesset");
 var Game = require("./public/js/engine");
 var Bot = require("./bots");
 var roomCnt = 0;
@@ -14,7 +13,7 @@ function Room() {
 	this.openIds = [];
 	//list of removed player ids, for grid replacement
 	this.banned = [];
-	this.game = new Game(this, new RulesSet());
+	this.game = new Game(this);
 	this.admin = undefined;
 	//player
 	this.turn = 0;
@@ -162,9 +161,9 @@ Room.prototype.move = function(data, player) {
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
 	console.log("adding bot");
-	if (this.admin === admin) {
+	//if (this.admin === admin) {
 		this.add(new Bot());
-	}
+	//}
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {

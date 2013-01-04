@@ -11,7 +11,7 @@ var Room = function(connect) {
 	this.socket.on("move", function(data) {
 		self.move(data);
 	});
-	this.game = new Game(this, new RulesSet());
+	this.game = new Game(this);
 	this.renderer = new Render("#mv-canvas", this);
 	this.me=-1;
 	//my player id

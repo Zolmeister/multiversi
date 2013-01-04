@@ -34,21 +34,14 @@ Bot.prototype.nextMove = function(grid){
 	var bestStart={i:0,j:0};
 	var bestEnd={i:0,j:0};
 	var bestScore=-1;
-	var savedGrid = deepCopy(grid)//grid.slice();
-	 //grid.slice();
-	/*for (var i = 0; i < 9; i++) {
-		var t=[]
-        for (var j = 0; j < 8; j++) {
-        	t.push(grid[i][j]);
-        }
-        savedGrid.push(t);
-       }*/
+	var savedGrid = deepCopy(grid);
 	for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
             if (this.engine.grid[i][j] === this.id) {
             	var start = {i:i, j:j}
             	var moves = this.engine.generateMoves(start);
-            	for(var move in moves){
+            	for(var m in moves){
+            		var move = moves[m].move;
             		if(!this.engine.validateMove(start, move, this.id))
             			continue;
             		this.engine.move(start, move);
