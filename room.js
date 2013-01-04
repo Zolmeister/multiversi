@@ -161,9 +161,9 @@ Room.prototype.move = function(data, player) {
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
 	console.log("adding bot");
-	//if (this.admin === admin) {
+	if (this.admin === admin) {
 		this.add(new Bot());
-	//}
+	}
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {

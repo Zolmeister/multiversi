@@ -2,6 +2,7 @@
 {<js}
 <!-- TODO: use require.js -->
 <script src="/js/settings.js"></script>
+<script src="/js/utils.js"></script>
 <script src="/js/sockets.js"></script>
 <script src="/js/rulesset.js"></script>
 <script src="/js/engine.js"></script>

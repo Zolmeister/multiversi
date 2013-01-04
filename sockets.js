@@ -1,6 +1,7 @@
 var Games = {};
 //dict of rooms by id
 var Room = require('./room');
+var util = require("./utils");
 
 function Player(id, socket) {
 	this.id = id;
@@ -8,19 +9,6 @@ function Player(id, socket) {
 	//this.color
 	//color is now based on index in player list
 	this.bot = false;
-}
-
-function isInt(n) {
-	return typeof n === "number" && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
-}
-
-function getPlayer(room, id) {
-	for (var i in room.players) {
-		var player = room.players[i]
-		if (player.id == id) {
-			return player;
-		}
-	}
 }
 
 //TODO: proper error handling and input validation
@@ -32,7 +20,7 @@ module.exports = function(socket) {
 
 	socket.on("join", function(data) {
 		//data: {room: target room id}
-		if (!data || !isInt(data.room)) {
+		if (!data || !util.isInt(data.room)) {
 			socket.emit("error", "joining room, bad data")
 			return;
 		}
@@ -111,17 +99,16 @@ module.exports = function(socket) {
 		//TODO: bans by IP, instead of bans by player Id
 		//TODO: data validation
 		var action = data.action;
-		var targetPlayer = getPlayer(room, data.target);
+		var targetPlayer = util.getPlayer(room, data.target);
 		if (action === "kick") {
 			room.kick(targetPlayer, player);
 		} else if (action === "ban") {
 			room.ban(targetPlayer, player);
 		} else if (action === "start") {
 			room.adrminStart(player);
-		} else if (action === "addBot"){
+		} else if (action === "addBot") {
 			room.addBot(player);
-		}
-		 else {
+		} else {
 			socket.emit("error", "bad call");
 		}
 	})

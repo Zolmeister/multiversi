@@ -1,9 +1,8 @@
-
 var RulesSet = RulesSet || require('./rulesset.js');
 //room: {players: [list of player Objects], turn: player object}
 function Game(room) {
 	this.room = room;
-    this.rules = new RulesSet();
+	this.rules = new RulesSet();
 	this.grid = this.rules.newBoard();
 };
 
@@ -16,10 +15,9 @@ var directions = {
 	downRight : 5
 }
 
-// Util
 Game.prototype.newGame = function() {
 	this.grid = this.rules.newBoard();
-    this.rules.setInitialPositions(this.grid, this.room.players);
+	this.rules.setInitialPositions(this.grid, this.room.players);
 }
 
 Game.prototype.spaceInDirection = function(start, direction) {
@@ -57,9 +55,9 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
-    if (space.i < 0 || space.i >= this.rules.width || space.j < 0 || space.j >= this.rules.height) {
-        return undefined;
-    }
+	if (space.i < 0 || space.i >= this.rules.width || space.j < 0 || space.j >= this.rules.height) {
+		return undefined;
+	}
 
 	return space;
 }
@@ -76,128 +74,128 @@ Game.prototype.directionFrom = function(start, end) {
 			return directions.up;
 		}
 	} else if (di < 0) {
-        if (di % 2 === 0) {
-            if (dj === di / 2) {
-                return directions.upLeft;
-            } else if (dj == di / -2) {
-                return directions.downLeft;
-            }
-        } else {
-            if (start.i % 2 === 1) {
-                if (dj === (di - 1) / 2) {
-                    return directions.upLeft;
-                } else if (dj === (di + 1) / -2) {
-                    return directions.downLeft;
-                }
-            } else {
-                if (dj === (di + 1) / 2) {
-                    return directions.upLeft;
-                } else if (dj === (di - 1) / -2) {
-                    return directions.downLeft;
-                }
-            }
-        }
+		if (di % 2 === 0) {
+			if (dj === di / 2) {
+				return directions.upLeft;
+			} else if (dj == di / -2) {
+				return directions.downLeft;
+			}
+		} else {
+			if (start.i % 2 === 1) {
+				if (dj === (di - 1) / 2) {
+					return directions.upLeft;
+				} else if (dj === (di + 1) / -2) {
+					return directions.downLeft;
+				}
+			} else {
+				if (dj === (di + 1) / 2) {
+					return directions.upLeft;
+				} else if (dj === (di - 1) / -2) {
+					return directions.downLeft;
+				}
+			}
+		}
 	} else {
-        if (di % 2 === 0) {
-            if (dj == di / -2) {
-                return directions.upRight;
-            } else if (dj == di / 2) {
-                return directions.downRight;
-            }
-        } else {
-            if (start.i % 2 === 1) {
-                if (dj === (di + 1) / -2) {
-                    return directions.upRight;
-                } else if (dj == (di - 1) / 2) {
-                    return directions.downRight;
-                }
-            } else {
-                if (dj === (di - 1) / -2) {
-                    return directions.upRight;
-                } else if (dj == (di + 1) / 2) {
-                    return directions.downRight;
-                }
-            }
-        }
+		if (di % 2 === 0) {
+			if (dj == di / -2) {
+				return directions.upRight;
+			} else if (dj == di / 2) {
+				return directions.downRight;
+			}
+		} else {
+			if (start.i % 2 === 1) {
+				if (dj === (di + 1) / -2) {
+					return directions.upRight;
+				} else if (dj == (di - 1) / 2) {
+					return directions.downRight;
+				}
+			} else {
+				if (dj === (di - 1) / -2) {
+					return directions.upRight;
+				} else if (dj == (di + 1) / 2) {
+					return directions.downRight;
+				}
+			}
+		}
 	}
 
 	return undefined;
 }
-
 // returns possible move in direction
 //TODO: check redundant code against Game.spacesFrom
 Game.prototype.generateMoveInDirection = function(start, direction) {
-    
-    if (direction >= 6 || direction < 0) {
-        return undefined;
-    }
-    
-    var nextSpace = {
-        i : start.i,
-        j : start.j
-    }
-    var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
-    var spaces = [];
-    
-    while (true) {
-        nextSpace = this.spaceInDirection(nextSpace, direction);
-        if (!nextSpace) {
-            break;
-        }
-        nextValue = this.grid[nextSpace.i][nextSpace.j];
-        if (nextValue === startId || nextValue === -2) {
-            return undefined;
-        } else if (!this.rules.canJumpSpace(nextSpace)) {
-            return undefined;
-        }
-        
-        spaces.push(nextSpace);
 
-        if (nextValue == -1) {
-            break;
-        }
-    }
+	if (direction >= 6 || direction < 0) {
+		return undefined;
+	}
 
-    if (spaces.length === 0) {
-        return undefined;
-    }
+	var nextSpace = {
+		i : start.i,
+		j : start.j
+	}
+	var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
+	var spaces = [];
 
-    return spaces;
+	while (true) {
+		nextSpace = this.spaceInDirection(nextSpace, direction);
+		if (!nextSpace) {
+			break;
+		}
+		nextValue = this.grid[nextSpace.i][nextSpace.j];
+		if (nextValue === startId || nextValue === -2) {
+			return undefined;
+		} else if (!this.rules.canJumpSpace(nextSpace)) {
+			return undefined;
+		}
+
+		spaces.push(nextSpace);
+
+		if (nextValue == -1) {
+			break;
+		}
+	}
+
+	if (spaces.length === 0) {
+		return undefined;
+	}
+
+	return spaces;
 }
-
 //returns list of possible moves
 //Only called by client
 Game.prototype.generateMoves = function(start) {
-    var moves = {};
-    for (var direction = 0; direction < 6; direction++) {
-        var spaces = this.generateMoveInDirection(start, direction);
-        if (spaces) {
-            var space = spaces[spaces.length - 1];
-            moves[[space.i, space.j]] = spaces;
-            moves[[space.i, space.j]].move = {i: space.i, j:space.j};
-        }
-    }
-    return moves;
+	var moves = {};
+	for (var direction = 0; direction < 6; direction++) {
+		var spaces = this.generateMoveInDirection(start, direction);
+		if (spaces) {
+			var space = spaces[spaces.length - 1];
+			moves[[space.i, space.j]] = spaces;
+			moves[[space.i, space.j]].move = {
+				i : space.i,
+				j : space.j
+			};
+		}
+	}
+	return moves;
 }
-
 // returns array of spaces in straight line from start to end, if possible
 Game.prototype.spacesFrom = function(start, end) {
-    var direction = this.directionFrom(start, end);
-    if (direction === undefined) {
-        return undefined;
-    }
+	var direction = this.directionFrom(start, end);
+	if (direction === undefined) {
+		return undefined;
+	}
 
-    var spaces = this.generateMoveInDirection(start, direction);
-    if (!spaces) {
-        return undefined;
-    }
+	var spaces = this.generateMoveInDirection(start, direction);
+	if (!spaces) {
+		return undefined;
+	}
 
-    var space = spaces[spaces.length - 1];
-    if (space.i !== end.i || space.j !== end.j) {
-        return undefined;
-    }
+	var space = spaces[spaces.length - 1];
+	if (space.i !== end.i || space.j !== end.j) {
+		return undefined;
+	}
 
-    return spaces;
+	return spaces;
 }
 
 Game.prototype.validateMove = function(start, end, playerId) {
@@ -207,90 +205,85 @@ Game.prototype.validateMove = function(start, end, playerId) {
 	if (this.grid[end.i][end.j] !== -1) {
 		return false;
 	}
-	
-    var direction = this.directionFrom(start, end);
-    if (direction === undefined) {
-        return false;
-    }
 
-    var spaces = this.generateMoveInDirection(start, direction);
-    if (spaces && spaces.length > 0) {
-        var space = spaces[spaces.length - 1];
-            if (space.i === end.i && space.j === end.j) {
-                return true;
-            }
-    }
-    return false;
+	var direction = this.directionFrom(start, end);
+	if (direction === undefined) {
+		return false;
+	}
+
+	var spaces = this.generateMoveInDirection(start, direction);
+	if (spaces && spaces.length > 0) {
+		var space = spaces[spaces.length - 1];
+		if (space.i === end.i && space.j === end.j) {
+			return true;
+		}
+	}
+	return false;
 }
 
 Game.prototype.move = function(start, end) {
 	// Make grid changes
 	var startId = this.grid[start.i][start.j];
-    var spaces = this.spacesFrom(start, end);
-    
-    if(!spaces){
-		console.log("no spaces");
-		return;    	
-    }
-    
-    for (var i = 0; i < spaces.length; i++) {
-        var space = spaces[i];
-        this.grid[space.i][space.j] = startId;
-    }
-}
+	var spaces = this.spacesFrom(start, end);
 
+	if (!spaces) {
+		console.log("no spaces");
+		return;
+	}
+
+	for (var i = 0; i < spaces.length; i++) {
+		var space = spaces[i];
+		this.grid[space.i][space.j] = startId;
+	}
+}
 //return array of player scores in turn order
 //return [0, 0, 0] when not 3 players
 Game.prototype.getScores = function() {
 
-    if (this.room.players.length !== 3) {
-        return [0, 0, 0];
-    }
+	if (this.room.players.length !== 3) {
+		return [0, 0, 0];
+	}
 
-    var scores = {};
-    for (var i = 0; i < 3; i++) {
-        scores[this.room.players[i].id] = 0;
-    }
+	var scores = {};
+	for (var i = 0; i < 3; i++) {
+		scores[this.room.players[i].id] = 0;
+	}
 
-    for (var i = 0; i < this.rules.width; i++) {
-        for (var j = 0; j < this.rules.height; j++) {
-            var id = this.grid[i][j];
-            if (id === -1 || id === -2) {
-                continue;
-            }
-            scores[id]++;
-        }
-    }
-    return [scores[this.room.players[0].id],
-            scores[this.room.players[1].id],
-            scores[this.room.players[2].id]];
+	for (var i = 0; i < this.rules.width; i++) {
+		for (var j = 0; j < this.rules.height; j++) {
+			var id = this.grid[i][j];
+			if (id === -1 || id === -2) {
+				continue;
+			}
+			scores[id]++;
+		}
+	}
+	return [scores[this.room.players[0].id], scores[this.room.players[1].id], scores[this.room.players[2].id]];
 }
 
 Game.prototype.getPlayerScore = function(playerId) {
 	var score = 0;
-    for (var i = 0; i < this.rules.width; i++) {
-        for (var j = 0; j < this.rules.height; j++) {
-            var id = this.grid[i][j];
-            if(id === playerId){
-            	score++;
-            }
-        }
-    }
-    return score;
+	for (var i = 0; i < this.rules.width; i++) {
+		for (var j = 0; j < this.rules.height; j++) {
+			var id = this.grid[i][j];
+			if (id === playerId) {
+				score++;
+			}
+		}
+	}
+	return score;
 }
-
 //replace grid instances of playerFrom, to playerTO
-Game.prototype.replacePlayer = function(playerFromId, playerToId){
-    for (var i = 0; i < this.rules.width; i++) {
-        for (var j = 0; j < this.rules.height; j++) {
-            if (this.grid[i][j] === playerFromId) {
-                this.grid[i][j] = playerToId;
-            }
-        }
-    }
+Game.prototype.replacePlayer = function(playerFromId, playerToId) {
+	for (var i = 0; i < this.rules.width; i++) {
+		for (var j = 0; j < this.rules.height; j++) {
+			if (this.grid[i][j] === playerFromId) {
+				this.grid[i][j] = playerToId;
+			}
+		}
+	}
 }
-
-if (typeof module === "undefined")
+if ( typeof module === "undefined")
 	module = {}
 module.exports = Game;
 

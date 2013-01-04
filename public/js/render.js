@@ -41,10 +41,6 @@ var Render = function(canvasId, room) {
 
 	this.centerSpace = this.hexSpaceCenter(4, 3);
 }
-// Util
-function distance2(x1, y1, x2, y2) {
-	return Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2);
-}
 
 Render.prototype.hexSpaceCenter = function(i, j) {
 
@@ -157,7 +153,7 @@ Render.prototype.onClick = function(e) {
 		this.possibleMoves = {};
 	} else {
 		// Validate locally
-		if (!this.possibleMoves[[space.i, space.j]]){
+		if (!this.possibleMoves[[space.i, space.j]]) {
 			return;
 		}
 
@@ -260,11 +256,11 @@ Render.prototype.drawHexSpace = function(x, y, radius, fill) {
 	if (fill) {
 		this.context.fillStyle = fill;
 		this.context.fill();
-		if(DEBUG){
+		if (DEBUG) {
 			this.context.fillStyle = "#000";
 			this.context.font = "12px sans-serif";
-			var space = this.spaceAt(x,y);
-			this.context.fillText(space.i+" "+space.j,-6,2);
+			var space = this.spaceAt(x, y);
+			this.context.fillText(space.i + " " + space.j, -6, 2);
 		}
 	}
 	this.context.stroke();
