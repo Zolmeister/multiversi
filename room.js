@@ -1,5 +1,6 @@
 var Game = require("./public/js/engine");
 var Bot = require("./bots");
+var settings = require("./settings");
 var roomCnt = 0;
 function nextRoomId() {
 	return roomCnt++;
@@ -161,7 +162,7 @@ Room.prototype.move = function(data, player) {
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
 	console.log("adding bot");
-	if (this.admin === admin) {
+	if (this.admin === admin || settings.DEBUG) {
 		this.add(new Bot());
 	}
 }
