@@ -1,3 +1,4 @@
+var RulesSet = require("./public/js/rulesset");
 var Game = require("./public/js/engine");
 var Bot = require("./bots");
 var roomCnt = 0;
@@ -13,7 +14,7 @@ function Room() {
 	this.openIds = [];
 	//list of removed player ids, for grid replacement
 	this.banned = [];
-	this.game = new Game(this);
+	this.game = new Game(this, new RulesSet());
 	this.admin = undefined;
 	//player
 	this.turn = 0;

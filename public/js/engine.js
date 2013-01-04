@@ -1,8 +1,10 @@
 
 //room: {players: [list of player Objects], turn: player object}
-function Game(room) {
+function Game(room, rules) {
 	this.room = room;
-	this.grid = this.newBoard();
+    //this.rules = new RulesSet();
+    this.rules = rules;
+	this.grid = this.rules.newBoard();
 };
 
 var directions = {
@@ -15,36 +17,9 @@ var directions = {
 }
 
 // Util
-Game.prototype.newBoard = function() {
-	var grid = new Array(9);
-	for (var i = 0; i < 9; i++) {
-		grid[i] = new Array(8);
-		for (var j = 0; j < 8; j++) {
-			if (j == 0 && (i < 2 || i > 6)) {
-				grid[i][j] = -2;
-
-			} else if ((j == 1 || j == 5 || j == 6) && (i == 0 || i == 8)) {
-				grid[i][j] = -2;
-
-			} else if (j == 7 && !(i == 3 || i == 5)) {
-				grid[i][j] = -2;
-
-			} else {
-				grid[i][j] = -1;
-			}
-		}
-	}
-	return grid;
-}
-
 Game.prototype.newGame = function() {
-	this.grid = this.newBoard();
-	this.grid[3][3] = this.room.players[0].id;
-	this.grid[5][4] = this.room.players[0].id;
-	this.grid[4][2] = this.room.players[1].id;
-	this.grid[4][4] = this.room.players[1].id;
-	this.grid[3][4] = this.room.players[2].id;
-	this.grid[5][3] = this.room.players[2].id;
+	this.grid = this.rules.newBoard();
+    this.rules.setInitialPositions(this.grid, this.room.players);
 }
 
 Game.prototype.spaceInDirection = function(start, direction) {
@@ -82,7 +57,7 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
-    if (space.i < 0 || space.i > 8 || space.j < 0 || space.j > 7) {
+    if (space.i < 0 || space.i >= this.rules.width || space.j < 0 || space.j >= this.rules.height) {
         return undefined;
     }
 
@@ -172,7 +147,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         if (nextValue === startId || nextValue === -2) {
             return undefined;
-        } else if ((nextSpace.i == 4 && nextSpace.j == 2) || ((nextSpace.j == 3 || nextSpace.j == 4) && (nextSpace.i >=3 && nextSpace.i <= 5))) {
+        } else if (!this.rules.canJumpSpace(nextSpace)) {
             return undefined;
         }
         
@@ -197,7 +172,7 @@ Game.prototype.generateMoves = function(start) {
     for (var direction = 0; direction < 6; direction++) {
         var spaces = this.generateMoveInDirection(start, direction);
         if (spaces) {
-            var space = spaces[spaces.length -1 ];
+            var space = spaces[spaces.length - 1];
             moves[[space.i, space.j]] = spaces;
         }
     }
@@ -240,7 +215,7 @@ Game.prototype.validateMove = function(start, end, playerId) {
     var spaces = this.generateMoveInDirection(start, direction);
     if (spaces && spaces.length > 0) {
         var space = spaces[spaces.length - 1];
-            if (space && space.i === end.i && space.j === end.j) {
+            if (space.i === end.i && space.j === end.j) {
                 return true;
             }
     }
@@ -251,10 +226,12 @@ Game.prototype.move = function(start, end) {
 	// Make grid changes
 	var startId = this.grid[start.i][start.j];
     var spaces = this.spacesFrom(start, end);
+    
     if(!spaces){
 		console.log("no spaces");
 		return;    	
     }
+    
     for (var i = 0; i < spaces.length; i++) {
         var space = spaces[i];
         this.grid[space.i][space.j] = startId;
@@ -274,8 +251,8 @@ Game.prototype.getScores = function() {
         scores[this.room.players[i].id] = 0;
     }
 
-    for (var i = 0; i < 9; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (var i = 0; i < this.rules.width; i++) {
+        for (var j = 0; j < this.rules.height; j++) {
             var id = this.grid[i][j];
             if (id === -1 || id === -2) {
                 continue;
@@ -290,8 +267,8 @@ Game.prototype.getScores = function() {
 
 Game.prototype.getPlayerScore = function(playerId) {
 	var score = 0;
-    for (var i = 0; i < 9; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (var i = 0; i < this.rules.width; i++) {
+        for (var j = 0; j < this.rules.height; j++) {
             var id = this.grid[i][j];
             if(id === playerId){
             	score++;
@@ -303,15 +280,16 @@ Game.prototype.getPlayerScore = function(playerId) {
 
 //replace grid instances of playerFrom, to playerTO
 Game.prototype.replacePlayer = function(playerFromId, playerToId){
-    for (var i = 0; i < 9; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (var i = 0; i < this.rules.width; i++) {
+        for (var j = 0; j < this.rules.height; j++) {
             if (this.grid[i][j] === playerFromId) {
                 this.grid[i][j] = playerToId;
             }
         }
     }
 }
-if(typeof module == "undefined")
-	module={}
+
+if (typeof module === "undefined")
+	module = {}
 module.exports = Game;
 
