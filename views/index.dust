@@ -1,6 +1,7 @@
 {>"base.dust"/}
 {<js}
 <!-- TODO: use require.js -->
+<script src="/js/settings.js"></script>
 <script src="/js/sockets.js"></script>
 <script src="/js/engine.js"></script>
 <script src="/js/render.js"></script>

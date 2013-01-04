@@ -260,6 +260,12 @@ Render.prototype.drawHexSpace = function(x, y, radius, fill) {
 	if (fill) {
 		this.context.fillStyle = fill;
 		this.context.fill();
+		if(DEBUG){
+			this.context.fillStyle = "#000";
+			this.context.font = "12px sans-serif";
+			var space = this.spaceAt(x,y);
+			this.context.fillText(space.i+" "+space.j,-6,2);
+		}
 	}
 	this.context.stroke();
 
