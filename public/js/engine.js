@@ -268,13 +268,12 @@ Game.prototype.getScores = function() {
 			if (id === -1 || id === -2) {
 				continue;
 			}
+            if (!scores[id]) {
+                scores[id] = 0;
+            }
 			scores[id]++;
 		}
 	}
-
-    if (scores.length !== 3) {
-        return {};
-    }
 
 	return scores;
 }
