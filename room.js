@@ -45,6 +45,7 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
 			id : p.id,
 			//color : p.color,
 			//color is now based on index in player list
+			score : p.score,
 			bot : p.bot,
 			removed : p.removed
 		}
@@ -85,6 +86,7 @@ Room.prototype.add = function(player, callback) {
 			this.players[slot] = player;
 			//replace open space with new player
 			this.game.replacePlayer(openId, player.id);
+			this.setScores();
 			//replace previous player
 			this.update("board", this.game.grid);
 			//TODO: make this more efficient
@@ -144,7 +146,6 @@ Room.prototype.move = function(data, player) {
 		console.log("tried to move, but not your turn");
 		return;
 	}
-	console.log("move");
 	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
 		console.log("bad move");
@@ -152,23 +153,40 @@ Room.prototype.move = function(data, player) {
 		console.log(data);
 		return;
 	}
-
-	this.game.move(data.start, data.end);
+	var scoreDiff = this.game.move(data.start, data.end);
+	this.mergeScores(scoreDiff);
 	this.sendAll("move", data);
 	this.turn = ++this.turn % 3;
 	this.update("gameState", this.gameState());
 
 	var curPlayer = this.players[this.turn];
 	if (curPlayer.bot) {
-		console.log("bot play");
+		console.log("bot play")
 		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
 		this.move(move, curPlayer);
 	}
 }
+
+Room.prototype.mergeScores = function(scores) {
+	var scoreDiff = scores
+	for (var s in scoreDiff) {
+		if (this.getPlayer(s)){
+			this.getPlayer(s).score += scoreDiff[s];
+		}
+	}
+}
+Room.prototype.setScores = function(){
+	var scores = this.game.getScores();
+	for(var s in scores){
+		if (this.getPlayer(s)){
+			this.getPlayer(s).score = scores[s];
+		}
+	}
+}
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
-	console.log("adding bot");
 	if (this.admin === admin || settings.DEBUG) {
+		console.log("adding bot");
 		this.add(new Bot());
 	}
 }
@@ -195,9 +213,10 @@ Room.prototype.adminStart = function(starter) {
 Room.prototype.newGame = function() {
 	this.playing = true;
 	this.started = true;
-	this.game.newGame();
+	this.mergeScores(this.game.newGame());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
+	this.update("players", this.publicPlayerList());
 	this.update("board", this.game.grid);
 }
 //TODO: make more efficient
@@ -205,8 +224,7 @@ Room.prototype.gameState = function() {
 	var state = {
 		isPublic : this.isPublic,
 		playing : this.playing,
-		turn : this.turn,
-		scores : this.game.getScores()
+		turn : this.turn
 	}
 	return state;
 }

@@ -15,7 +15,7 @@ function deepCopy(grid) {
 var botCount = 100;
 //TODO: use uuid
 function newBotId() {
-	return botCount++;
+	return (botCount++)+"";
 }
 
 function isInt(n) {
@@ -23,7 +23,7 @@ function isInt(n) {
 }
 var roomCnt = 0;
 function nextRoomId() {
-	return roomCnt++;
+	return (roomCnt++)+"";
 }
 
 exports.deepCopy = deepCopy;

@@ -18,6 +18,7 @@ var directions = {
 Game.prototype.newGame = function() {
 	this.grid = this.rules.newBoard();
 	this.rules.setInitialPositions(this.grid, this.room.players);
+	return this.getScores();
 }
 
 Game.prototype.spaceInDirection = function(start, direction) {
@@ -225,6 +226,8 @@ Game.prototype.move = function(start, end) {
 	// Make grid changes
 	var startId = this.grid[start.i][start.j];
 	var spaces = this.spacesFrom(start, end);
+	var scoreDiff = {};
+	scoreDiff[startId] = 0;
 
 	if (!spaces) {
 		console.log("no spaces");
@@ -233,15 +236,26 @@ Game.prototype.move = function(start, end) {
 
 	for (var i = 0; i < spaces.length; i++) {
 		var space = spaces[i];
+		var gridSpace = this.grid[space.i][space.j];
+
+		if (gridSpace !== startId) {
+			if (scoreDiff[gridSpace])
+				scoreDiff[gridSpace]--;
+			else
+				scoreDiff[gridSpace] = -1;
+			scoreDiff[startId]++;
+		}
+
 		this.grid[space.i][space.j] = startId;
 	}
+	return scoreDiff;
 }
-//return array of player scores in turn order
-//return [0, 0, 0] when not 3 players
+//return dist of player scores
+//return {} when not 3 players
 Game.prototype.getScores = function() {
 
 	if (this.room.players.length !== 3) {
-		return [0, 0, 0];
+		return {};
 	}
 
 	var scores = {};
@@ -258,7 +272,7 @@ Game.prototype.getScores = function() {
 			scores[id]++;
 		}
 	}
-	return [scores[this.room.players[0].id], scores[this.room.players[1].id], scores[this.room.players[2].id]];
+	return scores;
 }
 
 Game.prototype.getPlayerScore = function(playerId) {

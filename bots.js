@@ -4,6 +4,7 @@ var util = require("./utils");
 var Bot = function() {
 	this.engine = new Game({});
 	this.id = util.newBotId();
+	this.score = 0;
 	this.socket = {
 		emit : function() {
 		}

@@ -21,11 +21,33 @@ Room.prototype.currentPlayerId = function(){
 	return this.players[this.turn].id;
 }
 
+Room.prototype.getPlayer = function(id) {
+	for (var i in this.players) {
+		var player = this.players[i];
+		if (player.id === id) {
+			return player;
+		}
+	}
+}
+
 Room.prototype.move = function(data) {
 	console.log("move");
 	console.log(data);
-	this.game.move(data.start, data.end);
+	var scoreDiff = this.game.move(data.start, data.end);
+	this.mergeScores(scoreDiff);
 	this.renderer.draw();
+	for (var i = 0; i < this.players.length; i++) {
+            $("#p" + i + "-score").html(this.players[i].score);
+        }
+}
+
+Room.prototype.mergeScores = function(scores) {
+	var scoreDiff = scores
+	for (var s in scoreDiff) {
+		if (this.getPlayer(s)){
+			this.getPlayer(s).score += scoreDiff[s];
+		}
+	}
 }
 
 Room.prototype.update = function(data) {
@@ -34,18 +56,16 @@ Room.prototype.update = function(data) {
 
 	if (target === "players") {
 		this.players = data;
+		for (var i = 0; i < this.players.length; i++) {
+            $("#p" + i + "-score").html(this.players[i].score);
+        }
 	} else if (target === "gameState") {
 		this.turn=data.turn;
-		console.log("turn")
-		console.log(this.turn)
 		this.renderer.draw();
 
         $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
         $("#p" + this.turn).css('font-weight', 'bold');
-
-        for (var i = 0; i < 3; i++) {
-            $("#p" + i + "-score").html(data.scores[i]);
-        }
+        
 	} else if (target === "me") {
 		this.me = data;
 		this.renderer.draw();

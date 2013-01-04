@@ -158,7 +158,7 @@ Render.prototype.onClick = function(e) {
 		}
 
 		// Send move to server
-		this.game.move(this.clickedSpace, space);
+		this.room.move({start: this.clickedSpace, end: space});
 		this.room.connect.move({
 			start : this.clickedSpace,
 			end : space

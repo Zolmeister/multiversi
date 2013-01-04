@@ -6,6 +6,7 @@ var util = require("./utils");
 function Player(id, socket) {
 	this.id = id;
 	this.socket = socket;
+	this.score = 0;
 	//this.color
 	//color is now based on index in player list
 	this.bot = false;
