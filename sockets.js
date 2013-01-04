@@ -99,7 +99,7 @@ module.exports = function(socket) {
 		//TODO: bans by IP, instead of bans by player Id
 		//TODO: data validation
 		var action = data.action;
-		var targetPlayer = util.getPlayer(room, data.target);
+		var targetPlayer = room.getPlayer(data.target);
 		if (action === "kick") {
 			room.kick(targetPlayer, player);
 		} else if (action === "ban") {

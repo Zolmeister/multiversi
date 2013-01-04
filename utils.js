@@ -21,17 +21,12 @@ function newBotId() {
 function isInt(n) {
 	return typeof n === "number" && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
 }
-
-function getPlayer(room, id) {
-	for (var i in room.players) {
-		var player = room.players[i]
-		if (player.id == id) {
-			return player;
-		}
-	}
+var roomCnt = 0;
+function nextRoomId() {
+	return roomCnt++;
 }
 
 exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
-exports.getPlayer = getPlayer;
+exports.nextRoomId = nextRoomId;

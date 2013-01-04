@@ -1,13 +1,10 @@
 var Game = require("./public/js/engine");
 var Bot = require("./bots");
+var util = require("./utils");
 var settings = require("./settings");
-var roomCnt = 0;
-function nextRoomId() {
-	return roomCnt++;
-}
 
 function Room() {
-	this.id = nextRoomId();
+	this.id = util.nextRoomId();
 	//TODO: replace with uuid?
 	this.players = [];
 	//list of player objects
@@ -25,6 +22,15 @@ function Room() {
 	//for new rooms, change on hit 3 players
 	this.playing = false;
 	//true if 3 players
+}
+
+Room.prototype.getPlayer = function(id) {
+	for (var i in this.players) {
+		var player = this.players[i];
+		if (player.id === id) {
+			return player;
+		}
+	}
 }
 
 Room.prototype.currentPlayerId = function() {
@@ -151,11 +157,11 @@ Room.prototype.move = function(data, player) {
 	this.sendAll("move", data);
 	this.turn = ++this.turn % 3;
 	this.update("gameState", this.gameState());
-	
+
 	var curPlayer = this.players[this.turn];
-	if(curPlayer.bot){
+	if (curPlayer.bot) {
 		console.log("bot play");
-		var move = curPlayer.nextMove(deepCopy(this.game.grid));
+		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
 		this.move(move, curPlayer);
 	}
 }
@@ -209,20 +215,6 @@ Room.prototype.setAdmin = function(player) {
 }
 Room.prototype.privatize = function() {
 	this.isPublic = false;
-}
-//Util
-function deepCopy(grid){
-	var s=[];
-	if(!grid[0] || !grid[0][0])
-		return [];
-	for (var i = 0; i < grid.length; i++) {
-		var t=[]
-        for (var j = 0; j < grid[0].length; j++) {
-        	t.push(grid[i][j]);
-        }
-        s.push(t);
-       }
-   return s;
 }
 
 module.exports = Room;
