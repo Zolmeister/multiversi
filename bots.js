@@ -48,8 +48,7 @@ Bot.prototype.nextMove = function(grid){
             if (this.engine.grid[i][j] === this.id) {
             	var start = {i:i, j:j}
             	var moves = this.engine.generateMoves(start);
-            	for(var m in moves){
-            		var move = moves[m];
+            	for(var move in moves){
             		if(!this.engine.validateMove(start, move, this.id))
             			continue;
             		this.engine.move(start, move);

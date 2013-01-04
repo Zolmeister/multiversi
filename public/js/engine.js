@@ -156,16 +156,16 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
     if (direction >= 6 || direction < 0) {
         return undefined;
     }
-
-    var space = {
+    
+    var nextSpace = {
         i : start.i,
         j : start.j
-    };
-    var startId = this.grid[space.i][space.j];
-    var nextSpace = {}, nextValue;
+    }
+    var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
+    var spaces = [];
     
     while (true) {
-        nextSpace = this.spaceInDirection(space, direction);
+        nextSpace = this.spaceInDirection(nextSpace, direction);
         if (!nextSpace) {
             break;
         }
@@ -176,33 +176,32 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
             return undefined;
         }
         
-        space = nextSpace;
+        spaces.push(nextSpace);
 
         if (nextValue == -1) {
             break;
         }
     }
 
-    if (space && space.i === start.i && space.j === start.j) {
-        return undefined;
-    } else if (space && this.grid[space.i][space.j] !== -1) {
+    if (spaces.length === 0) {
         return undefined;
     }
 
-    return space;
+    return spaces;
 }
 
 //returns list of possible moves
 //Only called by client
 Game.prototype.generateMoves = function(start) {
-    var spaces = {};
+    var moves = {};
     for (var direction = 0; direction < 6; direction++) {
-        var move = this.generateMoveInDirection(start, direction);
-        if (move) {
-            spaces[[move.i, move.j]] = {i: move.i, j: move.j};
+        var spaces = this.generateMoveInDirection(start, direction);
+        if (spaces) {
+            var space = spaces[spaces.length -1 ];
+            moves[[space.i, space.j]] = spaces;
         }
     }
-    return spaces;
+    return moves;
 }
 
 // returns array of spaces in straight line from start to end, if possible
@@ -212,32 +211,16 @@ Game.prototype.spacesFrom = function(start, end) {
         return undefined;
     }
 
-    var space = {
-        i : start.i,
-        j : start.j
-    };
-    var startId = this.grid[space.i][space.j];
-    var spaces = [];
-    var nextSpace = {}, nextValue;
-
-    while (true) {
-        nextSpace = this.spaceInDirection(space, direction);
-        if (!nextSpace) {
-            break;
-        }
-        nextValue = this.grid[nextSpace.i][nextSpace.j];
-        
-        if (nextValue == startId || nextValue == -2) {
-            return undefined;
-        } else {
-            spaces.push(nextSpace);
-            space = nextSpace;
-        }
-
-        if (nextValue == -1) {
-            break;
-        }
+    var spaces = this.generateMoveInDirection(start, direction);
+    if (!spaces) {
+        return undefined;
     }
+
+    var space = spaces[spaces.length - 1];
+    if (space.i !== end.i || space.j !== end.j) {
+        return undefined;
+    }
+
     return spaces;
 }
 
@@ -254,9 +237,12 @@ Game.prototype.validateMove = function(start, end, playerId) {
         return false;
     }
 
-    var space = this.generateMoveInDirection(start, direction);
-    if (space && space.i === end.i && space.j === end.j) {
-        return true;
+    var spaces = this.generateMoveInDirection(start, direction);
+    if (spaces && spaces.length > 0) {
+        var space = spaces[spaces.length - 1];
+            if (space && space.i === end.i && space.j === end.j) {
+                return true;
+            }
     }
     return false;
 }
@@ -328,3 +314,4 @@ Game.prototype.replacePlayer = function(playerFromId, playerToId){
 if(typeof module == "undefined")
 	module={}
 module.exports = Game;
+
