@@ -137,6 +137,8 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 	var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
 	var spaces = [];
 
+    var scores = this.getScores();
+
 	while (true) {
 		nextSpace = this.spaceInDirection(nextSpace, direction);
 		if (!nextSpace) {
@@ -148,6 +150,11 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 		} else if (!this.rules.canJumpSpace(nextSpace)) {
 			return undefined;
 		}
+
+        scores[nextValue] -= 1;
+        if (scores[nextValue] === 0) {
+            return 0;
+        }
 
 		spaces.push(nextSpace);
 

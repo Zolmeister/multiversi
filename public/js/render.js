@@ -12,8 +12,10 @@ var Render = function(canvasId, room) {
 	this.hexShape = {
 		radius : 36,
 		apothem : 31,
-		smallRadius : 33,
-		smallApothem : 28.6
+		smallRadius : 36,
+		smallApothem : 31
+		//smallRadius : 33,
+		//smallApothem : 28.6
 	}
 
 	this.xOffset = this.hexShape.radius + 1;

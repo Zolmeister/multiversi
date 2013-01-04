@@ -36,7 +36,7 @@ RulesSet.prototype.setInitialPositions = function(grid, players) {
 }
 
 RulesSet.prototype.canJumpSpace = function(space) {
-    if ((space.i == 4 && space.j == 2) || ((space.j == 3 || space.j == 4) && (space.i >=3 && space.i <= 5))) {
+    if (space.i == 4 && space.j == 3) {
         return false;
     }
 
