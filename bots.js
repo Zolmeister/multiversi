@@ -15,23 +15,41 @@ var Bot = function() {
 	};
 	this.bot = true;
 }
-
+//Util
+function deepCopy(grid){
+	var s=[];
+	if(!grid[0] || !grid[0][0])
+		return [];
+	for (var i = 0; i < grid.length; i++) {
+		var t=[]
+        for (var j = 0; j < grid[0].length; j++) {
+        	t.push(grid[i][j]);
+        }
+        s.push(t);
+       }
+   return s;
+}
 Bot.prototype.nextMove = function(grid){
 	this.engine.grid = grid;
 	var bestStart={i:0,j:0};
 	var bestEnd={i:0,j:0};
 	var bestScore=-1;
-	var savedGrid = grid.slice();
-	
+	var savedGrid = deepCopy(grid)//grid.slice();
+	 //grid.slice();
+	/*for (var i = 0; i < 9; i++) {
+		var t=[]
+        for (var j = 0; j < 8; j++) {
+        	t.push(grid[i][j]);
+        }
+        savedGrid.push(t);
+       }*/
 	for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 8; j++) {
             if (this.engine.grid[i][j] === this.id) {
-            	console.log("place: "+i+" "+j)
             	var start = {i:i, j:j}
             	var moves = this.engine.generateMoves(start);
             	for(var m in moves){
             		var move = moves[m];
-            		console.log(move);
             		if(!this.engine.validateMove(start, move, this.id))
             			continue;
             		this.engine.move(start, move);
@@ -41,12 +59,11 @@ Bot.prototype.nextMove = function(grid){
             			bestStart = start;
             			bestEnd = move;
             		}
-            		this.engine.grid = savedGrid;
+            		this.engine.grid = deepCopy(savedGrid);
             	}
             }
         }
     }
-    console.log({start: bestStart, end: bestEnd});
     return {start: bestStart, end: bestEnd};
 }
 

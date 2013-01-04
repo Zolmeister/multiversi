@@ -141,6 +141,8 @@ Room.prototype.move = function(data, player) {
 	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
 		console.log("bad move");
+		console.log(player.id)
+		console.log(data);
 		return;
 	}
 
@@ -152,15 +154,16 @@ Room.prototype.move = function(data, player) {
 	var curPlayer = this.players[this.turn];
 	if(curPlayer.bot){
 		console.log("bot play");
-		var move = curPlayer.nextMove(this.game.grid);
+		var move = curPlayer.nextMove(deepCopy(this.game.grid));
 		this.move(move, curPlayer);
 	}
 }
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
-	//if (this.admin === admin) {
+	console.log("adding bot");
+	if (this.admin === admin) {
 		this.add(new Bot());
-	//}
+	}
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {
@@ -205,6 +208,20 @@ Room.prototype.setAdmin = function(player) {
 }
 Room.prototype.privatize = function() {
 	this.isPublic = false;
+}
+//Util
+function deepCopy(grid){
+	var s=[];
+	if(!grid[0] || !grid[0][0])
+		return [];
+	for (var i = 0; i < grid.length; i++) {
+		var t=[]
+        for (var j = 0; j < grid[0].length; j++) {
+        	t.push(grid[i][j]);
+        }
+        s.push(t);
+       }
+   return s;
 }
 
 module.exports = Room;
