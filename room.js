@@ -55,8 +55,7 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
 }
 
 Room.prototype.update = function(target, data) {
-	console.log(target)
-	console.log(data)
+	util.log(target, data)
 	this.sendAll("update", {
 		target : target,
 		data : data
@@ -80,7 +79,7 @@ Room.prototype.add = function(player, callback) {
 				}
 			}
 			if ( typeof slot === "undefined") {
-				console.log("no slot")
+				util.log("no slot")
 				return;
 			}
 			this.players[slot] = player;
@@ -143,14 +142,14 @@ Room.prototype.sendAll = function(name, data) {//send to all players
 }
 Room.prototype.move = function(data, player) {
 	if (player.id !== this.currentPlayerId()) {
-		console.log("tried to move, but not your turn");
+		util.log("tried to move, but not your turn");
 		return;
 	}
 	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
-		console.log("bad move");
-		console.log(player.id)
-		console.log(data);
+		util.log("bad move");
+		util.log(player.id)
+		util.log(data);
 		return;
 	}
 	var scoreDiff = this.game.move(data.start, data.end);
@@ -161,7 +160,7 @@ Room.prototype.move = function(data, player) {
 
 	var curPlayer = this.players[this.turn];
 	if (curPlayer.bot) {
-		console.log("bot play")
+		util.log("bot play")
 		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
 		this.move(move, curPlayer);
 	}
@@ -186,7 +185,7 @@ Room.prototype.setScores = function(){
 //TODO: cleaner admin checking
 Room.prototype.addBot = function(admin) {
 	if (this.admin === admin || settings.DEBUG) {
-		console.log("adding bot");
+		util.log("adding bot");
 		this.add(new Bot());
 	}
 }
@@ -213,7 +212,8 @@ Room.prototype.adminStart = function(starter) {
 Room.prototype.newGame = function() {
 	this.playing = true;
 	this.started = true;
-	this.mergeScores(this.game.newGame());
+	this.game.newGame()
+	this.setScores(this.game.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
 	this.update("players", this.publicPlayerList());

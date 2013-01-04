@@ -18,7 +18,6 @@ var directions = {
 Game.prototype.newGame = function() {
 	this.grid = this.rules.newBoard();
 	this.rules.setInitialPositions(this.grid, this.room.players);
-	return this.getScores();
 }
 
 Game.prototype.spaceInDirection = function(start, direction) {

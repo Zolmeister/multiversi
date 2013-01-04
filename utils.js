@@ -1,3 +1,4 @@
+var sys = require('sys');
 function deepCopy(grid) {
 	var s = [];
 	if (!grid[0] || !grid[0][0])
@@ -25,8 +26,18 @@ var roomCnt = 0;
 function nextRoomId() {
 	return (roomCnt++)+"";
 }
+function log(name, object){
+	if(!object){
+		console.log(name);
+	}
+	else{
+		console.log(name);
+		console.log(sys.inspect(object));
+	}
+}
 
 exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
+exports.log = log;
