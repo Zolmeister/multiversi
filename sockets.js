@@ -1,25 +1,14 @@
 var Games = {};
 //dict of rooms by id
 var Room = require('./room');
+var util = require("./utils");
 
 function Player(id, socket) {
 	this.id = id;
 	this.socket = socket;
-	this.color
+	//this.color
+	//color is now based on index in player list
 	this.bot = false;
-}
-
-function isInt(n) {
-	return typeof n === "number" && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
-}
-
-function getPlayer(room, id) {
-	for (var i in room.players) {
-		var player = room.players[i]
-		if (player.id == id) {
-			return player;
-		}
-	}
 }
 
 //TODO: proper error handling and input validation
@@ -31,7 +20,7 @@ module.exports = function(socket) {
 
 	socket.on("join", function(data) {
 		//data: {room: target room id}
-		if (!data || !isInt(data.room)) {
+		if (!data || !util.isInt(data.room)) {
 			socket.emit("error", "joining room, bad data")
 			return;
 		}
@@ -50,7 +39,7 @@ module.exports = function(socket) {
 		//data: {}
 		var open = [];
 		for (var i in Games) {
-			if (Games[i].players.length < 3 && Games[i].started) {
+			if (!Games[i].playing && Games[i].isPublic) {
 				//private games that have started become public
 				open.push({
 					roomId : i,
@@ -88,13 +77,7 @@ module.exports = function(socket) {
 				});
 				newRoom.setAdmin(player);
 				for (var i = 0; i < 2; i++) {
-					var bot = new Player("bot", {
-						emit : function() {
-						}
-					});
-					//faked socket
-					bot.bot = true;
-					newRoom.add(bot);
+					newRoom.addBot(player);
 				}
 			} else {
 				newRoom.add(player, function(targetRoom) {
@@ -112,17 +95,19 @@ module.exports = function(socket) {
 	})
 
 	socket.on("roomAdmin", function(data) {
-		//data: {action: kick|ban|start, target: playerId}
+		//data: {action: kick|ban|start|addBot, target: playerId}
 		//TODO: bans by IP, instead of bans by player Id
 		//TODO: data validation
 		var action = data.action;
-		var targetPlayer = getPlayer(room, data.target);
+		var targetPlayer = room.getPlayer(data.target);
 		if (action === "kick") {
 			room.kick(targetPlayer, player);
 		} else if (action === "ban") {
 			room.ban(targetPlayer, player);
 		} else if (action === "start") {
 			room.adrminStart(player);
+		} else if (action === "addBot") {
+			room.addBot(player);
 		} else {
 			socket.emit("error", "bad call");
 		}
@@ -131,7 +116,7 @@ module.exports = function(socket) {
 	socket.on("move", function(data) {
 		//data: {start: {i: , j: }, end: {i: , j: }}
 		if (room) {
-			room.play(data, player);
+			room.move(data, player);
 		}
 	})
 }
