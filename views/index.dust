@@ -16,4 +16,6 @@
     <div id="p0">Player 1 <span id="p0-name"></span> (Red): <span id="p0-score">0</span></div>
     <div id="p1">Player 2 <span id="p1-name"></span> (Green): <span id="p1-score">0</span></div>
     <div id="p2">Player 3 <span id="p2-name"></span> (Purple): <span id="p2-score">0</span></div>
+
+    <button onClick='room.connect.roomAdmin("addBot", "")'>Add bot</button>
 {/body}

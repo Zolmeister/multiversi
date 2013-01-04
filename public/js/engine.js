@@ -158,12 +158,12 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 
 		spaces.push(nextSpace);
 
-		if (nextValue == -1) {
+		if (nextValue === -1) {
 			break;
 		}
 	}
 
-	if (spaces.length === 0) {
+	if (nextValue !== -1 || spaces.length === 0) {
 		return undefined;
 	}
 
@@ -261,14 +261,7 @@ Game.prototype.move = function(start, end) {
 //return {} when not 3 players
 Game.prototype.getScores = function() {
 
-	if (this.room.players.length !== 3) {
-		return {};
-	}
-
 	var scores = {};
-	for (var i = 0; i < 3; i++) {
-		scores[this.room.players[i].id] = 0;
-	}
 
 	for (var i = 0; i < this.rules.width; i++) {
 		for (var j = 0; j < this.rules.height; j++) {
@@ -279,6 +272,11 @@ Game.prototype.getScores = function() {
 			scores[id]++;
 		}
 	}
+
+    if (scores.length !== 3) {
+        return {};
+    }
+
 	return scores;
 }
 
