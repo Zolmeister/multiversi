@@ -1,5 +1,5 @@
 var Game = require("./public/js/engine");
-
+var Bot = require("./bots");
 var roomCnt = 0;
 function nextRoomId() {
 	return roomCnt++;
@@ -71,7 +71,7 @@ Room.prototype.add = function(player, callback) {
 					break;
 				}
 			}
-			if (typeof slot ==="undefined") {
+			if ( typeof slot === "undefined") {
 				console.log("no slot")
 				return;
 			}
@@ -133,21 +133,34 @@ Room.prototype.sendAll = function(name, data) {//send to all players
 	}
 }
 Room.prototype.move = function(data, player) {
-	if(player.id!==this.currentPlayerId()){
+	if (player.id !== this.currentPlayerId()) {
 		console.log("tried to move, but not your turn");
 		return;
 	}
-	console.log("move")
-	var valid = this.game.validateMove(data.start, data.end);
+	console.log("move");
+	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
 		console.log("bad move");
 		return;
 	}
 
 	this.game.move(data.start, data.end);
-	this.sendAll("move", data)
+	this.sendAll("move", data);
 	this.turn = ++this.turn % 3;
-	this.update("gameState", this.gameState())
+	this.update("gameState", this.gameState());
+	
+	var curPlayer = this.players[this.turn];
+	if(curPlayer.bot){
+		console.log("bot play");
+		var move = curPlayer.nextMove(this.game.grid);
+		this.move(move, curPlayer);
+	}
+}
+//TODO: cleaner admin checking
+Room.prototype.addBot = function(admin) {
+	//if (this.admin === admin) {
+		this.add(new Bot());
+	//}
 }
 Room.prototype.kick = function(target, kicker) {
 	if (this.admin === kicker) {
@@ -183,7 +196,7 @@ Room.prototype.gameState = function() {
 		isPublic : this.isPublic,
 		playing : this.playing,
 		turn : this.turn,
-        scores : this.game.getScores()
+		scores : this.game.getScores()
 	}
 	return state;
 }

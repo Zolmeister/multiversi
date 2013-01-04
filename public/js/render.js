@@ -151,19 +151,13 @@ Render.prototype.onClick = function(e) {
 
 		this.possibleMoves = this.game.generateMoves(space);
 
-		if (!this.possibleMoves) {
-			// means it's not client's turn, do nothing
-			this.possibleMoves = {};
-			return;
-		}
-
 	} else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
 		this.clickedSpace.i = -1;
 		this.clickedSpace.j = -1;
 		this.possibleMoves = {};
 	} else {
 		// Validate locally
-		if (!this.possibleMoves[[space.i, space.j]]) {
+		if (!this.possibleMoves[[space.i, space.j]]){
 			return;
 		}
 

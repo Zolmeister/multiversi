@@ -89,13 +89,7 @@ module.exports = function(socket) {
 				});
 				newRoom.setAdmin(player);
 				for (var i = 0; i < 2; i++) {
-					var bot = new Player("bot", {
-						emit : function() {
-						}
-					});
-					//faked socket
-					bot.bot = true;
-					newRoom.add(bot);
+					newRoom.addBot(player);
 				}
 			} else {
 				newRoom.add(player, function(targetRoom) {
@@ -113,7 +107,7 @@ module.exports = function(socket) {
 	})
 
 	socket.on("roomAdmin", function(data) {
-		//data: {action: kick|ban|start, target: playerId}
+		//data: {action: kick|ban|start|addBot, target: playerId}
 		//TODO: bans by IP, instead of bans by player Id
 		//TODO: data validation
 		var action = data.action;
@@ -124,7 +118,10 @@ module.exports = function(socket) {
 			room.ban(targetPlayer, player);
 		} else if (action === "start") {
 			room.adrminStart(player);
-		} else {
+		} else if (action === "addBot"){
+			room.addBot(player);
+		}
+		 else {
 			socket.emit("error", "bad call");
 		}
 	})
