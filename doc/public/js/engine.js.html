@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>engine.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = '../../', thisFile = 'public/js/engine.js', defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>engine.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">RulesSet</span> <span class="o">=</span> <span class="nx">RulesSet</span> <span class="o">||</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./rulesset.js&#39;</span><span class="p">);</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>room: {players: [list of player Objects], turn: player object}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">Game</span><span class="p">(</span><span class="nx">room</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">room</span> <span class="o">=</span> <span class="nx">room</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">rules</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RulesSet</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">newBoard</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">directions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">upRight</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">up</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">upLeft</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="nx">downLeft</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">down</span> <span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nx">downRight</span> <span class="o">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">newGame</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">newBoard</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">setInitialPositions</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">room</span><span class="p">.</span><span class="nx">players</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">spaceInDirection</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">direction</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">space</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">:</span> <span class="nx">start</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span>
+    <span class="nx">j</span> <span class="o">:</span> <span class="nx">start</span><span class="p">.</span><span class="nx">j</span>
+  <span class="p">};</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upRight</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">up</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upLeft</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downLeft</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">down</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downRight</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">width</span> <span class="o">||</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">space</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">directionFrom</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">di</span> <span class="o">=</span> <span class="nx">end</span><span class="p">.</span><span class="nx">i</span> <span class="o">-</span> <span class="nx">start</span><span class="p">.</span><span class="nx">i</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">dj</span> <span class="o">=</span> <span class="nx">end</span><span class="p">.</span><span class="nx">j</span> <span class="o">-</span> <span class="nx">start</span><span class="p">.</span><span class="nx">j</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">di</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">end</span><span class="p">.</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">down</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">j</span> <span class="o">&gt;</span> <span class="nx">end</span><span class="p">.</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">up</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">di</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">di</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="nx">di</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upLeft</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">==</span> <span class="nx">di</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downLeft</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upLeft</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downLeft</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upLeft</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downLeft</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">di</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">==</span> <span class="nx">di</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upRight</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">==</span> <span class="nx">di</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downRight</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upRight</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">==</span> <span class="p">(</span><span class="nx">di</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downRight</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">===</span> <span class="p">(</span><span class="nx">di</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">upRight</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dj</span> <span class="o">==</span> <span class="p">(</span><span class="nx">di</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">directions</span><span class="p">.</span><span class="nx">downRight</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>returns possible move in direction
+TODO: check redundant code against Game.spacesFrom</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">generateMoveInDirection</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">direction</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="o">||</span> <span class="nx">direction</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">nextSpace</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">:</span> <span class="nx">start</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span>
+    <span class="nx">j</span> <span class="o">:</span> <span class="nx">start</span><span class="p">.</span><span class="nx">j</span>
+  <span class="p">}</span>
+  <span class="kd">var</span> <span class="nx">nextValue</span><span class="p">,</span> <span class="nx">startId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">nextSpace</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">nextSpace</span><span class="p">.</span><span class="nx">j</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">spaces</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="kd">var</span> <span class="nx">scores</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getScores</span><span class="p">();</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">nextSpace</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">spaceInDirection</span><span class="p">(</span><span class="nx">nextSpace</span><span class="p">,</span> <span class="nx">direction</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nextSpace</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">nextValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">nextSpace</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">nextSpace</span><span class="p">.</span><span class="nx">j</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">nextValue</span> <span class="o">===</span> <span class="nx">startId</span> <span class="o">||</span> <span class="nx">nextValue</span> <span class="o">===</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">canJumpSpace</span><span class="p">(</span><span class="nx">nextSpace</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="p">}</span>
+
+        <span class="nx">scores</span><span class="p">[</span><span class="nx">nextValue</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">scores</span><span class="p">[</span><span class="nx">nextValue</span><span class="p">]</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="nx">spaces</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">nextSpace</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">nextValue</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">nextValue</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">spaces</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>returns list of possible moves
+Only called by client</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">generateMoves</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">moves</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">direction</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">;</span> <span class="nx">direction</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">spaces</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateMoveInDirection</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">direction</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">spaces</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">space</span> <span class="o">=</span> <span class="nx">spaces</span><span class="p">[</span><span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="nx">moves</span><span class="p">[[</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">spaces</span><span class="p">;</span>
+      <span class="nx">moves</span><span class="p">[[</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span><span class="p">]].</span><span class="nx">move</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">i</span> <span class="o">:</span> <span class="nx">space</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span>
+        <span class="nx">j</span> <span class="o">:</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">moves</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>returns array of spaces in straight line from start to end, if possible</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">spacesFrom</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">directionFrom</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">spaces</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateMoveInDirection</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">direction</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">spaces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">space</span> <span class="o">=</span> <span class="nx">spaces</span><span class="p">[</span><span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">!==</span> <span class="nx">end</span><span class="p">.</span><span class="nx">i</span> <span class="o">||</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">!==</span> <span class="nx">end</span><span class="p">.</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">spaces</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validateMove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">,</span> <span class="nx">playerId</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">start</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">start</span><span class="p">.</span><span class="nx">j</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">playerId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">end</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">end</span><span class="p">.</span><span class="nx">j</span><span class="p">]</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">direction</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">directionFrom</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">direction</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">spaces</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateMoveInDirection</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">direction</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">spaces</span> <span class="o">&amp;&amp;</span> <span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">space</span> <span class="o">=</span> <span class="nx">spaces</span><span class="p">[</span><span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">end</span><span class="p">.</span><span class="nx">i</span> <span class="o">&amp;&amp;</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">===</span> <span class="nx">end</span><span class="p">.</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">move</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>Make grid changes</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">startId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">start</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">start</span><span class="p">.</span><span class="nx">j</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">spaces</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">spacesFrom</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">scoreDiff</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">startId</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">spaces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;no spaces&quot;</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">spaces</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">space</span> <span class="o">=</span> <span class="nx">spaces</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">gridSpace</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">space</span><span class="p">.</span><span class="nx">j</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">gridSpace</span> <span class="o">!==</span> <span class="nx">startId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">gridSpace</span><span class="p">])</span>
+        <span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">gridSpace</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
+      <span class="k">else</span>
+        <span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">gridSpace</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">startId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span><span class="p">][</span><span class="nx">space</span><span class="p">.</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">startId</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">scoreDiff</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>return dist of player scores
+return {} when not 3 players</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getScores</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">scores</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="nx">id</span> <span class="o">===</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">scores</span><span class="p">[</span><span class="nx">id</span><span class="p">])</span> <span class="p">{</span>
+                <span class="nx">scores</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span>
+      <span class="nx">scores</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">scores</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getPlayerScore</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">playerId</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">score</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">playerId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">score</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">score</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>replace grid instances of playerFrom, to playerTO</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Game</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">replacePlayer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">playerFromId</span><span class="p">,</span> <span class="nx">playerToId</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">rules</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">===</span> <span class="nx">playerFromId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">grid</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">playerToId</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span>
+  <span class="nx">module</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Game</span><span class="p">;</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

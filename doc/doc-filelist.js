@@ -1,0 +1,1 @@
+var tree={"files":["app.js","bots.js","room.js","settings.js","sockets.js","utils.js"],"dirs":{"doc":{"files":["doc-filelist.js","doc-script.js"]},"public":{"dirs":{"js":{"files":["engine.js","index.js","render.js","room.js","rulesset.js","settings.js","sockets.js","utils.js"]}}},"routes":{"files":["index.js"]}}};

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>sockets.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = '', thisFile = 'sockets.js', defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>sockets.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Games</span> <span class="o">=</span> <span class="p">{};</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>dict of rooms by id</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Room</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./room&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./utils&quot;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">socket</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">score</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>this.color
+color is now based on index in player list</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">bot</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>TODO: proper error handling and input validation
+TODO: obscure room IDs to prevent joining private games</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">socket</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">room</span><span class="p">;</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;join&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>data: {room: target room id}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">data</span> <span class="o">||</span> <span class="o">!</span><span class="nx">util</span><span class="p">.</span><span class="nx">isInt</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">room</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;joining room, bad data&quot;</span><span class="p">)</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">roomNumber</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">room</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">targetRoom</span> <span class="o">=</span> <span class="nx">Games</span><span class="p">[</span><span class="nx">roomNumber</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">targetRoom</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">targetRoom</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">player</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">targetRoom</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span> <span class="o">=</span> <span class="nx">targetRoom</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;joining room&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;getRooms&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>data: {}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">open</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">Games</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Games</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">playing</span> <span class="o">&amp;&amp;</span> <span class="nx">Games</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">isPublic</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>private games that have started become public</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>        <span class="nx">open</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="nx">roomId</span> <span class="o">:</span> <span class="nx">i</span><span class="p">,</span>
+          <span class="nx">players</span> <span class="o">:</span> <span class="nx">Games</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>open: [{roomId: id, players: int}]</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">,</span> <span class="nx">open</span><span class="p">);</span>
+  <span class="p">})</span>
+  <span class="kd">function</span> <span class="nx">leaveRoom</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">room</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;leaveRoom&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">leaveRoom</span><span class="p">();</span>
+  <span class="p">})</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;disconnect&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">leaveRoom</span><span class="p">();</span>
+  <span class="p">})</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;createGame&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>data: {isPrivate: boolean, bots: boolean}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">newRoom</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Room</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">isPrivate</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">isPrivate</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">bots</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">bots</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isPrivate</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">bots</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">newRoom</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">player</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">targetRoom</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">room</span> <span class="o">=</span> <span class="nx">targetRoom</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="nx">newRoom</span><span class="p">.</span><span class="nx">setAdmin</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">newRoom</span><span class="p">.</span><span class="nx">addBot</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">newRoom</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">player</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">targetRoom</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">room</span> <span class="o">=</span> <span class="nx">targetRoom</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="nx">newRoom</span><span class="p">.</span><span class="nx">setAdmin</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+        <span class="nx">newRoom</span><span class="p">.</span><span class="nx">privatize</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">newRoom</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">player</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">targetRoom</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span> <span class="o">=</span> <span class="nx">targetRoom</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="nx">Games</span><span class="p">[</span><span class="nx">newRoom</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">newRoom</span><span class="p">;</span>
+  <span class="p">})</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;roomAdmin&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>data: {action: kick|ban|start|addBot, target: playerId}
+TODO: bans by IP, instead of bans by player Id
+TODO: data validation</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">action</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">targetPlayer</span> <span class="o">=</span> <span class="nx">room</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;kick&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">kick</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">,</span> <span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;ban&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">ban</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">,</span> <span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;start&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">adrminStart</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;addBot&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">addBot</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;bad call&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>data: {start: {i: , j: }, end: {i: , j: }}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">room</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">room</span><span class="p">.</span><span class="nx">move</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>room.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = '', thisFile = 'room.js', defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>room.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Game</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./public/js/engine&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">Bot</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./bots&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./utils&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./settings&quot;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">Room</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">nextRoomId</span><span class="p">();</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>TODO: replace with uuid?</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">players</span> <span class="o">=</span> <span class="p">[];</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>list of player objects</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">openIds</span> <span class="o">=</span> <span class="p">[];</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>list of removed player ids, for grid replacement</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">banned</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">game</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Game</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>player</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">turn</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<p>player index</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>for private games, change to false</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">started</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>for new rooms, change on hit 3 players</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>true if 3 players</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="p">}</span>
+
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getPlayer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">currentPlayerId</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">turn</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>TODO: do this more efficiently (perhaps using map/clone)</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">publicPlayerList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="c1">//send only select information to clients</span>
+  <span class="kd">var</span> <span class="nx">playerList</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">id</span> <span class="o">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>color : p.color,
+color is now based on index in player list</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="nx">score</span> <span class="o">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">score</span><span class="p">,</span>
+      <span class="nx">bot</span> <span class="o">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">bot</span><span class="p">,</span>
+      <span class="nx">removed</span> <span class="o">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">removed</span>
+    <span class="p">}</span>
+    <span class="nx">playerList</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">playerList</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">sendAll</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">target</span> <span class="o">:</span> <span class="nx">target</span><span class="p">,</span>
+    <span class="nx">data</span> <span class="o">:</span> <span class="nx">data</span>
+  <span class="p">});</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>2 cases, either a game has started and we need to replace a removed player, or were still adding players</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">player</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">openIds</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">banned</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">player</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">player</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">sentBoard</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span><span class="c1">// add player</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="c1">//this.openIds.length &gt;= 1</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>replace previously removed player</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">openId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">openIds</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>pop left</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">slot</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">removed</span><span class="p">)</span> <span class="p">{</span><span class="c1">//check if player has been removed from game</span>
+          <span class="nx">slot</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">slot</span> <span class="o">===</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;no slot&quot;</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">slot</span><span class="p">]</span> <span class="o">=</span> <span class="nx">player</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>replace open space with new player</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">replacePlayer</span><span class="p">(</span><span class="nx">openId</span><span class="p">,</span> <span class="nx">player</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setScores</span><span class="p">();</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<p>replace previous player</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">grid</span><span class="p">);</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<p>TODO: make this more efficient</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="nx">sentBoard</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicPlayerList</span><span class="p">());</span>
+    <span class="kd">var</span> <span class="nx">playerSocket</span> <span class="o">=</span> <span class="nx">player</span><span class="p">.</span><span class="nx">socket</span><span class="p">;</span>
+    <span class="nx">playerSocket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">target</span> <span class="o">:</span> <span class="s2">&quot;me&quot;</span><span class="p">,</span>
+      <span class="nx">data</span> <span class="o">:</span> <span class="nx">player</span><span class="p">.</span><span class="nx">id</span>
+    <span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">sentBoard</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">playerSocket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">target</span> <span class="o">:</span> <span class="s2">&quot;board&quot;</span><span class="p">,</span>
+        <span class="nx">data</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">grid</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">started</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+</div>
+<p>have enough people, public game, and havent started yet</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">newGame</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">playing</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<p>game has been started, filled last vacant seat</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;gameState&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gameState</span><span class="p">());</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span><span class="c1">//if game is not full yet</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+</div>
+<p>remove player from player list</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="c1">//open up player slot for replacement</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">openIds</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">id</span><span class="p">);</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+</div>
+<p>this.players[index] = this.removedPlayer();</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">removed</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+</div>
+<p>dont actually remove player</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;gameState&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gameState</span><span class="p">());</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicPlayerList</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sendAll</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span><span class="c1">//send to all players</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">move</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">id</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">currentPlayerId</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;tried to move, but not your turn&quot;</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kd">var</span> <span class="nx">valid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">validateMove</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">end</span><span class="p">,</span> <span class="nx">player</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">valid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;bad move&quot;</span><span class="p">);</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kd">var</span> <span class="nx">scoreDiff</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">move</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">start</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">end</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">mergeScores</span><span class="p">(</span><span class="nx">scoreDiff</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">sendAll</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">turn</span> <span class="o">=</span> <span class="o">++</span><span class="k">this</span><span class="p">.</span><span class="nx">turn</span> <span class="o">%</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;gameState&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gameState</span><span class="p">());</span>
+
+  <span class="kd">var</span> <span class="nx">curPlayer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">players</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">turn</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">curPlayer</span><span class="p">.</span><span class="nx">bot</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;bot play&quot;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">move</span> <span class="o">=</span> <span class="nx">curPlayer</span><span class="p">.</span><span class="nx">nextMove</span><span class="p">(</span><span class="nx">util</span><span class="p">.</span><span class="nx">deepCopy</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">grid</span><span class="p">));</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">move</span><span class="p">(</span><span class="nx">move</span><span class="p">,</span> <span class="nx">curPlayer</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">mergeScores</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scores</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">scoreDiff</span> <span class="o">=</span> <span class="nx">scores</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">s</span> <span class="k">in</span> <span class="nx">scoreDiff</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">s</span><span class="p">)){</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">s</span><span class="p">).</span><span class="nx">score</span> <span class="o">+=</span> <span class="nx">scoreDiff</span><span class="p">[</span><span class="nx">s</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setScores</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="kd">var</span> <span class="nx">scores</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">getScores</span><span class="p">();</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">s</span> <span class="k">in</span> <span class="nx">scores</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">s</span><span class="p">)){</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">s</span><span class="p">).</span><span class="nx">score</span> <span class="o">=</span> <span class="nx">scores</span><span class="p">[</span><span class="nx">s</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+</div>
+<p>TODO: cleaner admin checking</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addBot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">admin</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">===</span> <span class="nx">admin</span> <span class="o">||</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">DEBUG</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;adding bot&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Bot</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">kick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">kicker</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">===</span> <span class="nx">kicker</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+</div>
+<p>kick target</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="k">this</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">target</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">ban</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">banner</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">===</span> <span class="nx">banner</span><span class="p">)</span> <span class="p">{</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+</div>
+<p>ban target</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>    <span class="k">this</span><span class="p">.</span><span class="nx">kick</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">banner</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">banned</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">target</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">adminStart</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">starter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">===</span> <span class="nx">starter</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;gameState&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gameState</span><span class="p">())</span>
+  <span class="p">}</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+</div>
+<p>only call this with 3 players in players list</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">newGame</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">started</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">newGame</span><span class="p">()</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setScores</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">getScores</span><span class="p">());</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">turn</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;gameState&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gameState</span><span class="p">());</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicPlayerList</span><span class="p">());</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">grid</span><span class="p">);</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+</div>
+<p>TODO: make more efficient</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">gameState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">isPublic</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span><span class="p">,</span>
+    <span class="nx">playing</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">playing</span><span class="p">,</span>
+    <span class="nx">turn</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">turn</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setAdmin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">admin</span> <span class="o">=</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">Room</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">privatize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">isPublic</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Room</span><span class="p">;</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
