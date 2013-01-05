@@ -47,13 +47,9 @@
 </div>
 <p>dict of rooms by id</p>
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Room</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./room&#39;</span><span class="p">);</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Room</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./room&quot;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./utils&quot;</span><span class="p">);</span>
-
-<span class="kd">function</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">socket</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">score</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span></pre></div>
+<span class="kd">var</span> <span class="nx">settings</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./settings&quot;</span><span class="p">);</span></pre></div>
         </td>
       </tr>
       <tr>
@@ -61,10 +57,30 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
-<p>this.color
-color is now based on index in player list</p>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">id</span>
+      <span class="dox_type">id</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">socket
+</span>
+      <span class="dox_type">socket</span>
+    </div>
+  </div>
+</div>
         </td>
-        <td class="code highlight"><div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">bot</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">Player</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">socket</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">score</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">bot</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 <span class="p">}</span></pre></div>
         </td>
       </tr>
@@ -211,16 +227,18 @@ TODO: data validation</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">action</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">targetPlayer</span> <span class="o">=</span> <span class="nx">room</span><span class="p">.</span><span class="nx">getPlayer</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;kick&quot;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">room</span><span class="p">.</span><span class="nx">kick</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">,</span> <span class="nx">player</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;ban&quot;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">room</span><span class="p">.</span><span class="nx">ban</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">,</span> <span class="nx">player</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;start&quot;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">room</span><span class="p">.</span><span class="nx">adrminStart</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;addBot&quot;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">room</span><span class="p">.</span><span class="nx">addBot</span><span class="p">(</span><span class="nx">player</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;bad call&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">room</span><span class="p">.</span><span class="nx">admin</span> <span class="o">===</span> <span class="nx">player</span> <span class="o">||</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">DEBUG</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;kick&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span><span class="p">.</span><span class="nx">kick</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;ban&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span><span class="p">.</span><span class="nx">ban</span><span class="p">(</span><span class="nx">targetPlayer</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;start&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span><span class="p">.</span><span class="nx">adrminStart</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">action</span> <span class="o">===</span> <span class="s2">&quot;addBot&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">room</span><span class="p">.</span><span class="nx">addBot</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;bad call&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">})</span>
 

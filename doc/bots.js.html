@@ -38,8 +38,24 @@
 <p>Given a grid and a player ID, bot returns its move</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Game</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./public/js/engine&quot;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./utils&quot;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">Bot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./utils&quot;</span><span class="p">);</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">Bot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Game</span><span class="p">({});</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">newBotId</span><span class="p">();</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">score</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -48,9 +64,36 @@
     <span class="p">}</span>
   <span class="p">};</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">bot</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nx">Bot</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">nextMove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grid</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">grid</span>
+      <span class="dox_type">grid</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">move
+move</span>
+      <span>= {start:{Position}, end: {Position}}</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">Bot</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">nextMove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grid</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">engine</span><span class="p">.</span><span class="nx">grid</span> <span class="o">=</span> <span class="nx">grid</span><span class="p">;</span>
   <span class="kd">var</span> <span class="nx">bestStart</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">i</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>

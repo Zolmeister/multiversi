@@ -1,14 +1,18 @@
 var Games = {};
 //dict of rooms by id
-var Room = require('./room');
+var Room = require("./room");
 var util = require("./utils");
-
+var settings = require("./settings");
+/*
+ * @constructor
+ * @this {Player}
+ * @param {id} id
+ * @param {socket} socket
+ */
 function Player(id, socket) {
 	this.id = id;
 	this.socket = socket;
 	this.score = 0;
-	//this.color
-	//color is now based on index in player list
 	this.bot = false;
 }
 
@@ -101,16 +105,18 @@ module.exports = function(socket) {
 		//TODO: data validation
 		var action = data.action;
 		var targetPlayer = room.getPlayer(data.target);
-		if (action === "kick") {
-			room.kick(targetPlayer, player);
-		} else if (action === "ban") {
-			room.ban(targetPlayer, player);
-		} else if (action === "start") {
-			room.adrminStart(player);
-		} else if (action === "addBot") {
-			room.addBot(player);
-		} else {
-			socket.emit("error", "bad call");
+		if (room.admin === player || settings.DEBUG) {
+			if (action === "kick") {
+				room.kick(targetPlayer);
+			} else if (action === "ban") {
+				room.ban(targetPlayer);
+			} else if (action === "start") {
+				room.adrminStart();
+			} else if (action === "addBot") {
+				room.addBot();
+			} else {
+				socket.emit("error", "bad call");
+			}
 		}
 	})
 

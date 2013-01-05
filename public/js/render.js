@@ -1,3 +1,9 @@
+/*
+ * @constructor
+ * @this {Render}
+ * @param {string} canvasId
+ * @param {Room} room
+ */
 var Render = function(canvasId, room) {
 	this.canvas = $(canvasId)[0];
 	this.context = this.canvas.getContext("2d");
@@ -43,7 +49,11 @@ var Render = function(canvasId, room) {
 
 	this.centerSpace = this.hexSpaceCenter(4, 3);
 }
-
+/*
+ * @param {i} i
+ * @param {j} j
+ * @return {Coordiante} {x,y}
+ */
 Render.prototype.hexSpaceCenter = function(i, j) {
 
 	var x = i * (1.5 * this.hexShape.radius);
@@ -76,7 +86,10 @@ Render.prototype.hexSpaceCenter = function(i, j) {
 		y : y + this.yOffset
 	};
 }
-
+/*
+ * @param {Event} e
+ * @return {Coordinate} {x,y}
+ */
 Render.prototype.getCursorPosition = function(e) {
 	var x, y;
 	if (e.pageX != undefined && e.pageY != undefined) {
@@ -95,7 +108,11 @@ Render.prototype.getCursorPosition = function(e) {
 		y : y
 	};
 }
-
+/*
+ * @param {Coordinate.X} canvas_x
+ * @param {Coordinate.Y} canvas_y
+ * @return {Position}
+ */
 Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 	var high_i = Math.floor(canvas_x / (1.5 * this.hexShape.radius));
 	var high_j = Math.floor(canvas_y / (2 * this.hexShape.apothem));
@@ -122,7 +139,9 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 		j : min_j
 	};
 }
-
+/*
+ * @param {Event} e
+ */
 Render.prototype.onClick = function(e) {
 	console.log("clicked")
 	var clicked = this.getCursorPosition(e);
@@ -175,7 +194,7 @@ Render.prototype.onClick = function(e) {
 
 	this.draw();
 }
-//TODO: move this to room, and fix all code that compares objects
+//TODO: move this to room
 Render.prototype.index = function(id) {
 	for (var i = 0; i < this.room.players.length; i++) {
 		if (this.room.players[i].id === id) {

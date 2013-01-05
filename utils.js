@@ -1,4 +1,8 @@
 var sys = require('sys');
+/*
+ * @param {2dArray} grid
+ * @return {2dArray} s
+ */
 function deepCopy(grid) {
 	var s = [];
 	if (!grid[0] || !grid[0][0])

@@ -1,6 +1,10 @@
 //Given a grid and a player ID, bot returns its move
 var Game = require("./public/js/engine");
 var util = require("./utils");
+/*
+ * @constructor
+ * @this {Bot}
+ */
 var Bot = function() {
 	this.engine = new Game({});
 	this.id = util.newBotId();
@@ -11,7 +15,11 @@ var Bot = function() {
 	};
 	this.bot = true;
 }
-
+/*
+ * @param {grid} grid
+ * @return {move}
+ * {move} = {start:{Position}, end: {Position}}
+ */
 Bot.prototype.nextMove = function(grid) {
 	this.engine.grid = grid;
 	var bestStart = {

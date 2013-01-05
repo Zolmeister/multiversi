@@ -1,9 +1,14 @@
-
+/*
+ * @constructor
+ * @this {RulesSet}
+ */
 function RulesSet() {
     this.width = 9;
     this.height = 8;
 };
-
+/*
+ * @return {grid}
+ */
 RulesSet.prototype.newBoard = function() {
 	var grid = new Array(this.width);
 	for (var i = 0; i < this.width; i++) {
@@ -25,7 +30,10 @@ RulesSet.prototype.newBoard = function() {
 	}
 	return grid;
 }
-
+/*
+ * @param {grid} grid
+ * @param {list: players} players
+ */
 RulesSet.prototype.setInitialPositions = function(grid, players) {
 	grid[3][3] = players[0].id;
 	grid[5][4] = players[0].id;
@@ -34,7 +42,10 @@ RulesSet.prototype.setInitialPositions = function(grid, players) {
 	grid[3][4] = players[2].id;
 	grid[5][3] = players[2].id;
 }
-
+/*
+ * @param {Position} space
+ * return {boolean}
+ */
 RulesSet.prototype.canJumpSpace = function(space) {
     if (space.i == 4 && space.j == 3) {
         return false;
@@ -45,5 +56,6 @@ RulesSet.prototype.canJumpSpace = function(space) {
 
 if (typeof module === "undefined")
 	module = {}
+	
 module.exports = RulesSet;
 

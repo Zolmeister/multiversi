@@ -1,4 +1,8 @@
-//client side room object
+/*
+ * @constructor
+ * @this {Room}
+ * @param {Connect} connect
+ */
 var Room = function(connect) {
 	this.players=[];
 	this.turn=0;
@@ -29,7 +33,10 @@ Room.prototype.getPlayer = function(id) {
 		}
 	}
 }
-
+/*
+ * @param {move} data
+ * {move} = {start: {Position}, end: {Position}}
+ */
 Room.prototype.move = function(data) {
 	console.log("move");
 	console.log(data);
@@ -49,7 +56,10 @@ Room.prototype.mergeScores = function(scores) {
 		}
 	}
 }
-
+/*
+ * @param {update} data
+ * {update} = {target: {string}, data: {object}}
+ */
 Room.prototype.update = function(data) {
 	var target = data.target;
 	var data = data.data;

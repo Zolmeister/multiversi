@@ -1,3 +1,7 @@
+/*
+ * @constructor
+ * @this {Connect}
+ */
 var Connect = function() {
 	this.socket = io.connect();
 	this.socket.on("error", function(data) {

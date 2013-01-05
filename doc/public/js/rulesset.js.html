@@ -35,14 +35,43 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
 </div>
-
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+  </div>
+</div>
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">RulesSet</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">newBoard</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">};</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">grid
+</span>
+      <span>{grid}</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">newBoard</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">grid</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">);</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">grid</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
@@ -62,18 +91,65 @@
     <span class="p">}</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">grid</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setInitialPositions</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grid</span><span class="p">,</span> <span class="nx">players</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">grid</span>
+      <span class="dox_type">grid</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">players
+</span>
+      <span class="dox_type">list:players</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setInitialPositions</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grid</span><span class="p">,</span> <span class="nx">players</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
   <span class="nx">grid</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nx">players</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canJumpSpace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">space</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">space
+return</span>
+      <span class="dox_type">Position</span>
+      <span>{boolean}</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">RulesSet</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canJumpSpace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">space</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">space</span><span class="p">.</span><span class="nx">i</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">&amp;&amp;</span> <span class="nx">space</span><span class="p">.</span><span class="nx">j</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
     <span class="p">}</span>
@@ -83,6 +159,7 @@
 
 <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span>
   <span class="nx">module</span> <span class="o">=</span> <span class="p">{}</span>
+  
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">RulesSet</span><span class="p">;</span>
 </pre></div>
         </td>

@@ -2,7 +2,10 @@ var Game = require("./public/js/engine");
 var Bot = require("./bots");
 var util = require("./utils");
 var settings = require("./settings");
-
+/*
+ * @constructor
+ * @this {Room}
+ */
 function Room() {
 	this.id = util.nextRoomId();
 	//TODO: replace with uuid?
@@ -24,6 +27,10 @@ function Room() {
 	//true if 3 players
 }
 
+/*
+ * @param {id} id
+ * @return {Player}
+ */
 Room.prototype.getPlayer = function(id) {
 	for (var i in this.players) {
 		var player = this.players[i];
@@ -36,7 +43,11 @@ Room.prototype.getPlayer = function(id) {
 Room.prototype.currentPlayerId = function() {
 	return this.players[this.turn].id;
 }
-//TODO: do this more efficiently (perhaps using map/clone)
+/*
+ * TODO: do this more efficiently (perhaps using map/clone)
+ * @return {list: {players}}
+ * {players} = {id, score, bot, removed}
+ */
 Room.prototype.publicPlayerList = function() {//send only select information to clients
 	var playerList = [];
 	for (var i in this.players) {
@@ -53,7 +64,10 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
 	}
 	return playerList;
 }
-
+/*
+ * @param {string} target
+ * @param {Object} data
+ */
 Room.prototype.update = function(target, data) {
 	util.log(target, data)
 	this.sendAll("update", {
@@ -61,7 +75,11 @@ Room.prototype.update = function(target, data) {
 		data : data
 	});
 }
-//2 cases, either a game has started and we need to replace a removed player, or were still adding players
+/*
+ * 2 cases, either a game has started and we need to replace a removed player, or were still adding players
+ * @param {player} player
+ * @param {callback} callback
+ */
 Room.prototype.add = function(player, callback) {
 	if ((this.openIds.length >= 1 || this.players.length < 3) && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
 		var sentBoard = false;
@@ -117,6 +135,9 @@ Room.prototype.add = function(player, callback) {
 		}
 	}
 }
+/*
+ * @param {player} player
+ */
 Room.prototype.remove = function(player) {
 	var index = this.players.indexOf(player);
 	if (index !== -1) {
@@ -135,11 +156,20 @@ Room.prototype.remove = function(player) {
 		this.update("players", this.publicPlayerList());
 	}
 }
+/*
+ * @param {string} name
+ * @param {Object} data
+ */
 Room.prototype.sendAll = function(name, data) {//send to all players
 	for (var i in this.players) {
 		this.players[i].socket.emit(name, data);
 	}
 }
+/*
+ * @param {move} data
+ * @param {player} player
+ * {move} = {start:{Position}, end:{Position}}
+ */
 Room.prototype.move = function(data, player) {
 	if (player.id !== this.currentPlayerId()) {
 		util.log("tried to move, but not your turn");
@@ -165,45 +195,41 @@ Room.prototype.move = function(data, player) {
 		this.move(move, curPlayer);
 	}
 }
-
+/*
+ * @param {dict} scores {id: scoreDiff}
+ */
 Room.prototype.mergeScores = function(scores) {
 	var scoreDiff = scores
 	for (var s in scoreDiff) {
-		if (this.getPlayer(s)){
+		if (this.getPlayer(s)) {
 			this.getPlayer(s).score += scoreDiff[s];
 		}
 	}
 }
-Room.prototype.setScores = function(){
+/*
+ * re-sets score based on board values
+ */
+Room.prototype.setScores = function() {
 	var scores = this.game.getScores();
-	for(var s in scores){
-		if (this.getPlayer(s)){
+	for (var s in scores) {
+		if (this.getPlayer(s)) {
 			this.getPlayer(s).score = scores[s];
 		}
 	}
 }
-//TODO: cleaner admin checking
-Room.prototype.addBot = function(admin) {
-	if (this.admin === admin || settings.DEBUG) {
-		util.log("adding bot");
-		this.add(new Bot());
-	}
+Room.prototype.addBot = function() {
+	util.log("adding bot");
+	this.add(new Bot());
 }
-Room.prototype.kick = function(target, kicker) {
-	if (this.admin === kicker) {
-		//kick target
-		this.remove(target);
-	}
+Room.prototype.kick = function(target) {
+	this.remove(target);
 }
-Room.prototype.ban = function(target, banner) {
-	if (this.admin === banner) {
-		//ban target
-		this.kick(target, banner);
-		this.banned.push(target);
-	}
+Room.prototype.ban = function(target) {
+	this.kick(target);
+	this.banned.push(target);
 }
-Room.prototype.adminStart = function(starter) {
-	if (this.admin === starter && !this.isPublic) {
+Room.prototype.adminStart = function() {
+	if (!this.isPublic) {
 		this.isPublic = true;
 		this.update("gameState", this.gameState())
 	}
@@ -219,7 +245,11 @@ Room.prototype.newGame = function() {
 	this.update("players", this.publicPlayerList());
 	this.update("board", this.game.grid);
 }
-//TODO: make more efficient
+/*
+ * TODO: make more efficient
+ * @return {gameState}
+ * {gameState} = {isPublic: boolean, playing: {boolean}, turn: {number}}
+ */
 Room.prototype.gameState = function() {
 	var state = {
 		isPublic : this.isPublic,

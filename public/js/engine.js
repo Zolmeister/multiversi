@@ -1,10 +1,4 @@
 var RulesSet = RulesSet || require('./rulesset.js');
-//room: {players: [list of player Objects], turn: player object}
-function Game(room) {
-	this.room = room;
-	this.rules = new RulesSet();
-	this.grid = this.rules.newBoard();
-};
 
 var directions = {
 	upRight : 0,
@@ -15,11 +9,27 @@ var directions = {
 	downRight : 5
 }
 
+/*
+ * @constructor
+ * @this {Game}
+ * @param {Room} room
+ * room: {players: [Players]}
+ */
+function Game(room) {
+	this.room = room;
+	this.rules = new RulesSet();
+	this.grid = this.rules.newBoard();
+};
+
 Game.prototype.newGame = function() {
 	this.grid = this.rules.newBoard();
 	this.rules.setInitialPositions(this.grid, this.room.players);
 }
-
+/*
+ * @param {Position} start
+ * @param {number} direction
+ * @return {Position}
+ */
 Game.prototype.spaceInDirection = function(start, direction) {
 
 	var space = {
@@ -61,7 +71,11 @@ Game.prototype.spaceInDirection = function(start, direction) {
 
 	return space;
 }
-
+/*
+ * @param {Position} start
+ * @param {Position} end
+ * @return {number} direction
+ */
 Game.prototype.directionFrom = function(start, end) {
 
 	var di = end.i - start.i;
@@ -121,8 +135,11 @@ Game.prototype.directionFrom = function(start, end) {
 
 	return undefined;
 }
-// returns possible move in direction
-//TODO: check redundant code against Game.spacesFrom
+/*
+ * @param {Position} start
+ * @param {number} direction
+ * @return {list} spaces {i, j}
+ */
 Game.prototype.generateMoveInDirection = function(start, direction) {
 
 	if (direction >= 6 || direction < 0) {
@@ -168,8 +185,10 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 
 	return spaces;
 }
-//returns list of possible moves
-//Only called by client
+/*
+ * @param {Position} start
+ * @return {dict} moves {'[i,j]': {list} spaces.move: {i, j}}
+ */
 Game.prototype.generateMoves = function(start) {
 	var moves = {};
 	for (var direction = 0; direction < 6; direction++) {
@@ -185,7 +204,12 @@ Game.prototype.generateMoves = function(start) {
 	}
 	return moves;
 }
-// returns array of spaces in straight line from start to end, if possible
+/*
+ * returns array of spaces in straight line from start to end, including end
+ * @param {Postition} start
+ * @param {Position} end
+ * @return {list} spaces {i, j}
+ */
 Game.prototype.spacesFrom = function(start, end) {
 	var direction = this.directionFrom(start, end);
 	if (direction === undefined) {
@@ -204,7 +228,12 @@ Game.prototype.spacesFrom = function(start, end) {
 
 	return spaces;
 }
-
+/*
+ * @param {Position} start
+ * @param {Position} end
+ * @param {id} playerId
+ * @return {boolean}
+ */
 Game.prototype.validateMove = function(start, end, playerId) {
 	if (this.grid[start.i][start.j] !== playerId) {
 		return false;
@@ -227,7 +256,11 @@ Game.prototype.validateMove = function(start, end, playerId) {
 	}
 	return false;
 }
-
+/*
+ * @param {Position} start
+ * @param {Position} end
+ * @return {dict} scoreDiff {id: diffNumber}
+ */
 Game.prototype.move = function(start, end) {
 	// Make grid changes
 	var startId = this.grid[start.i][start.j];
@@ -256,8 +289,10 @@ Game.prototype.move = function(start, end) {
 	}
 	return scoreDiff;
 }
-//return dist of player scores
-//return {} when not 3 players
+/* 
+ * returns {} when not 3 players
+ * @return {dict} scores {id: score}
+ */
 Game.prototype.getScores = function() {
 
 	var scores = {};
@@ -290,7 +325,10 @@ Game.prototype.getPlayerScore = function(playerId) {
 	}
 	return score;
 }
-//replace grid instances of playerFrom, to playerTO
+/*
+ * @param {id} playerFromId
+ * @param {id} playerToId
+ */
 Game.prototype.replacePlayer = function(playerFromId, playerToId) {
 	for (var i = 0; i < this.rules.width; i++) {
 		for (var j = 0; j < this.rules.height; j++) {
