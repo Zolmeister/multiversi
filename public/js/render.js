@@ -167,7 +167,6 @@ Render.prototype.onClick = function(e) {
 		this.clickedSpace.j = space.j;
 
 		this.possibleMoves = this.game.generateMoves(space);
-
 	} else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
 		this.clickedSpace.i = -1;
 		this.clickedSpace.j = -1;
@@ -206,14 +205,14 @@ Render.prototype.index = function(id) {
 // Draw
 Render.prototype.draw = function() {
 
-    if (!this.game.grid) {
+    if (!this.game.grid || !this.room.board) {
         return;
     }
 
 	// clear canvas
 	this.canvas.width = this.canvas.width;
-	for (var i = 0; i < this.game.rules.width; i++) {
-		for (var j = 0; j < this.game.rules.height; j++) {
+	for (var i = 0; i < this.room.board.width; i++) {
+		for (var j = 0; j < this.room.board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";

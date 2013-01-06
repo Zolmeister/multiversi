@@ -72,7 +72,7 @@ module.exports = function(socket) {
 
 	socket.on("createGame", function(data) {
 		//data: {isPrivate: boolean, bots: boolean}
-		var newRoom = new Room();
+		var newRoom = new Room(data.gametype);
 		var isPrivate = data.isPrivate;
 		var bots = data.bots;
 		if (isPrivate) {

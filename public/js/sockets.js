@@ -22,13 +22,14 @@ var Connect = function() {
 		this.socket.emit("leaveRoom");
 	}
 
-	this.createGame = function createGame(isPrivate, bots) {
+	this.createGame = function createGame(isPrivate, bots, type) {
 		isPrivate = isPrivate || false;
 		bots = bots || false;
+		type = type || "classic";
 		this.socket.emit("createGame", {
 			isPrivate : isPrivate,
 			bots : bots,
-            gametype : "classic"
+            gametype : type
 		});
 	}
 

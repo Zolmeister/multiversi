@@ -17,7 +17,7 @@ var directions = {
  */
 function Game(room) {
 	this.room = room;
-	this.rules = new RulesSet();
+	this.rules = new RulesSet(this.room.board);
     this.grid = undefined;
 };
 
@@ -26,8 +26,10 @@ function Game(room) {
  */
 Game.prototype.newGame = function(board) {
     this.rules.board = board;
-	this.grid = this.rules.newBoard();
-	this.rules.setInitialPositions(this.grid, this.room.players);
+    if(!this.grid){
+    	this.grid = this.rules.newBoard();
+		this.rules.setInitialPositions(this.grid, this.room.players);
+    }
 }
 
 /*
@@ -36,7 +38,6 @@ Game.prototype.newGame = function(board) {
  * @return {Position}
  */
 Game.prototype.spaceInDirection = function(start, direction) {
-
 	var space = {
 		i : start.i,
 		j : start.j
@@ -70,7 +71,7 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
-	if (space.i < 0 || space.i >= this.rules.width || space.j < 0 || space.j >= this.rules.height) {
+	if (space.i < 0 || space.i >= this.room.board.width || space.j < 0 || space.j >= this.room.board.height) {
 		return undefined;
 	}
 
@@ -161,7 +162,6 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 	var spaces = [];
 
     var scores = this.getScores();
-
 	while (true) {
 		nextSpace = this.spaceInDirection(nextSpace, direction);
 		if (!nextSpace) {
@@ -185,11 +185,10 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 			break;
 		}
 	}
-
 	if (nextValue !== -1 || spaces.length === 0) {
 		return undefined;
 	}
-
+	console.log(spaces)
 	return spaces;
 }
 
@@ -309,8 +308,8 @@ Game.prototype.getScores = function() {
 
 	var scores = {};
 
-	for (var i = 0; i < this.rules.width; i++) {
-		for (var j = 0; j < this.rules.height; j++) {
+	for (var i = 0; i < this.room.board.width; i++) {
+		for (var j = 0; j < this.room.board.height; j++) {
 			var id = this.grid[i][j];
 			if (id === -1 || id === -2) {
 				continue;

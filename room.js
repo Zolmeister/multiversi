@@ -6,7 +6,7 @@ var settings = require("./settings");
  * @constructor
  * @this {Room}
  */
-function Room() {
+function Room(gametype) {
 	this.id = util.nextRoomId();
 	//TODO: replace with uuid?
 	this.players = [];
@@ -14,6 +14,7 @@ function Room() {
 	this.openIds = [];
 	//list of removed player ids, for grid replacement
 	this.banned = [];
+	this.board = this.getBoard(gametype);
 	this.game = new Game(this);
 	this.admin = undefined;
 	//player
@@ -82,7 +83,6 @@ Room.prototype.update = function(target, data) {
  */
 Room.prototype.add = function(player, callback) {
 	if ((this.openIds.length >= 1 || this.players.length < 3) && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
-		var sentBoard = false;
 		if (this.players.length < 3) {// add player
 			this.players.push(player);
 		} else {//this.openIds.length >= 1
@@ -105,7 +105,7 @@ Room.prototype.add = function(player, callback) {
 			this.game.replacePlayer(openId, player.id);
 			this.setScores();
 			//replace previous player
-			this.update("board", this.game.grid);
+			this.update("grid", this.game.grid);
 			//TODO: make this more efficient
 			sentBoard = true;
 		}
@@ -116,12 +116,10 @@ Room.prototype.add = function(player, callback) {
 			target : "me",
 			data : player.id
 		});
-		if (!sentBoard) {
-			//playerSocket.emit("update", {
-			//	target : "board",
-			//	data : this.game.grid
-			//});
-		}
+		playerSocket.emit("update", {
+			target : "board",
+			data : this.board
+		});
 		if (callback) {
 			callback(this);
 		}
@@ -234,18 +232,24 @@ Room.prototype.adminStart = function() {
 		this.update("gameState", this.gameState())
 	}
 }
+
+Room.prototype.getBoard = function(board){
+	var boards = {
+		"classic": './resources/boards/original.json'
+	}
+	return boards[board]?require(boards[board]):require(boards["classic"]);
+}
 //only call this with 3 players in players list
-Room.prototype.newGame = function() {
-    var board = require('./resources/boards/original.json');
+Room.prototype.newGame = function(board) {
 	this.playing = true;
 	this.started = true;
-	this.game.newGame(board)
+	this.game.newGame(this.board);
 	this.setScores(this.game.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
 	this.update("players", this.publicPlayerList());
-	//this.update("board", this.game.grid);
-    this.update("board", board);
+    this.update("board", this.board);
+    this.update("grid", this.game.grid);
 }
 /*
  * TODO: make more efficient

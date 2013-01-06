@@ -71,21 +71,25 @@ Room.prototype.update = function(data) {
 		for (var i = 0; i < this.players.length; i++) {
             $("#p" + i + "-score").html(this.players[i].score);
         }
+        
 	} else if (target === "gameState") {
 		this.turn=data.turn;
-		this.renderer.draw();
-
         $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
         $("#p" + this.turn).css('font-weight', 'bold');
         
 	} else if (target === "me") {
 		this.me = data;
-		this.renderer.draw();
         $("#p" + this.renderer.index(this.me) + "-name").html("(you)");
-
+        
 	} else if (target === "board") {
-		console.log("update grid")
+		console.log("update board object")
+		console.log(data);
+		this.board = data;
         this.game.newGame(data);
-		this.renderer.draw();
+        
+	} else if (target === "grid"){
+		console.log("update grid state");
+		this.game.grid = data;
 	}
+	this.renderer.draw();
 }
