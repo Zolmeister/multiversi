@@ -117,10 +117,10 @@ Room.prototype.add = function(player, callback) {
 			data : player.id
 		});
 		if (!sentBoard) {
-			playerSocket.emit("update", {
-				target : "board",
-				data : this.game.grid
-			});
+			//playerSocket.emit("update", {
+			//	target : "board",
+			//	data : this.game.grid
+			//});
 		}
 		if (callback) {
 			callback(this);
@@ -236,14 +236,16 @@ Room.prototype.adminStart = function() {
 }
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
+    var board = require('./resources/boards/original.json');
 	this.playing = true;
 	this.started = true;
-	this.game.newGame()
+	this.game.newGame(board)
 	this.setScores(this.game.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
 	this.update("players", this.publicPlayerList());
-	this.update("board", this.game.grid);
+	//this.update("board", this.game.grid);
+    this.update("board", board);
 }
 /*
  * TODO: make more efficient

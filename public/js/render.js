@@ -205,10 +205,15 @@ Render.prototype.index = function(id) {
 }
 // Draw
 Render.prototype.draw = function() {
+
+    if (!this.game.grid) {
+        return;
+    }
+
 	// clear canvas
 	this.canvas.width = this.canvas.width;
-	for (var i = 0; i < 9; i++) {
-		for (var j = 0; j < 8; j++) {
+	for (var i = 0; i < this.game.rules.width; i++) {
+		for (var j = 0; j < this.game.rules.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";
@@ -219,7 +224,9 @@ Render.prototype.draw = function() {
 			}
 
 			// Fill
-			if (this.game.grid[i][j] !== -1) {
+            if (this.game.grid[i][j] === -3) {
+				fill = "#444";
+            } else if (this.game.grid[i][j] !== -1) {
 				var index = this.index(this.game.grid[i][j])
 				var colors = this.colors[index];
 				if (!colors) {
@@ -234,9 +241,7 @@ Render.prototype.draw = function() {
 				} else {
 					fill = colors.color;
 				}
-			}
-
-			if (this.possibleMoves[[i, j]]) {
+			} else if (this.possibleMoves[[i, j]]) {
 				var index = this.index(this.room.me);
 				var colors = this.colors[index];
 				if (!colors) {
@@ -249,16 +254,8 @@ Render.prototype.draw = function() {
 				fill = colors.moveColor;
 			}
 
-			if (i == 4 && j == 3) {
-				fill = "#444";
-			}
-
 			// Draw Hex Spaces
-			if ((i == 4 && j == 2) || ((j == 3 || j == 4) && (i >= 3 && i <= 5))) {
-				this.drawHexSpace(space.x, space.y, this.hexShape.smallRadius, fill);
-			} else {
-				this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
-			}
+            this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
 		}
 	}
 }

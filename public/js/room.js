@@ -33,6 +33,7 @@ Room.prototype.getPlayer = function(id) {
 		}
 	}
 }
+
 /*
  * @param {move} data
  * {move} = {start: {Position}, end: {Position}}
@@ -56,6 +57,7 @@ Room.prototype.mergeScores = function(scores) {
 		}
 	}
 }
+
 /*
  * @param {update} data
  * {update} = {target: {string}, data: {object}}
@@ -83,7 +85,7 @@ Room.prototype.update = function(data) {
 
 	} else if (target === "board") {
 		console.log("update grid")
-		this.game.grid = data;
+        this.game.newGame(data);
 		this.renderer.draw();
 	}
 }

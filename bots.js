@@ -21,8 +21,13 @@ var Bot = function() {
  * {move} = {start:{Position}, end: {Position}}
  */
 Bot.prototype.nextMove = function(grid) {
-	this.engine.grid = grid;
-	var bestStart = {
+    if (!this.engine.grid) {
+        this.engine.rules.board = require("./resources/boards/original.json");
+        this.engine.rules.newBoard();
+    }
+    this.engine.grid = grid;
+	
+    var bestStart = {
 		i : 0,
 		j : 0
 	};

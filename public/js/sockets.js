@@ -27,7 +27,8 @@ var Connect = function() {
 		bots = bots || false;
 		this.socket.emit("createGame", {
 			isPrivate : isPrivate,
-			bots : bots
+			bots : bots,
+            gametype : "classic"
 		});
 	}
 

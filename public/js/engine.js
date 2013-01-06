@@ -18,13 +18,18 @@ var directions = {
 function Game(room) {
 	this.room = room;
 	this.rules = new RulesSet();
-	this.grid = this.rules.newBoard();
+    this.grid = undefined;
 };
 
-Game.prototype.newGame = function() {
+/*
+ * @param {Board} board
+ */
+Game.prototype.newGame = function(board) {
+    this.rules.board = board;
 	this.grid = this.rules.newBoard();
 	this.rules.setInitialPositions(this.grid, this.room.players);
 }
+
 /*
  * @param {Position} start
  * @param {number} direction
@@ -71,6 +76,7 @@ Game.prototype.spaceInDirection = function(start, direction) {
 
 	return space;
 }
+
 /*
  * @param {Position} start
  * @param {Position} end
@@ -135,6 +141,7 @@ Game.prototype.directionFrom = function(start, end) {
 
 	return undefined;
 }
+
 /*
  * @param {Position} start
  * @param {number} direction
@@ -161,7 +168,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 			break;
 		}
 		nextValue = this.grid[nextSpace.i][nextSpace.j];
-		if (nextValue === startId || nextValue === -2) {
+		if (nextValue === startId || nextValue <= -2) {
 			return undefined;
 		} else if (!this.rules.canJumpSpace(nextSpace)) {
 			return undefined;
@@ -185,6 +192,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 
 	return spaces;
 }
+
 /*
  * @param {Position} start
  * @return {dict} moves {'[i,j]': {list} spaces.move: {i, j}}
@@ -204,6 +212,7 @@ Game.prototype.generateMoves = function(start) {
 	}
 	return moves;
 }
+
 /*
  * returns array of spaces in straight line from start to end, including end
  * @param {Postition} start
@@ -228,6 +237,7 @@ Game.prototype.spacesFrom = function(start, end) {
 
 	return spaces;
 }
+
 /*
  * @param {Position} start
  * @param {Position} end
@@ -256,6 +266,7 @@ Game.prototype.validateMove = function(start, end, playerId) {
 	}
 	return false;
 }
+
 /*
  * @param {Position} start
  * @param {Position} end
@@ -289,6 +300,7 @@ Game.prototype.move = function(start, end) {
 	}
 	return scoreDiff;
 }
+
 /* 
  * returns {} when not 3 players
  * @return {dict} scores {id: score}
@@ -325,6 +337,7 @@ Game.prototype.getPlayerScore = function(playerId) {
 	}
 	return score;
 }
+
 /*
  * @param {id} playerFromId
  * @param {id} playerToId
@@ -338,6 +351,7 @@ Game.prototype.replacePlayer = function(playerFromId, playerToId) {
 		}
 	}
 }
+
 if ( typeof module === "undefined")
 	module = {}
 module.exports = Game;

@@ -3,31 +3,36 @@
  * @this {RulesSet}
  */
 function RulesSet() {
-    this.width = 9;
-    this.height = 8;
+    this.width = 0;
+    this.height = 0;
+    this.board = undefined;
 };
 /*
  * @return {grid}
  */
 RulesSet.prototype.newBoard = function() {
+
+    this.width = this.board.width;
+    this.height = this.board.height;
+
 	var grid = new Array(this.width);
 	for (var i = 0; i < this.width; i++) {
 		grid[i] = new Array(this.height);
 		for (var j = 0; j < this.height; j++) {
-			if (j == 0 && (i < 2 || i > 6)) {
-				grid[i][j] = -2;
-
-			} else if ((j == 1 || j == 5 || j == 6) && (i == 0 || i == 8)) {
-				grid[i][j] = -2;
-
-			} else if (j == 7 && !(i == 3 || i == 5)) {
-				grid[i][j] = -2;
-
-			} else {
-				grid[i][j] = -1;
-			}
+            grid[i][j] = -1;
 		}
 	}
+
+    for (var s in this.board.nonrendered) {
+        var space = this.board.nonrendered[s];
+        grid[space[0]][space[1]] = -2;
+    }
+    
+    for (var s in this.board.nonjumpable) {
+        var space = this.board.nonjumpable[s];
+        grid[space[0]][space[1]] = -3;
+    }
+
 	return grid;
 }
 /*
@@ -42,14 +47,15 @@ RulesSet.prototype.setInitialPositions = function(grid, players) {
 	grid[3][4] = players[2].id;
 	grid[5][3] = players[2].id;
 }
+
 /*
  * @param {Position} space
  * return {boolean}
  */
 RulesSet.prototype.canJumpSpace = function(space) {
-    if (space.i == 4 && space.j == 3) {
-        return false;
-    }
+    //if (space.i == 4 && space.j == 3) {
+    //    return false;
+    //}
 
     return true;
 }
