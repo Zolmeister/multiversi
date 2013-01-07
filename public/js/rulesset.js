@@ -8,6 +8,7 @@ function RulesSet(game) {
 	this.game = game;
 	this.board = this.game.board;
 };
+
 /*
  * @return {grid}
  */
@@ -36,6 +37,7 @@ RulesSet.prototype.newBoard = function() {
 
 	return grid;
 }
+
 /*
  * @param {grid} grid
  * @param {list: players} players
@@ -52,6 +54,7 @@ RulesSet.prototype.setInitialPositions = function(grid, players) {
         }
 	}
 }
+
 /*
  * @param {Position} space
  * return {boolean}
@@ -63,6 +66,82 @@ RulesSet.prototype.canJumpSpace = function(space) {
 
 	return true;
 }
+
+/*
+ * @param {BoardDiff} boardDiff
+ * return {ScoreDiff}
+ */
+RulesSet.prototype.getScoreDiff = function(boardDiff) {
+
+    /*
+     * BoardDiff = {
+     *     gained: {
+     *         id: [spaces],
+     *         id: ...
+     *     },
+     *     lost: {
+     *         id: [spaces],
+     *         id: ...
+     *     }
+     * }
+     */
+	//var startId = this.grid[start.i][start.j];
+	//var spaces = this.spacesFrom(start, end);
+	//var scoreDiff = {};
+	//scoreDiff[startId] = 0;
+
+	//if (!spaces) {
+	//	console.log("no spaces");
+	//	return;
+	//}
+
+	//for (var i = 0; i < spaces.length; i++) {
+	//	var space = spaces[i];
+	//	var gridSpace = this.grid[space.i][space.j];
+
+	//	if (gridSpace !== startId) {
+	//		if (scoreDiff[gridSpace]) {
+	//			scoreDiff[gridSpace]--;
+    //        } else {
+	//			scoreDiff[gridSpace] = -1;
+    //        }
+	//		scoreDiff[startId]++;
+	//	}
+
+	//	this.grid[space.i][space.j] = startId;
+	//}
+	//return scoreDiff;
+
+    var scoreDiff = {};
+    for (var id in boardDiff.gained) {
+        var spaces = boardDiff.gained[id];
+
+        for (var s in spaces) {
+            var space = spaces[s];
+            if (scoreDiff[id]) {
+                scoreDiff[id]++;
+            } else {
+                scoreDiff[id] = 1;
+            }
+        }
+    }
+    
+    for (var id in boardDiff.lost) {
+        var spaces = boardDiff.lost[id];
+
+        for (var s in spaces) {
+            var space = spaces[s];
+            if (scoreDiff[id]) {
+                scoreDiff[id]--;
+            } else {
+                scoreDiff[id] = -1;
+            }
+        }
+    }
+
+    return scoreDiff;
+}
+
 if ( typeof module === "undefined")
 	module = {}
 

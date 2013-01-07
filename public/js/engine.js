@@ -280,8 +280,8 @@ Game.prototype.move = function(start, end) {
 	// Make grid changes
 	var startId = this.grid[start.i][start.j];
 	var spaces = this.spacesFrom(start, end);
-	var scoreDiff = {};
-	scoreDiff[startId] = 0;
+	var boardDiff = {gained: {}, lost: {}};
+	boardDiff.gained[startId] = [];
 
 	if (!spaces) {
 		console.log("no spaces");
@@ -292,16 +292,18 @@ Game.prototype.move = function(start, end) {
 		var space = spaces[i];
 		var gridSpace = this.grid[space.i][space.j];
 
-		if (gridSpace !== startId) {
-			if (scoreDiff[gridSpace])
-				scoreDiff[gridSpace]--;
-			else
-				scoreDiff[gridSpace] = -1;
-			scoreDiff[startId]++;
-		}
+		if (gridSpace !== startId && gridSpace !== -1) {
+            if (!boardDiff.lost[gridSpace]) {
+                boardDiff.lost[gridSpace] = [];
+            }
+            boardDiff.lost[gridSpace].push(space);
+        }
 
+        boardDiff.gained[startId].push(space);
 		this.grid[space.i][space.j] = startId;
 	}
+
+    var scoreDiff = this.rules.getScoreDiff(boardDiff);
 	return scoreDiff;
 }
 
