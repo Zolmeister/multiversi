@@ -240,7 +240,7 @@ Room.prototype.getBoard = function(board){
 	return boards[board]?require(boards[board]):require(boards["classic"]);
 }
 //only call this with 3 players in players list
-Room.prototype.newGame = function(board) {
+Room.prototype.newGame = function() {
 	this.playing = true;
 	this.started = true;
 	this.game.newGame(this.board);

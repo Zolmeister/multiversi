@@ -7,6 +7,9 @@ var util = require("./utils");
  */
 var Bot = function() {
 	this.engine = new Game({});
+	//TODO: get the right board
+	this.engine.board = require('./resources/boards/original.json');
+	this.engine.setRules();
 	this.id = util.newBotId();
 	this.score = 0;
 	this.socket = {

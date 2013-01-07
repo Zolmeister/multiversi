@@ -2,10 +2,11 @@
  * @constructor
  * @this {RulesSet}
  */
-function RulesSet(board) {
+function RulesSet(game) {
 	this.width = 0;
 	this.height = 0;
-	this.board = board;
+	this.game = game;
+	this.board = this.game.board;
 };
 /*
  * @return {grid}

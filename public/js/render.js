@@ -13,7 +13,6 @@ var Render = function(canvasId, room) {
 	}, false);
 
 	this.room = room;
-	this.game = room.game;
 
 	this.hexShape = {
 		radius : 36,
@@ -147,7 +146,7 @@ Render.prototype.onClick = function(e) {
 	var clicked = this.getCursorPosition(e);
 	var space = this.spaceAt(clicked.x, clicked.y);
 	try {
-		if (this.game.grid[space.i][space.j] == -2) {
+		if (this.room.game.grid[space.i][space.j] == -2) {
 			console.log("1")
 			return;
 		}
@@ -161,12 +160,12 @@ Render.prototype.onClick = function(e) {
 		return;
 	}
 
-	console.log(this.game.grid[space.i][space.j])
-	if (this.game.grid[space.i][space.j] === this.room.me && this.clickedSpace.i === -1 && this.clickedSpace.j === -1) {
+	console.log(this.room.game.grid[space.i][space.j])
+	if (this.room.game.grid[space.i][space.j] === this.room.me && this.clickedSpace.i === -1 && this.clickedSpace.j === -1) {
 		this.clickedSpace.i = space.i;
 		this.clickedSpace.j = space.j;
 
-		this.possibleMoves = this.game.generateMoves(space);
+		this.possibleMoves = this.room.game.generateMoves(space);
 	} else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
 		this.clickedSpace.i = -1;
 		this.clickedSpace.j = -1;
@@ -205,28 +204,29 @@ Render.prototype.index = function(id) {
 // Draw
 Render.prototype.draw = function() {
 
-    if (!this.game.grid || !this.room.board) {
+    if (!this.room.game.grid || !this.room.game.board) {
+    	console.log("no game or board")
         return;
     }
 
 	// clear canvas
 	this.canvas.width = this.canvas.width;
-	for (var i = 0; i < this.room.board.width; i++) {
-		for (var j = 0; j < this.room.board.height; j++) {
+	for (var i = 0; i < this.room.game.board.width; i++) {
+		for (var j = 0; j < this.room.game.board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";
 
 			// Weed out non-spaces
-			if (this.game.grid[i][j] == -2) {
+			if (this.room.game.grid[i][j] == -2) {
 				continue;
 			}
 
 			// Fill
-            if (this.game.grid[i][j] === -3) {
+            if (this.room.game.grid[i][j] === -3) {
 				fill = "#444";
-            } else if (this.game.grid[i][j] !== -1) {
-				var index = this.index(this.game.grid[i][j])
+            } else if (this.room.game.grid[i][j] !== -1) {
+				var index = this.index(this.room.game.grid[i][j])
 				var colors = this.colors[index];
 				if (!colors) {
 					colors = {

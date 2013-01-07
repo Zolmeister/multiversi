@@ -84,9 +84,8 @@ Room.prototype.update = function(data) {
 	} else if (target === "board") {
 		console.log("update board object")
 		console.log(data);
-		this.board = data;
+        this.game = new Game(this);
         this.game.newGame(data);
-        
 	} else if (target === "grid"){
 		console.log("update grid state");
 		this.game.grid = data;
