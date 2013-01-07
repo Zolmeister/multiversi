@@ -42,14 +42,15 @@ RulesSet.prototype.newBoard = function() {
  */
 RulesSet.prototype.setInitialPositions = function(grid, players) {
 	if (players.length === 3) {
-		grid[3][3] = players[0].id;
-		grid[5][4] = players[0].id;
-		grid[4][2] = players[1].id;
-		grid[4][4] = players[1].id;
-		grid[3][4] = players[2].id;
-		grid[5][3] = players[2].id;
-	}
 
+        for (var i = 0; i < 3; i++) {
+            var id = players[i].id;
+            for (var s in this.board.starting[i]) {
+                var space = this.board.starting[i][s];
+                grid[space[0]][space[1]] = id;
+            }
+        }
+	}
 }
 /*
  * @param {Position} space
