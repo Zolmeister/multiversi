@@ -292,8 +292,8 @@ Render.prototype.draw = function() {
                 this.context.font = "12px sans-serif";
                 this.context.fillText(i + " " + j, space.x - 7, space.y + 4);
             }
-		}
-	}
+        }
+    }
 }
 
 Render.prototype.drawHexSpace = function(x, y, radius, fill) {
