@@ -19,23 +19,16 @@ function Game(room) {
 	this.room = room;
     this.grid = undefined;
     //2d array of points
-    this.board = undefined;
-    //governes the starting positions and game type of grid
+    this.rules = new RulesSet(this);
 };
 
-Game.prototype.setRules = function(){
-	this.rules = new RulesSet(this);
-}
 /*
  * @param {Board} board
  */
 Game.prototype.newGame = function(board) {
-    this.board = board;
-    this.setRules();
-    if(!this.grid){
-    	this.grid = this.rules.newBoard();
-		this.rules.setInitialPositions(this.grid, this.room.players);
-    }
+    this.rules.board = board;
+    this.grid = this.rules.newBoard();
+	this.rules.setInitialPositions(this.grid, this.room.players);
 }
 
 /*
@@ -77,7 +70,7 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
-	if (space.i < 0 || space.i >= this.board.width || space.j < 0 || space.j >= this.board.height) {
+	if (space.i < 0 || space.i >= this.rules.board.width || space.j < 0 || space.j >= this.rules.board.height) {
 		return undefined;
 	}
 
@@ -167,14 +160,14 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 	var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
 	var spaces = [];
 
-    var scores = this.getScores();
+    var scores = this.rules.getScores("classic");
 	while (true) {
 		nextSpace = this.spaceInDirection(nextSpace, direction);
 		if (!nextSpace) {
 			break;
 		}
 		nextValue = this.grid[nextSpace.i][nextSpace.j];
-		if (nextValue === startId || nextValue <= -2) {
+		if (nextValue === startId || nextValue === -2 || nextValue === -3) {
 			return undefined;
 		} else if (!this.rules.canJumpSpace(nextSpace)) {
 			return undefined;
@@ -307,42 +300,6 @@ Game.prototype.move = function(start, end) {
 	return scoreDiff;
 }
 
-/* 
- * returns {} when not 3 players
- * @return {dict} scores {id: score}
- */
-Game.prototype.getScores = function() {
-
-	var scores = {};
-
-	for (var i = 0; i < this.board.width; i++) {
-		for (var j = 0; j < this.board.height; j++) {
-			var id = this.grid[i][j];
-			if (id === -1 || id === -2) {
-				continue;
-			}
-            if (!scores[id]) {
-                scores[id] = 0;
-            }
-			scores[id]++;
-		}
-	}
-
-	return scores;
-}
-
-Game.prototype.getPlayerScore = function(playerId) {
-	var score = 0;
-	for (var i = 0; i < this.rules.width; i++) {
-		for (var j = 0; j < this.rules.height; j++) {
-			var id = this.grid[i][j];
-			if (id === playerId) {
-				score++;
-			}
-		}
-	}
-	return score;
-}
 
 /*
  * @param {id} playerFromId
@@ -358,7 +315,7 @@ Game.prototype.replacePlayer = function(playerFromId, playerToId) {
 	}
 }
 
-if ( typeof module === "undefined")
+if (typeof module === "undefined")
 	module = {}
 module.exports = Game;
 

@@ -143,11 +143,14 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.getDimensions = function() {
-    var width = (1.5 * this.hexShape.radius) * this.room.game.rules.board.width + 2;
-    if (this.room.game.rules.board.width % 2 === 1) {
+    var width = (2 * this.hexShape.radius) * this.room.game.rules.board.width + 2;
+    if (this.room.game.rules.board.width % 2 === 0) {
         width += .5 * this.hexShape.radius;
     }
     var height = (2 * this.hexShape.apothem) * this.room.game.rules.board.height + 2;
+    if (this.room.game.rules.board.height % 2 === 0) {
+        height += this.hexShape.apothem;
+    }
     return {width : width, height : height};
 }
 
@@ -219,7 +222,7 @@ Render.prototype.index = function(id) {
 // Draw
 Render.prototype.draw = function() {
 
-    if (!this.room.game.grid || !this.room.game.board) {
+    if (!this.room.game.grid) {
     	console.log("no game or board")
         return;
     }
@@ -229,8 +232,8 @@ Render.prototype.draw = function() {
     this.canvas.width = dim.width;
     this.canvas.height = dim.height;
 	
-    for (var i = 0; i < this.room.game.board.width; i++) {
-		for (var j = 0; j < this.room.game.board.height; j++) {
+    for (var i = 0; i < this.room.game.rules.board.width; i++) {
+		for (var j = 0; j < this.room.game.rules.board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";
@@ -243,6 +246,8 @@ Render.prototype.draw = function() {
 			// Fill
             if (this.room.game.grid[i][j] === -3) {
 				fill = "#444";
+            } else if (this.room.game.grid[i][j] <= -4) {
+            
             } else if (this.room.game.grid[i][j] !== -1) {
 				var index = this.index(this.room.game.grid[i][j])
 				var colors = this.colors[index];
@@ -273,6 +278,20 @@ Render.prototype.draw = function() {
 
 			// Draw Hex Spaces
             this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
+
+            var s = {i: i, j: j};
+            if (this.room.game.rules.board.gametype === "pointcontrol" && this.room.game.rules.isControlPoint(s)) {
+                this.context.beginPath();
+                this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
+                this.context.fillStyle = "#FFB00F";
+                this.context.fill();
+            }
+            
+            if (DEBUG) {
+                this.context.fillStyle = "#000";
+                this.context.font = "12px sans-serif";
+                this.context.fillText(i + " " + j, space.x - 7, space.y + 4);
+            }
 		}
 	}
 }
@@ -291,12 +310,6 @@ Render.prototype.drawHexSpace = function(x, y, radius, fill) {
 	if (fill) {
 		this.context.fillStyle = fill;
 		this.context.fill();
-		if (DEBUG) {
-			this.context.fillStyle = "#000";
-			this.context.font = "12px sans-serif";
-			var space = this.spaceAt(x, y);
-			this.context.fillText(space.i + " " + space.j, -6, 2);
-		}
 	}
 	this.context.stroke();
 

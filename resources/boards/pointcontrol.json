@@ -1,0 +1,14 @@
+{
+    "name": "Point Control",
+    "gametype": "pointcontrol",
+    "width": 9,
+    "height": 10,
+    "nonrendered": [],
+    "nonjumpable": [],
+    "controlpoints": [[0, 0]],
+    "starting": {
+        "0": [[3, 3], [5, 4]],
+        "1": [[4, 2], [4, 4]],
+        "2": [[3, 4], [5, 3]]
+    }
+}

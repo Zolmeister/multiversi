@@ -85,10 +85,9 @@ Room.prototype.add = function(player, callback) {
 	if ((this.openIds.length >= 1 || this.players.length < 3) && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
 		if (this.players.length < 3) {// add player
 			this.players.push(player);
-		} else {//this.openIds.length >= 1
+		} else { //this.openIds.length >= 1
 			//replace previously removed player
 			var openId = this.openIds.shift();
-			//pop left
 			var slot = undefined;
 			for (var i = 0; i < this.players.length; i++) {
 				if (this.players[i].removed) {//check if player has been removed from game
@@ -96,20 +95,18 @@ Room.prototype.add = function(player, callback) {
 					break;
 				}
 			}
-			if ( typeof slot === "undefined") {
+
+			if (typeof slot === "undefined") {
 				util.log("no slot")
 				return;
 			}
-			//replace open space with new player
+			
+            //replace open space with new player
             console.log("previous: "  + openId + ", new: " + player.id);
 			this.game.replacePlayer(openId, player.id);
-			
             
             this.players[slot] = player;
 			this.setScores();
-			//replace previous player
-			this.update("grid", this.game.grid);
-			//TODO: make this more efficient
 		}
 
 		this.update("players", this.publicPlayerList());
@@ -122,10 +119,16 @@ Room.prototype.add = function(player, callback) {
 			target : "board",
 			data : this.board
 		});
-		if (callback) {
+        playerSocket.emit("update", {
+			target : "grid",
+			data : this.game.grid
+        });
+		
+        if (callback) {
 			callback(this);
 		}
-		if (this.players.length === 3 && this.isPublic && !this.started) {
+		
+        if (this.players.length === 3 && this.isPublic && !this.started) {
 			//have enough people, public game, and havent started yet
 			this.newGame();
 		} else if (this.players.length === 3 && !this.playing) {
@@ -135,6 +138,7 @@ Room.prototype.add = function(player, callback) {
 		}
 	}
 }
+
 /*
  * @param {player} player
  */
@@ -156,6 +160,7 @@ Room.prototype.remove = function(player) {
 		this.update("players", this.publicPlayerList());
 	}
 }
+
 /*
  * @param {string} name
  * @param {Object} data
@@ -165,6 +170,7 @@ Room.prototype.sendAll = function(name, data) {//send to all players
 		this.players[i].socket.emit(name, data);
 	}
 }
+
 /*
  * @param {move} data
  * @param {player} player
@@ -195,39 +201,45 @@ Room.prototype.move = function(data, player) {
 		this.move(move, curPlayer);
 	}
 }
+
 /*
  * @param {dict} scores {id: scoreDiff}
  */
-Room.prototype.mergeScores = function(scores) {
-	var scoreDiff = scores
+Room.prototype.mergeScores = function(scoreDiff) {
+	var scoreDiff = scoreDiff
 	for (var s in scoreDiff) {
 		if (this.getPlayer(s)) {
 			this.getPlayer(s).score += scoreDiff[s];
 		}
 	}
 }
+
 /*
  * re-sets score based on board values
  */
 Room.prototype.setScores = function() {
-	var scores = this.game.getScores();
+	var scores = this.game.rules.getScores();
 	for (var s in scores) {
 		if (this.getPlayer(s)) {
 			this.getPlayer(s).score = scores[s];
 		}
 	}
 }
+
 Room.prototype.addBot = function() {
 	util.log("adding bot");
-	this.add(new Bot());
+	this.add(new Bot(this.board));
 }
+
 Room.prototype.kick = function(target) {
 	this.remove(target);
 }
+
 Room.prototype.ban = function(target) {
 	this.kick(target);
 	this.banned.push(target);
 }
+
 Room.prototype.adminStart = function() {
 	if (!this.isPublic) {
 		this.isPublic = true;
@@ -237,22 +249,25 @@ Room.prototype.adminStart = function() {
 
 Room.prototype.getBoard = function(board){
 	var boards = {
-		"classic": './resources/boards/original.json'
+		"classic": './resources/boards/original.json',
+		"pointcontrol": './resources/boards/pointcontrol.json',
 	}
 	return boards[board]?require(boards[board]):require(boards["classic"]);
 }
+
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
 	this.playing = true;
 	this.started = true;
 	this.game.newGame(this.board);
-	this.setScores(this.game.getScores());
+	this.setScores(this.game.rules.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
 	this.update("players", this.publicPlayerList());
     this.update("board", this.board);
     this.update("grid", this.game.grid);
 }
+
 /*
  * TODO: make more efficient
  * @return {gameState}
@@ -266,11 +281,14 @@ Room.prototype.gameState = function() {
 	}
 	return state;
 }
+
 Room.prototype.setAdmin = function(player) {
 	this.admin = player;
 }
+
 Room.prototype.privatize = function() {
 	this.isPublic = false;
 }
 
 module.exports = Room;
+

@@ -6,7 +6,7 @@ window.onload=function(){
 		if(rooms.length<1){
 			//create room
 			console.log("no room, created one");
-			room.connect.createGame();
+			room.connect.createGame(false, false, GAMETYPE);
 		}
 		else{
 			room.connect.join(0);
@@ -22,3 +22,4 @@ window.onload=function(){
 	this.room.turn = this.room.me;
 	room.renderer.draw();*/
 }
+
