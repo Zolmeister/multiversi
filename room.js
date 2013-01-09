@@ -100,14 +100,16 @@ Room.prototype.add = function(player, callback) {
 				util.log("no slot")
 				return;
 			}
-			this.players[slot] = player;
 			//replace open space with new player
+            console.log("previous: "  + openId + ", new: " + player.id);
 			this.game.replacePlayer(openId, player.id);
+			
+            
+            this.players[slot] = player;
 			this.setScores();
 			//replace previous player
 			this.update("grid", this.game.grid);
 			//TODO: make this more efficient
-			sentBoard = true;
 		}
 
 		this.update("players", this.publicPlayerList());

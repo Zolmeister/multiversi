@@ -1,3 +1,3 @@
-DEBUG = false;
+DEBUG = true;
 
 module.exports.DEBUG = DEBUG; 

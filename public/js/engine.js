@@ -349,8 +349,8 @@ Game.prototype.getPlayerScore = function(playerId) {
  * @param {id} playerToId
  */
 Game.prototype.replacePlayer = function(playerFromId, playerToId) {
-	for (var i = 0; i < this.rules.width; i++) {
-		for (var j = 0; j < this.rules.height; j++) {
+	for (var i = 0; i < this.rules.board.width; i++) {
+		for (var j = 0; j < this.rules.board.height; j++) {
 			if (this.grid[i][j] === playerFromId) {
 				this.grid[i][j] = playerToId;
 			}
