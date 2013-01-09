@@ -13,20 +13,22 @@ var directions = {
  * @constructor
  * @this {Game}
  * @param {Room} room
+ * @param {Board} board
  * room: {players: [Players]}
  */
-function Game(room) {
+function Game(room, board) {
 	this.room = room;
     this.grid = undefined;
     //2d array of points
-    this.rules = new RulesSet(this);
+    this.rules = new RulesSet(this, board);
+    this.grid = this.rules.newBoard();
+    this.rules.setInitialPositions(this.grid, this.room.players);
 };
 
 /*
  * @param {Board} board
  */
-Game.prototype.newGame = function(board) {
-    this.rules.board = board;
+Game.prototype.newGame = function() {
     this.grid = this.rules.newBoard();
 	this.rules.setInitialPositions(this.grid, this.room.players);
 }
@@ -313,6 +315,10 @@ Game.prototype.replacePlayer = function(playerFromId, playerToId) {
 			}
 		}
 	}
+}
+
+Game.prototype.setGrid = function(grid){
+	this.grid = grid;
 }
 
 if (typeof module === "undefined")

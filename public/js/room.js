@@ -15,7 +15,7 @@ var Room = function(connect) {
 	this.socket.on("move", function(data) {
 		self.move(data);
 	});
-	this.game = new Game(this);
+	this.game = undefined;
 	this.renderer = new Render("#mv-canvas", this);
 	this.me=-1;
 	//my player id
@@ -84,10 +84,20 @@ Room.prototype.update = function(data) {
 	} else if (target === "board") {
 		console.log("update board object")
 		console.log(data);
-        this.game.newGame(data);
+        this.game = new Game(this, data);
+        if(this.tmpGrid){//have previously recieved a grid
+        	this.game.setGrid(this.tmpGrid);
+        	this.tmpGrid = undefined;
+        }
 	} else if (target === "grid"){
 		console.log("update grid state");
-		this.game.grid = data;
+		var grid = data;
+		if(this.game){//if have recieved board
+			this.game.setGrid(grid);
+		}
+		else{
+			this.tmpGrid = grid;
+		}
 	}
 	this.renderer.draw();
 }

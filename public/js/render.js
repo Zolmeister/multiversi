@@ -222,8 +222,8 @@ Render.prototype.index = function(id) {
 // Draw
 Render.prototype.draw = function() {
 
-    if (!this.room.game.grid) {
-    	console.log("no game or board")
+    if (!this.room.game) {
+    	console.log("no game")
         return;
     }
 

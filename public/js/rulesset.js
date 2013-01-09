@@ -3,9 +3,9 @@
  * @this {RulesSet}
  */
 //function RulesSet(game) {
-function RulesSet(game) {
+function RulesSet(game, board) {
 	this.game = game;
-    this.board = undefined;
+    this.board = board;
 };
 
 /*
@@ -53,7 +53,7 @@ RulesSet.prototype.newBoard = function() {
  * @param {list: players} players
  */
 RulesSet.prototype.setInitialPositions = function(grid, players) {
-	if (players.length === 3) {
+	if (players && players.length === 3) {
 
         for (var i = 0; i < 3; i++) {
             var id = players[i].id;

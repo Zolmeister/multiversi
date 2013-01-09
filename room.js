@@ -15,7 +15,7 @@ function Room(gametype) {
 	//list of removed player ids, for grid replacement
 	this.banned = [];
 	this.board = this.getBoard(gametype);
-	this.game = new Game(this);
+	this.game = new Game(this, this.board);
 	this.admin = undefined;
 	//player
 	this.turn = 0;
@@ -107,6 +107,7 @@ Room.prototype.add = function(player, callback) {
             
             this.players[slot] = player;
 			this.setScores();
+			this.update("grid", this.game.grid);
 		}
 
 		this.update("players", this.publicPlayerList());
@@ -119,10 +120,10 @@ Room.prototype.add = function(player, callback) {
 			target : "board",
 			data : this.board
 		});
-        playerSocket.emit("update", {
-			target : "grid",
-			data : this.game.grid
-        });
+        //playerSocket.emit("update", {
+		//	target : "grid",
+		//	data : this.game.grid
+        //});
 		
         if (callback) {
 			callback(this);
@@ -259,7 +260,7 @@ Room.prototype.getBoard = function(board){
 Room.prototype.newGame = function() {
 	this.playing = true;
 	this.started = true;
-	this.game.newGame(this.board);
+	this.game.newGame();
 	this.setScores(this.game.rules.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());

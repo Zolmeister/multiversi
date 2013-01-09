@@ -6,10 +6,8 @@ var util = require("./utils");
  * @this {Bot}
  */
 var Bot = function(board) {
-	this.engine = new Game({});
+	this.engine = new Game({}, board);
 	//TODO: get the right board
-    this.engine.rules.board = board;
-    this.engine.grid = this.engine.rules.newBoard();
 	this.id = util.newBotId();
 	this.score = 0;
 	this.socket = {
