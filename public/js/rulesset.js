@@ -3,8 +3,6 @@
  * @this {RulesSet}
  */
 function RulesSet(game) {
-	this.width = 0;
-	this.height = 0;
 	this.game = game;
 	this.board = this.game.board;
 };
@@ -14,13 +12,10 @@ function RulesSet(game) {
  */
 RulesSet.prototype.newBoard = function() {
 
-	this.width = this.board.width;
-	this.height = this.board.height;
-
-	var grid = new Array(this.width);
-	for (var i = 0; i < this.width; i++) {
-		grid[i] = new Array(this.height);
-		for (var j = 0; j < this.height; j++) {
+	var grid = new Array(this.board.width);
+	for (var i = 0; i < this.board.width; i++) {
+		grid[i] = new Array(this.board.height);
+		for (var j = 0; j < this.board.height; j++) {
 			grid[i][j] = -1;
 		}
 	}
@@ -72,7 +67,6 @@ RulesSet.prototype.canJumpSpace = function(space) {
  * return {ScoreDiff}
  */
 RulesSet.prototype.getScoreDiff = function(boardDiff) {
-
     /*
      * BoardDiff = {
      *     gained: {
@@ -85,32 +79,6 @@ RulesSet.prototype.getScoreDiff = function(boardDiff) {
      *     }
      * }
      */
-	//var startId = this.grid[start.i][start.j];
-	//var spaces = this.spacesFrom(start, end);
-	//var scoreDiff = {};
-	//scoreDiff[startId] = 0;
-
-	//if (!spaces) {
-	//	console.log("no spaces");
-	//	return;
-	//}
-
-	//for (var i = 0; i < spaces.length; i++) {
-	//	var space = spaces[i];
-	//	var gridSpace = this.grid[space.i][space.j];
-
-	//	if (gridSpace !== startId) {
-	//		if (scoreDiff[gridSpace]) {
-	//			scoreDiff[gridSpace]--;
-    //        } else {
-	//			scoreDiff[gridSpace] = -1;
-    //        }
-	//		scoreDiff[startId]++;
-	//	}
-
-	//	this.grid[space.i][space.j] = startId;
-	//}
-	//return scoreDiff;
 
     var scoreDiff = {};
     for (var id in boardDiff.gained) {

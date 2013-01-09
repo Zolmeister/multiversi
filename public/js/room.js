@@ -91,3 +91,4 @@ Room.prototype.update = function(data) {
 	}
 	this.renderer.draw();
 }
+

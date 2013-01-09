@@ -48,6 +48,7 @@ var Render = function(canvasId, room) {
 
 	this.centerSpace = this.hexSpaceCenter(4, 3);
 }
+
 /*
  * @param {i} i
  * @param {j} j
@@ -85,6 +86,7 @@ Render.prototype.hexSpaceCenter = function(i, j) {
 		y : y + this.yOffset
 	};
 }
+
 /*
  * @param {Event} e
  * @return {Coordinate} {x,y}
@@ -107,6 +109,7 @@ Render.prototype.getCursorPosition = function(e) {
 		y : y
 	};
 }
+
 /*
  * @param {Coordinate.X} canvas_x
  * @param {Coordinate.Y} canvas_y
@@ -138,6 +141,16 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 		j : min_j
 	};
 }
+
+Render.prototype.getDimensions = function() {
+    var width = (1.5 * this.hexShape.radius) * this.room.game.rules.board.width + 2;
+    if (this.room.game.rules.board.width % 2 === 1) {
+        width += .5 * this.hexShape.radius;
+    }
+    var height = (2 * this.hexShape.apothem) * this.room.game.rules.board.height + 2;
+    return {width : width, height : height};
+}
+
 /*
  * @param {Event} e
  */
@@ -192,6 +205,7 @@ Render.prototype.onClick = function(e) {
 
 	this.draw();
 }
+
 //TODO: move this to room
 Render.prototype.index = function(id) {
 	for (var i = 0; i < this.room.players.length; i++) {
@@ -201,6 +215,7 @@ Render.prototype.index = function(id) {
 	}
 	return -1;
 }
+
 // Draw
 Render.prototype.draw = function() {
 
@@ -210,8 +225,11 @@ Render.prototype.draw = function() {
     }
 
 	// clear canvas
-	this.canvas.width = this.canvas.width;
-	for (var i = 0; i < this.room.game.board.width; i++) {
+    var dim = this.getDimensions();
+    this.canvas.width = dim.width;
+    this.canvas.height = dim.height;
+	
+    for (var i = 0; i < this.room.game.board.width; i++) {
 		for (var j = 0; j < this.room.game.board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
