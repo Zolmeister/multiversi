@@ -185,20 +185,27 @@ Room.prototype.move = function(data, player) {
 	}
 	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
-		util.log("bad move");
-		util.log(player.id)
-		util.log(data);
+        var d = data;
+        d.id = player.id;
+		util.log("bad move", d);
 		return;
 	}
+
 	var scoreDiff = this.game.move(data.start, data.end);
 	this.mergeScores(scoreDiff);
 	this.sendAll("move", data);
+    
+    if (this.game.gameEnded()) {
+        // TODO: Game ends here
+        util.log("game ended");
+    }
+
 	this.turn = ++this.turn % 3;
 	this.update("gameState", this.gameState());
 
 	var curPlayer = this.players[this.turn];
 	if (curPlayer.bot) {
-		util.log("bot play")
+		util.log("bot play");
 		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
 		this.move(move, curPlayer);
 	}

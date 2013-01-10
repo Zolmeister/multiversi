@@ -99,17 +99,18 @@ Room.prototype.update = function(data) {
 		console.log("update board object")
 		console.log(data);
         this.game = new Game(this.players, data);
-        if(this.tmpGrid){//have previously recieved a grid
+        if (this.tmpGrid) { //have previously recieved a grid
         	this.game.setGrid(this.tmpGrid);
         	this.tmpGrid = undefined;
         }
+
 	} else if (target === "grid"){
 		console.log("update grid state");
 		var grid = data;
-		if(this.game){//if have recieved board
+		if(this.game) { //if have recieved board
 			this.game.setGrid(grid);
 		}
-		else{
+		else {
 			this.tmpGrid = grid;
 		}
 	}

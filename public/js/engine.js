@@ -308,7 +308,12 @@ Game.prototype.move = function(start, end) {
 	}
 
     var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board.gametype);
+    this.rules.movesMade++;
 	return scoreDiff;
+}
+
+Game.prototype.gameEnded = function() {
+    return this.rules.gameEnded(this.grid, this.board);
 }
 
 

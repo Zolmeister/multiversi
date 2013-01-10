@@ -5,13 +5,19 @@
 //function RulesSet(game) {
 function RulesSet() {
 	this.controlPoints = [];
+    this.movesMade = 0;
+    this.totalMoves = 0;
 };
 
 /*
  * @return {grid}
  */
 RulesSet.prototype.newBoard = function(board, players) {
+    
     this.controlPoints = [];
+    this.movesMade = 0;
+    this.totalMoves = board.width * board.height;
+
 	var grid = new Array(board.width);
 	for (var i = 0; i < board.width; i++) {
 		grid[i] = new Array(board.height);
@@ -23,11 +29,13 @@ RulesSet.prototype.newBoard = function(board, players) {
 	for (var s in board.nonrendered) {
 		var space = board.nonrendered[s];
 		grid[space[0]][space[1]] = -2;
+        this.totalMoves--;
 	}
 
 	for (var s in board.nonjumpable) {
 		var space = board.nonjumpable[s];
 		grid[space[0]][space[1]] = -3;
+        this.totalMoves--;
 	}
 
     if (board.gametype === "pointcontrol") {
@@ -54,6 +62,7 @@ RulesSet.prototype.setInitialPositions = function(grid, board, players) {
             for (var s in board.starting[i]) {
                 var space = board.starting[i][s];
                 grid[space[0]][space[1]] = id;
+                this.totalMoves--;
             }
         }
 	}
@@ -65,6 +74,19 @@ RulesSet.prototype.setInitialPositions = function(grid, board, players) {
  */
 RulesSet.prototype.canJumpSpace = function(space) {
 	return true;
+}
+
+/*
+ * @param {grid} grid
+ * @param {board} board
+ */
+RulesSet.prototype.gameEnded = function(grid, board) {
+
+    if (this.movesMade >= this.totalMoves) {
+        return true;
+    }
+
+    return false;
 }
 
 /*
@@ -200,7 +222,7 @@ RulesSet.prototype.getPlayerScore = function(grid, board, playerId) {
     return 0;
 }
 
-if ( typeof module === "undefined")
+if (typeof module === "undefined")
 	module = {}
 
 module.exports = RulesSet;

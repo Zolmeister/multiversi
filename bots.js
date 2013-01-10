@@ -34,8 +34,8 @@ Bot.prototype.nextMove = function(grid) {
 	};
 	var bestScore = -1;
 	var savedGrid = util.deepCopy(grid);
-	for (var i = 0; i < 9; i++) {
-		for (var j = 0; j < 8; j++) {
+	for (var i = 0; i < this.engine.board.width; i++) {
+		for (var j = 0; j < this.engine.board.height; j++) {
 			if (this.engine.grid[i][j] === this.id) {
 				var start = {
 					i : i,
