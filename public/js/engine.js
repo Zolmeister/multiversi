@@ -16,21 +16,22 @@ var directions = {
  * @param {Board} board
  * room: {players: [Players]}
  */
-function Game(room, board) {
-	this.room = room;
-    this.grid = undefined;
+function Game(players, board) {
+	this.board = board;
     //2d array of points
-    this.rules = new RulesSet(this, board);
-    this.grid = this.rules.newBoard();
-    this.rules.setInitialPositions(this.grid, this.room.players);
+    this.rules = new RulesSet();
+    this.grid = this.rules.newBoard(this.board, players);
 };
 
 /*
  * @param {Board} board
  */
-Game.prototype.newGame = function() {
-    this.grid = this.rules.newBoard();
-	this.rules.setInitialPositions(this.grid, this.room.players);
+Game.prototype.newGame = function(players) {
+    this.grid = this.rules.newBoard(this.board, players);
+}
+
+Game.prototype.getScores = function(){
+	return this.rules.getScores(this.grid, this.board);
 }
 
 /*
@@ -72,7 +73,7 @@ Game.prototype.spaceInDirection = function(start, direction) {
 		return undefined;
 	}
 
-	if (space.i < 0 || space.i >= this.rules.board.width || space.j < 0 || space.j >= this.rules.board.height) {
+	if (space.i < 0 || space.i >= this.board.width || space.j < 0 || space.j >= this.board.height) {
 		return undefined;
 	}
 
@@ -162,7 +163,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 	var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
 	var spaces = [];
 
-    var scores = this.rules.getScores("classic");
+    var scores = this.rules.getScores(this.grid, this.board);
 	while (true) {
 		nextSpace = this.spaceInDirection(nextSpace, direction);
 		if (!nextSpace) {
@@ -298,7 +299,7 @@ Game.prototype.move = function(start, end) {
 		this.grid[space.i][space.j] = startId;
 	}
 
-    var scoreDiff = this.rules.getScoreDiff(boardDiff);
+    var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board.gametype);
 	return scoreDiff;
 }
 
@@ -308,8 +309,8 @@ Game.prototype.move = function(start, end) {
  * @param {id} playerToId
  */
 Game.prototype.replacePlayer = function(playerFromId, playerToId) {
-	for (var i = 0; i < this.rules.board.width; i++) {
-		for (var j = 0; j < this.rules.board.height; j++) {
+	for (var i = 0; i < this.board.width; i++) {
+		for (var j = 0; j < this.board.height; j++) {
 			if (this.grid[i][j] === playerFromId) {
 				this.grid[i][j] = playerToId;
 			}

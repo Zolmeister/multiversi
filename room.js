@@ -2,6 +2,7 @@ var Game = require("./public/js/engine");
 var Bot = require("./bots");
 var util = require("./utils");
 var settings = require("./settings");
+var Player = require("./public/js/player");
 /*
  * @constructor
  * @this {Room}
@@ -9,13 +10,14 @@ var settings = require("./settings");
 function Room(gametype) {
 	this.id = util.nextRoomId();
 	//TODO: replace with uuid?
-	this.players = [];
-	//list of player objects
 	this.openIds = [];
 	//list of removed player ids, for grid replacement
+	this.players = this.dummyPlayers();
+	//list of player objects
 	this.banned = [];
 	this.board = this.getBoard(gametype);
-	this.game = new Game(this, this.board);
+	this.game = new Game(this.players, this.board);
+	console.log(this.game.grid);
 	this.admin = undefined;
 	//player
 	this.turn = 0;
@@ -24,10 +26,22 @@ function Room(gametype) {
 	//for private games, change to false
 	this.started = false;
 	//for new rooms, change on hit 3 players
-	this.playing = false;
-	//true if 3 players
 }
 
+Room.prototype.dummyPlayers = function() {
+	var dummies = [];
+	for (var i = 1; i < 4; i++) {
+		var id = i;
+		var dummy = new Player(id, {
+			emit : function() {
+			}
+		});
+		dummy.removed = true;
+		dummies.push(dummy);
+		this.openIds.push(id);
+	}
+	return dummies;
+}
 /*
  * @param {id} id
  * @return {Player}
@@ -82,33 +96,29 @@ Room.prototype.update = function(target, data) {
  * @param {callback} callback
  */
 Room.prototype.add = function(player, callback) {
-	if ((this.openIds.length >= 1 || this.players.length < 3) && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
-		if (this.players.length < 3) {// add player
-			this.players.push(player);
-		} else { //this.openIds.length >= 1
-			//replace previously removed player
-			var openId = this.openIds.shift();
-			var slot = undefined;
-			for (var i = 0; i < this.players.length; i++) {
-				if (this.players[i].removed && this.players[i].id === openId) {//check if player has been removed from game
-					slot = i;
-					break;
-				}
+	if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
+		//replace previously removed player
+		var openId = this.openIds.shift();
+		var slot = undefined;
+		for (var i = 0; i < this.players.length; i++) {
+			if (this.players[i].removed && this.players[i].id === openId) {//check if player has been removed from game
+				slot = i;
+				break;
 			}
-
-			if (typeof slot === "undefined") {
-				util.log("no slot")
-				return;
-			}
-			
-            //replace open space with new player
-            console.log("previous: "  + openId + ", new: " + player.id);
-			this.game.replacePlayer(openId, player.id);
-            
-            this.players[slot] = player;
-			this.setScores();
-			this.update("grid", this.game.grid);
 		}
+
+		if ( typeof slot === "undefined") {
+			util.log("no slot")
+			return;
+		}
+
+		//replace open space with new player
+		console.log("previous: " + openId + ", new: " + player.id);
+		this.game.replacePlayer(openId, player.id);
+
+		this.players[slot] = player;
+		this.setScores();
+		this.update("grid", this.game.grid);
 
 		this.update("players", this.publicPlayerList());
 		var playerSocket = player.socket;
@@ -124,48 +134,36 @@ Room.prototype.add = function(player, callback) {
 			target : "board",
 			data : this.board
 		});
-        //playerSocket.emit("update", {
+		//playerSocket.emit("update", {
 		//	target : "grid",
 		//	data : this.game.grid
-        //});
-		
-        if (callback) {
+		//});
+
+		if (callback) {
 			callback(this);
 		}
-		
-        if (this.players.length === 3 && this.isPublic && !this.started) {
+
+		if (this.isPublic && !this.started) {
 			//have enough people, public game, and havent started yet
 			this.newGame();
-		} else if (this.players.length === 3 && !this.playing) {
-			//game has been started, filled last vacant seat
-			this.playing = true;
 		}
 		this.update("gameState", this.gameState());
 	}
 }
-
 /*
  * @param {player} player
  */
 Room.prototype.remove = function(player) {
 	var index = this.players.indexOf(player);
 	if (index !== -1) {
-		this.playing = false;
-		if (this.players.length < 3) {//if game is not full yet
-			this.players.splice(index, 1);
-			//remove player from player list
-		} else {//open up player slot for replacement
-			this.openIds.push(this.players[index].id);
-			//this.players[index] = this.removedPlayer();
-			this.players[index].removed = true;
-			//dont actually remove player
-		}
-
+		this.openIds.push(this.players[index].id);
+		//this.players[index] = this.removedPlayer();
+		this.players[index].removed = true;
+		//dont actually remove player
 		this.update("gameState", this.gameState());
 		this.update("players", this.publicPlayerList());
 	}
 }
-
 /*
  * @param {string} name
  * @param {Object} data
@@ -175,7 +173,6 @@ Room.prototype.sendAll = function(name, data) {//send to all players
 		this.players[i].socket.emit(name, data);
 	}
 }
-
 /*
  * @param {move} data
  * @param {player} player
@@ -206,7 +203,6 @@ Room.prototype.move = function(data, player) {
 		this.move(move, curPlayer);
 	}
 }
-
 /*
  * @param {dict} scores {id: scoreDiff}
  */
@@ -218,12 +214,11 @@ Room.prototype.mergeScores = function(scoreDiff) {
 		}
 	}
 }
-
 /*
  * re-sets score based on board values
  */
 Room.prototype.setScores = function() {
-	var scores = this.game.rules.getScores();
+	var scores = this.game.getScores();
 	for (var s in scores) {
 		if (this.getPlayer(s)) {
 			this.getPlayer(s).score = scores[s];
@@ -252,27 +247,24 @@ Room.prototype.adminStart = function() {
 	}
 }
 
-Room.prototype.getBoard = function(board){
+Room.prototype.getBoard = function(board) {
 	var boards = {
-		"classic": './resources/boards/original.json',
-		"pointcontrol": './resources/boards/pointcontrol.json',
+		"classic" : './resources/boards/original.json',
+		"pointcontrol" : './resources/boards/pointcontrol.json',
 	}
-	return boards[board]?require(boards[board]):require(boards["classic"]);
+	return boards[board] ? require(boards[board]) : require(boards["classic"]);
 }
-
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
-	this.playing = true;
 	this.started = true;
-	this.game.newGame();
-	this.setScores(this.game.rules.getScores());
+	//this.game.newGame();
+	this.setScores(this.game.getScores());
 	this.turn = 0;
 	this.update("gameState", this.gameState());
 	this.update("players", this.publicPlayerList());
-    this.update("board", this.board);
-    this.update("grid", this.game.grid);
+	this.update("board", this.board);
+	this.update("grid", this.game.grid);
 }
-
 /*
  * TODO: make more efficient
  * @return {gameState}
@@ -281,7 +273,6 @@ Room.prototype.newGame = function() {
 Room.prototype.gameState = function() {
 	var state = {
 		isPublic : this.isPublic,
-		playing : this.playing,
 		turn : this.turn
 	}
 	return state;

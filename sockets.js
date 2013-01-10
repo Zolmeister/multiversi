@@ -3,19 +3,7 @@ var Games = {};
 var Room = require("./room");
 var util = require("./utils");
 var settings = require("./settings");
-/*
- * @constructor
- * @this {Player}
- * @param {id} id
- * @param {socket} socket
- */
-function Player(id, socket) {
-	this.id = id;
-	this.socket = socket;
-	this.score = 0;
-	this.bot = false;
-	this.removed = false;
-}
+var Player = require("./public/js/player");
 
 //TODO: proper error handling and input validation
 //TODO: obscure room IDs to prevent joining private games

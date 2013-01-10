@@ -3,48 +3,43 @@
  * @this {RulesSet}
  */
 //function RulesSet(game) {
-function RulesSet(game, board) {
-	this.game = game;
-    this.board = board;
+function RulesSet() {
+	this.controlPoints = [];
 };
 
 /*
  * @return {grid}
  */
-RulesSet.prototype.newBoard = function() {
-
-    if (!this.board) {
-        return undefined;
-    }
-
+RulesSet.prototype.newBoard = function(board, players) {
     this.controlPoints = [];
-
-	var grid = new Array(this.board.width);
-	for (var i = 0; i < this.board.width; i++) {
-		grid[i] = new Array(this.board.height);
-		for (var j = 0; j < this.board.height; j++) {
+	var grid = new Array(board.width);
+	for (var i = 0; i < board.width; i++) {
+		grid[i] = new Array(board.height);
+		for (var j = 0; j < board.height; j++) {
 			grid[i][j] = -1;
 		}
 	}
 
-	for (var s in this.board.nonrendered) {
-		var space = this.board.nonrendered[s];
+	for (var s in board.nonrendered) {
+		var space = board.nonrendered[s];
 		grid[space[0]][space[1]] = -2;
 	}
 
-	for (var s in this.board.nonjumpable) {
-		var space = this.board.nonjumpable[s];
+	for (var s in board.nonjumpable) {
+		var space = board.nonjumpable[s];
 		grid[space[0]][space[1]] = -3;
 	}
 
-    if (this.board.gametype === "pointcontrol") {
-        for (var s in this.board.controlpoints) {
-            var space = this.board.controlpoints[s];
+    if (board.gametype === "pointcontrol") {
+        for (var s in board.controlpoints) {
+            var space = board.controlpoints[s];
             grid[space[0]][space[1]] = -1;
             this.controlPoints.push({i : space[0], j : space[1]});
         }
     }
-
+    
+    this.setInitialPositions(grid, board, players);
+    
 	return grid;
 }
 
@@ -52,13 +47,12 @@ RulesSet.prototype.newBoard = function() {
  * @param {grid} grid
  * @param {list: players} players
  */
-RulesSet.prototype.setInitialPositions = function(grid, players) {
+RulesSet.prototype.setInitialPositions = function(grid, board, players) {
 	if (players && players.length === 3) {
-
         for (var i = 0; i < 3; i++) {
             var id = players[i].id;
-            for (var s in this.board.starting[i]) {
-                var space = this.board.starting[i][s];
+            for (var s in board.starting[i]) {
+                var space = board.starting[i][s];
                 grid[space[0]][space[1]] = id;
             }
         }
@@ -92,7 +86,7 @@ RulesSet.prototype.isControlPoint = function(space) {
  * @param {BoardDiff} boardDiff
  * return {ScoreDiff}
  */
-RulesSet.prototype.getScoreDiff = function(boardDiff) {
+RulesSet.prototype.getScoreDiff = function(boardDiff, gametype) {
     /*
      * BoardDiff = {
      *     gained: {
@@ -113,13 +107,13 @@ RulesSet.prototype.getScoreDiff = function(boardDiff) {
         for (var s in spaces) {
             var space = spaces[s];
             
-            if (this.board.gametype === "classic") {
+            if (gametype === "classic") {
                 if (scoreDiff[id]) {
                     scoreDiff[id]++;
                 } else {
                     scoreDiff[id] = 1;
                 }
-            } else if (this.board.gametype === "pointcontrol") {
+            } else if (gametype === "pointcontrol") {
                 if (this.isControlPoint(space)) {
                     if (scoreDiff[id]) {
                         scoreDiff[id]++;
@@ -136,13 +130,13 @@ RulesSet.prototype.getScoreDiff = function(boardDiff) {
 
         for (var s in spaces) {
             var space = spaces[s];
-            if (this.board.gametype === "classic") {
+            if (gametype === "classic") {
                 if (scoreDiff[id]) {
                     scoreDiff[id]--;
                 } else {
                     scoreDiff[id] = -1;
                 }
-            } else if (this.board.gametype === "pointcontrol") {
+            } else if (gametype === "pointcontrol") {
                 if (this.isControlPoint(space)) {
                     if (scoreDiff[id]) {
                         scoreDiff[id]--;
@@ -161,16 +155,13 @@ RulesSet.prototype.getScoreDiff = function(boardDiff) {
  * returns {} when not 3 players
  * @return {dict} scores {id: score}
  */
-RulesSet.prototype.getScores = function(gametype) {
+RulesSet.prototype.getScores = function(grid, board) {
 
 	var scores = {};
-    if (!gametype) {
-        gametype = this.board.gametype;
-    }
 
-	for (var i = 0; i < this.board.width; i++) {
-		for (var j = 0; j < this.board.height; j++) {
-			var id = this.game.grid[i][j];
+	for (var i = 0; i < board.width; i++) {
+		for (var j = 0; j < board.height; j++) {
+			var id = grid[i][j];
             if (id < 0) {
 				continue;
 			}
@@ -178,9 +169,9 @@ RulesSet.prototype.getScores = function(gametype) {
                 scores[id] = 0;
             }
 
-            if (gametype === "classic") {
+            if (board.gametype === "classic") {
 			    scores[id]++;
-            } else if (gametype === "pointcontrol") {
+            } else if (board.gametype === "pointcontrol") {
                 var s = {i: i, j: j};
                 if (this.isControlPoint(s)) {
                     scores[id]++;
@@ -192,9 +183,9 @@ RulesSet.prototype.getScores = function(gametype) {
 	return scores;
 }
 
-RulesSet.prototype.getPlayerScore = function(playerId, gametype) {
+RulesSet.prototype.getPlayerScore = function(grid, board, playerId) {
     
-    var scores = this.getScores(gametype);
+    var scores = this.getScores(grid, board);
     if (scores[playerId]) {
         return scores[playerId];
     }

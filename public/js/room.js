@@ -4,7 +4,7 @@
  * @param {Connect} connect
  */
 var Room = function(connect) {
-	this.players=[];
+	this.players = this.dummyPlayers();
 	this.turn=0;
 	this.connect = connect;
 	this.socket = this.connect.socket;
@@ -19,6 +19,18 @@ var Room = function(connect) {
 	this.renderer = new Render("#mv-canvas", this);
 	this.me=-1;
 	//my player id
+}
+
+Room.prototype.dummyPlayers = function() {
+	var dummies = [];
+	for (var i = 0; i < 3; i++) {
+		var id = i;
+		var dummy = new Player(id, {
+			emit : function() {
+			}
+		});
+	}
+	return dummies;
 }
 
 Room.prototype.currentPlayerId = function(){
@@ -86,7 +98,7 @@ Room.prototype.update = function(data) {
 	} else if (target === "board") {
 		console.log("update board object")
 		console.log(data);
-        this.game = new Game(this, data);
+        this.game = new Game(this.players, data);
         if(this.tmpGrid){//have previously recieved a grid
         	this.game.setGrid(this.tmpGrid);
         	this.tmpGrid = undefined;

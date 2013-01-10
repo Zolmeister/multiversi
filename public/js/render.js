@@ -143,12 +143,12 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.getDimensions = function() {
-    var width = (2 * this.hexShape.radius) * this.room.game.rules.board.width + 2;
-    if (this.room.game.rules.board.width % 2 === 0) {
+    var width = (2 * this.hexShape.radius) * this.room.game.board.width + 2;
+    if (this.room.game.board.width % 2 === 0) {
         width += .5 * this.hexShape.radius;
     }
-    var height = (2 * this.hexShape.apothem) * this.room.game.rules.board.height + 2;
-    if (this.room.game.rules.board.height % 2 === 0) {
+    var height = (2 * this.hexShape.apothem) * this.room.game.board.height + 2;
+    if (this.room.game.board.height % 2 === 0) {
         height += this.hexShape.apothem;
     }
     return {width : width, height : height};
@@ -232,8 +232,8 @@ Render.prototype.draw = function() {
     this.canvas.width = dim.width;
     this.canvas.height = dim.height;
 	
-    for (var i = 0; i < this.room.game.rules.board.width; i++) {
-		for (var j = 0; j < this.room.game.rules.board.height; j++) {
+    for (var i = 0; i < this.room.game.board.width; i++) {
+		for (var j = 0; j < this.room.game.board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";
@@ -280,7 +280,7 @@ Render.prototype.draw = function() {
             this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
 
             var s = {i: i, j: j};
-            if (this.room.game.rules.board.gametype === "pointcontrol" && this.room.game.rules.isControlPoint(s)) {
+            if (this.room.game.board.gametype === "pointcontrol" && this.room.game.rules.isControlPoint(s)) {
                 this.context.beginPath();
                 this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
                 this.context.fillStyle = "#FFB00F";

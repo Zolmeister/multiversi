@@ -6,6 +6,7 @@
 <script src="/js/sockets.js"></script>
 <script src="/js/rulesset.js"></script>
 <script src="/js/engine.js"></script>
+<script src="/js/player.js"></script>
 <script src="/js/render.js"></script>
 <script src="/js/room.js"></script>
 <script src="/js/index.js"></script>
