@@ -177,7 +177,7 @@ Render.prototype.onClick = function(e) {
 	}
 
 	console.log(this.room.game.grid[space.i][space.j])
-	if (this.room.game.grid[space.i][space.j] === this.room.me && this.clickedSpace.i === -1 && this.clickedSpace.j === -1) {
+	if (this.room.game.grid[space.i][space.j] === this.room.me) {
 		this.clickedSpace.i = space.i;
 		this.clickedSpace.j = space.j;
 
