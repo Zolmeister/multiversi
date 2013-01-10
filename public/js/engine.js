@@ -171,7 +171,7 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
 	var nextValue, startId = this.grid[nextSpace.i][nextSpace.j];
 	var spaces = [];
 
-    var scores = this.rules.getScores(this.grid, this.board);
+    var scores = this.rules.getScores(this.grid, this.board, true);
 	while (true) {
 		nextSpace = this.spaceInDirection(nextSpace, direction);
 		if (!nextSpace) {

@@ -155,9 +155,16 @@ RulesSet.prototype.getScoreDiff = function(boardDiff, gametype) {
  * returns {} when not 3 players
  * @return {dict} scores {id: score}
  */
-RulesSet.prototype.getScores = function(grid, board) {
+RulesSet.prototype.getScores = function(grid, board, forceClassic) {
 
 	var scores = {};
+    var gametype;
+    
+    if (forceClassic) {
+        gametype = "classic";
+    } else {
+        gametype = board.gametype;
+    }
 
 	for (var i = 0; i < board.width; i++) {
 		for (var j = 0; j < board.height; j++) {
@@ -169,9 +176,9 @@ RulesSet.prototype.getScores = function(grid, board) {
                 scores[id] = 0;
             }
 
-            if (board.gametype === "classic") {
+            if (gametype === "classic") {
 			    scores[id]++;
-            } else if (board.gametype === "pointcontrol") {
+            } else if (gametype === "pointcontrol") {
                 var s = {i: i, j: j};
                 if (this.isControlPoint(s)) {
                     scores[id]++;
