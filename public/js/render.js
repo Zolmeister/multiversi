@@ -162,12 +162,10 @@ Render.prototype.onClick = function(e) {
 	var clicked = this.getCursorPosition(e);
 	var space = this.spaceAt(clicked.x, clicked.y);
 	try {
-		if (this.room.game.grid[space.i][space.j] == -2) {
-			console.log("1")
+		if (this.room.game.grid[space.i][space.j] === -2) {
 			return;
 		}
 	} catch(e) {
-		console.log("2")
 		return;
 	}
 
@@ -177,7 +175,7 @@ Render.prototype.onClick = function(e) {
 	}
 
 	console.log(this.room.game.grid[space.i][space.j])
-	if (this.room.game.grid[space.i][space.j] === this.room.me) {
+	if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game.grid[space.i][space.j] === this.room.me) {
 		this.clickedSpace.i = space.i;
 		this.clickedSpace.j = space.j;
 
