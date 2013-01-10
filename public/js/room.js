@@ -65,8 +65,10 @@ Room.prototype.mergeScores = function(scores) {
 Room.prototype.update = function(data) {
 	var target = data.target;
 	var data = data.data;
-
-	if (target === "players") {
+	if (target === "room"){
+		this.id = data;
+		window.history.replaceState(data, data, "/room/"+data);
+	} else if (target === "players") {
 		this.players = data;
 		for (var i = 0; i < this.players.length; i++) {
             $("#p" + i + "-score").html(this.players[i].score);

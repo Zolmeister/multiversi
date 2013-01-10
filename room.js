@@ -90,7 +90,7 @@ Room.prototype.add = function(player, callback) {
 			var openId = this.openIds.shift();
 			var slot = undefined;
 			for (var i = 0; i < this.players.length; i++) {
-				if (this.players[i].removed) {//check if player has been removed from game
+				if (this.players[i].removed && this.players[i].id === openId) {//check if player has been removed from game
 					slot = i;
 					break;
 				}
@@ -112,6 +112,10 @@ Room.prototype.add = function(player, callback) {
 
 		this.update("players", this.publicPlayerList());
 		var playerSocket = player.socket;
+		playerSocket.emit("update", {
+			target : "room",
+			data : this.id
+		})
 		playerSocket.emit("update", {
 			target : "me",
 			data : player.id
@@ -135,8 +139,8 @@ Room.prototype.add = function(player, callback) {
 		} else if (this.players.length === 3 && !this.playing) {
 			//game has been started, filled last vacant seat
 			this.playing = true;
-			this.update("gameState", this.gameState());
 		}
+		this.update("gameState", this.gameState());
 	}
 }
 

@@ -14,6 +14,7 @@ function Player(id, socket) {
 	this.socket = socket;
 	this.score = 0;
 	this.bot = false;
+	this.removed = false;
 }
 
 //TODO: proper error handling and input validation
@@ -47,7 +48,7 @@ module.exports = function(socket) {
 			if (!Games[i].playing && Games[i].isPublic) {
 				//private games that have started become public
 				open.push({
-					roomId : i,
+					roomId : parseInt(i),
 					players : Games[i].players.length
 				});
 			}

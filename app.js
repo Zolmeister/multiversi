@@ -40,6 +40,7 @@ app.configure('development', function() {
 });
 
 app.get('/', routes.index);
+app.get('/room/:id', routes.index);
 
 io.sockets.on('connection', socketConnect);
 

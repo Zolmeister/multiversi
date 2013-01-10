@@ -8,6 +8,7 @@ var Connect = function() {
 		console.error(data);
 	})
 	this.join = function join(roomId) {
+		console.log("joining: "+roomId)
 		this.socket.emit("join", {
 			room : roomId
 		});
@@ -15,7 +16,7 @@ var Connect = function() {
 
 	this.getRooms = function getRooms(callback) {
 		this.socket.emit("getRooms");
-		this.socket.on("rooms", callback)
+		this.socket.on("rooms", callback);
 	}
 
 	this.leaveRoom = function leaveRoom() {
