@@ -6,7 +6,7 @@ var util = require("./utils");
  * @this {Bot}
  */
 var Bot = function(board) {
-	this.engine = new Game({}, board);
+	this.engine = new Game([], board);
 	//TODO: get the right board
 	this.id = util.newBotId();
 	this.score = 0;
@@ -47,7 +47,7 @@ Bot.prototype.nextMove = function(grid) {
 					if (!this.engine.validateMove(start, move, this.id))
 						continue;
 					this.engine.move(start, move);
-					var score = this.engine.rules.getPlayerScore(this.id);
+					var score = this.engine.rules.getPlayerScore(this.engine.grid, this.engine.board, this.id);
 					if (score > bestScore) {
 						bestScore = score;
 						bestStart = start;
