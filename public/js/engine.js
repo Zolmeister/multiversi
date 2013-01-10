@@ -34,6 +34,14 @@ Game.prototype.getScores = function(){
 	return this.rules.getScores(this.grid, this.board);
 }
 
+Game.prototype.getPlayerScore = function(playerId){
+	return this.rules.getPlayerScore(this.grid, this.board, playerId);
+}
+
+Game.prototype.isControlPoint = function(s){
+	return this.rules.isControlPoint(s);
+}
+
 /*
  * @param {Position} start
  * @param {number} direction

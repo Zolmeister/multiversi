@@ -280,7 +280,7 @@ Render.prototype.draw = function() {
             this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
 
             var s = {i: i, j: j};
-            if (this.room.game.board.gametype === "pointcontrol" && this.room.game.rules.isControlPoint(s)) {
+            if (this.room.game.board.gametype === "pointcontrol" && this.room.game.isControlPoint(s)) {
                 this.context.beginPath();
                 this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
                 this.context.fillStyle = "#FFB00F";
