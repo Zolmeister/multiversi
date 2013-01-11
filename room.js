@@ -55,6 +55,10 @@ Room.prototype.getPlayer = function(id) {
 	}
 }
 
+Room.prototype.getPlayerIndex = function(id){
+	return this.players.indexOf(this.getPlayer(id));
+}
+
 Room.prototype.currentPlayerId = function() {
 	return this.players[this.turn].id;
 }
@@ -90,6 +94,17 @@ Room.prototype.update = function(target, data) {
 		data : data
 	});
 }
+
+Room.prototype.playerCount = function(){
+	var cnt = 0;
+	for (var i = 0; i < this.players.length; i++) {
+		if (!this.players[i].removed) {//check if player has been removed from game
+			cnt++;
+		}
+	}
+	return cnt;
+}
+
 /*
  * 2 cases, either a game has started and we need to replace a removed player, or were still adding players
  * @param {player} player
@@ -99,15 +114,9 @@ Room.prototype.add = function(player, callback) {
 	if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
 		//replace previously removed player
 		var openId = this.openIds.shift();
-		var slot = undefined;
-		for (var i = 0; i < this.players.length; i++) {
-			if (this.players[i].removed && this.players[i].id === openId) {//check if player has been removed from game
-				slot = i;
-				break;
-			}
-		}
+		var slot = this.getPlayerIndex(openId);
 
-		if ( typeof slot === "undefined") {
+		if ( slot === -1) {
 			util.log("no slot")
 			return;
 		}
@@ -185,8 +194,8 @@ Room.prototype.move = function(data, player) {
 	}
 	var valid = this.game.validateMove(data.start, data.end, player.id);
 	if (!valid) {
-        var d = data;
-        d.id = player.id;
+		var d = data;
+		d.id = player.id;
 		util.log("bad move", d);
 		return;
 	}
@@ -194,11 +203,11 @@ Room.prototype.move = function(data, player) {
 	var scoreDiff = this.game.move(data.start, data.end);
 	this.mergeScores(scoreDiff);
 	this.sendAll("move", data);
-    
-    if (this.game.gameEnded()) {
-        // TODO: Game ends here
-        util.log("game ended");
-    }
+
+	if (this.game.gameEnded()) {
+		// TODO: Game ends here
+		util.log("game ended");
+	}
 
 	this.turn = ++this.turn % 3;
 	this.update("gameState", this.gameState());

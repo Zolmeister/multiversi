@@ -16,7 +16,6 @@ window.onload = function() {
 				console.log("no room, created one");
 				room.connect.createGame(false, false, GAMETYPE);
 			} else {
-				a=rooms
 				room.connect.join(rooms[0].roomId);
 				//join first available room
 			}

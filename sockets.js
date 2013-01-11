@@ -33,11 +33,11 @@ module.exports = function(socket) {
 		//data: {}
 		var open = [];
 		for (var i in Games) {
-			if (!Games[i].playing && Games[i].isPublic) {
+			if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
 				//private games that have started become public
 				open.push({
 					roomId : parseInt(i),
-					players : Games[i].players.length
+					players : Games[i].playerCount()
 				});
 			}
 		}
