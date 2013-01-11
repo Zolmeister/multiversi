@@ -212,12 +212,7 @@ Room.prototype.move = function(data, player) {
 	this.turn = ++this.turn % 3;
 	this.update("gameState", this.gameState());
 
-	var curPlayer = this.players[this.turn];
-	if (curPlayer.bot) {
-		util.log("bot play");
-		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
-		this.move(move, curPlayer);
-	}
+	this.botMove();
 }
 /*
  * @param {dict} scores {id: scoreDiff}
@@ -245,6 +240,16 @@ Room.prototype.setScores = function() {
 Room.prototype.addBot = function() {
 	util.log("adding bot");
 	this.add(new Bot(this.board));
+	this.botMove();
+}
+
+Room.prototype.botMove = function(){
+	var curPlayer = this.players[this.turn];
+	if (curPlayer.bot) {
+		util.log("bot play");
+		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
+		this.move(move, curPlayer);
+	}
 }
 
 Room.prototype.kick = function(target) {
