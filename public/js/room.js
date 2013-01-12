@@ -35,20 +35,20 @@ var Room = function() {
         return player ? player.id : -1;
     }, this);
 
-    this.input = new Input("#mv-canvas", this);
-    this.renderer = new Render("#mv-canvas");
+	this.input = new Input("#mv-canvas", this);
+	this.renderer = new Render("#mv-canvas");
 }
 
 Room.prototype.dummyPlayers = function() {
-    var dummies = [];
-    for (var i = 0; i < 3; i++) {
-        var id = i;
-        var dummy = new Player(id, {
-            emit : function() {
-            }
-        });
-    }
-    return dummies;
+	var dummies = [];
+	for (var i = 0; i < 3; i++) {
+		var id = i;
+		var dummy = ko.observable(new ObservablePlayer(new Player(id, {
+			emit : function() {
+			}
+		})));
+	}
+	return dummies;
 }
 
 Room.prototype.getPlayer = function(id) {
@@ -73,41 +73,38 @@ Room.prototype.getPlayerIndex = function(id) {
  * {move} = {start: {Position}, end: {Position}}
  */
 Room.prototype.move = function(data) {
-    console.log("move");
-    console.log(data);
-    var scoreDiff = this.game().move(data.start, data.end);
-    this.mergeScores(scoreDiff);
-    this.renderer.draw(this);
-    for (var i = 0; i < this.players().length; i++) {
-        $("#p" + i + "-score").html(this.players()[i].score);
-    }
+	console.log("move");
+	console.log(data);
+	var scoreDiff = this.game().move(data.start, data.end);
+	this.mergeScores(scoreDiff);
+	this.renderer.draw(this);
 }
 
 Room.prototype.mergeScores = function(scores) {
-    var scoreDiff = scores
-    for (var s in scoreDiff) {
-        if (this.getPlayer(s)) {
-            this.getPlayer(s).score += scoreDiff[s];
-        }
-    }
+	var scoreDiff = scores
+	for (var s in scoreDiff) {
+		if (this.getPlayer(s)) {
+			this.getPlayer(s).score(this.getPlayer(s).score() + scoreDiff[s]);
+		}
+	}
 }
 /*
  * @param {update} data
  * {update} = {target: {string}, data: {object}}
  */
 Room.prototype.update = function(data) {
-    var target = data.target;
-    var data = data.data;
-    if (target === "room") {
-        this.id = data;
-        if (window.history.state !== "room") {
-            window.history.pushState("room", "room", "/room/" + data)
-        }
-    } else if (target === "players") {
-        this.players(data);
-        /*for (var i = 0; i < this.players().length; i++) {
-         $("#p" + i + "-score").html(this.players()[i].score);
-         }*/
+	var target = data.target;
+	var data = data.data;
+	if (target === "room") {
+		this.id = data;
+		if (window.history.state !== "room") {
+			window.history.pushState("room", "room", "/room/" + data)
+		}
+	} else if (target === "players") {
+		this.players(data);
+		for (var i = 0; i < data.length; i++) {
+			this.players()[i] = new ObservablePlayer(data[i]);
+		}
 
     } else if (target === "gameState") {
         this.turn(data.turn);
@@ -118,14 +115,15 @@ Room.prototype.update = function(data) {
         this.me(data);
         //$("#p" + this.renderer.index(this.me()) + "-name").html("(you)");
 
-    } else if (target === "board") {
-        console.log("update board object")
-        console.log(data);
-        this.game(new Game(this.players, data));
-        if (this.tmpGrid) {//have previously recieved a grid
-            this.game().setGrid(this.tmpGrid);
-            this.tmpGrid = undefined;
-        }
+	} else if (target === "board") {
+		console.log("update board object")
+		console.log(data);
+		this.game(new Game(this.players(), data));
+		if (this.tmpGrid) {//have previously recieved a grid
+			this.game().setGrid(this.tmpGrid);
+			this.tmpGrid = undefined;
+		}
+
 
     } else if (target === "grid") {
         console.log("update grid state");

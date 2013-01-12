@@ -302,7 +302,6 @@ Game.prototype.move = function(start, end) {
         boardDiff.gained[startId].push(space);
         this.grid[space.i][space.j] = startId;
     }
-
     var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board.gametype);
     this.rules.movesMade++;
     return scoreDiff;

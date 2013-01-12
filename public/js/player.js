@@ -12,5 +12,13 @@ function Player(id, socket) {
     this.removed = false;
 }
 
+//Uses knockout.js, only for client side
+function ObservablePlayer(player) {
+	this.id = player.id;
+	this.score = ko.observable(player.score);
+	this.bot = ko.observable(player.bot);
+	this.removed = ko.observable(player.removed);
+}
+
 module = module || {};
 module.exports = Player; 
