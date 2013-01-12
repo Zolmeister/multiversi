@@ -27,7 +27,16 @@
 		<button data-bind="click: createRoom">Create Room</button>
 	</div>
 	<div data-bind="visible: game()">
-		<button onclick='leaveButton();'>leave room</button>
+		<h1>Players</h1>
+		<div class="players" data-bind="foreach: players()">
+			<div class="player" data-bind="style: {backgroundColor: $root.currentPlayerId()==id ? $root.indexToColor(index()).activeColor : $root.indexToColor(index()).color}">
+				Score: <span data-bind="text: score"></span><br>
+				<span data-bind="if: bot"> (BOT)</span>
+				<span data-bind="if: id==$root.me()">YOU</span>
+			</div>
+		</div>
+		<br>
+		<button style="clear: both" onclick='leaveButton();'>leave room</button>
 		<button onClick='room.connect().roomAdmin("addBot", "")'>Add bot</button>
 	</div>
 {/body}

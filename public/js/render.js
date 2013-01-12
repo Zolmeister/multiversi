@@ -33,19 +33,6 @@ var Render = function(canvasId, room) {
 	};
 
 	this.possibleMoves = {};
-	this.colors = [{
-		color : "#caa",
-		activeColor : "#d66",
-		moveColor : "#edd"
-	}, {
-		color : "#aca",
-		activeColor : "#6d6",
-		moveColor : "#ded"
-	}, {
-		color : "#aac",
-		activeColor : "#66d",
-		moveColor : "#dde"
-	}];
 
 	this.centerSpace = this.hexSpaceCenter(4, 3);
 }
@@ -169,13 +156,13 @@ Render.prototype.onClick = function(e) {
 		return;
 	}
 
-	if (this.room.currentPlayerId() !== this.room.me) {
+	if (this.room.currentPlayerId() !== this.room.me()) {
 		console.log("not your turn")
 		return;
 	}
 
 	console.log(this.room.game().grid[space.i][space.j])
-	if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game().grid[space.i][space.j] === this.room.me) {
+	if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game().grid[space.i][space.j] === this.room.me()) {
 		this.clickedSpace.i = space.i;
 		this.clickedSpace.j = space.j;
 
@@ -249,7 +236,7 @@ Render.prototype.draw = function() {
             
             } else if (this.room.game().grid[i][j] !== -1) {
 				var index = this.index(this.room.game().grid[i][j])
-				var colors = this.colors[index];
+				var colors = COLORS[index];
 				if (!colors) {
 					colors = {
 						color : "#333",
@@ -263,8 +250,8 @@ Render.prototype.draw = function() {
 					fill = colors.color;
 				}
 			} else if (this.possibleMoves[[i, j]]) {
-				var index = this.index(this.room.me);
-				var colors = this.colors[index];
+				var index = this.index(this.room.me());
+				var colors = COLORS[index];
 				if (!colors) {
 					colors = {
 						color : "#333",

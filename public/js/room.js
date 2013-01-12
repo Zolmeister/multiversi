@@ -5,6 +5,7 @@
  */
 var Room = function() {
 	this.players = ko.observableArray(this.dummyPlayers());
+	indexSubscribe(this.players);
 	this.turn = ko.observable(0);
 	this.connect = ko.observable(new Connect());
 	this.socket = this.connect().socket;
@@ -17,16 +18,23 @@ var Room = function() {
 	});
 	this.game = ko.observable(undefined);
 	this.renderer = new Render("#mv-canvas", this);
-	this.me = -1;
+	this.me = ko.observable(-1);
 	//my player id
 
-	self.createRoom = function() {
+	this.createRoom = function() {
 		console.log("creating room");
 		self.connect().createGame(false, false, GAMETYPE);
 	}
-	self.joinRoom = function(r) {
+	this.joinRoom = function(r) {
 		self.connect().join(r.roomId);
 	}
+	this.indexToColor = function(index) {
+		return COLORS[index];
+	}
+	this.currentPlayerId = ko.computed(function() {
+		var player = self.players()[self.turn()];
+		return player ? player.id : -1;
+	}, this);
 }
 
 Room.prototype.dummyPlayers = function() {
@@ -39,10 +47,6 @@ Room.prototype.dummyPlayers = function() {
 		});
 	}
 	return dummies;
-}
-
-Room.prototype.currentPlayerId = function() {
-	return this.players()[this.turn()].id;
 }
 
 Room.prototype.getPlayer = function(id) {
@@ -100,8 +104,8 @@ Room.prototype.update = function(data) {
 		//$("#p" + this.turn()).css('font-weight', 'bold');
 
 	} else if (target === "me") {
-		this.me = data;
-		//$("#p" + this.renderer.index(this.me) + "-name").html("(you)");
+		this.me(data);
+		//$("#p" + this.renderer.index(this.me()) + "-name").html("(you)");
 
 	} else if (target === "board") {
 		console.log("update board object")

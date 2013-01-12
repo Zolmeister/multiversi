@@ -12,15 +12,6 @@ function leaveButton() {
 	window.history.back();
 }
 
-/*
- * window history logic
- * if coming to '/', push state as lobby
- * 		on join room, push state as room
- * 		on back button, leave room
- * if coming to '/room/X', push state as lobby
- * 		on join room, push state as room
- * 		on back button, leave room
- */
 $(function() {
 	var inRoom = parseInt(window.location.href.split("/").pop());
 	window.history.replaceState("lobby", "lobbly", "/");
