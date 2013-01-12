@@ -87,6 +87,7 @@ Room.prototype.mergeScores = function(scores) {
 			this.getPlayer(s).score(this.getPlayer(s).score() + scoreDiff[s]);
 		}
 	}
+	this.players.valueHasMutated();
 }
 /*
  * @param {update} data

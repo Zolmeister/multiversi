@@ -248,12 +248,13 @@ Room.prototype.addBot = function() {
     this.botMove();
 }
 
-Room.prototype.botMove = function(){
-	var curPlayer = this.players[this.turn];
-	if (curPlayer.bot) {
-		var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
-		this.move(move, curPlayer);
-	}
+Room.prototype.botMove = function() {
+    var curPlayer = this.players[this.turn];
+    if (curPlayer.bot) {
+        var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
+        this.move(move, curPlayer);
+    }
+
 }
 
 Room.prototype.kick = function(target) {
