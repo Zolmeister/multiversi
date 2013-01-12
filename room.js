@@ -147,10 +147,6 @@ Room.prototype.add = function(player, callback) {
             target : "board",
             data : this.board
         });
-        //playerSocket.emit("update", {
-        //	target : "grid",
-        //	data : this.game.grid
-        //});
 
         if (callback) {
             callback(this);

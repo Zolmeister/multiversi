@@ -68,13 +68,12 @@ Room.prototype.getPlayerIndex = function(id) {
     }
     return -1;
 }
+
 /*
  * @param {move} data
  * {move} = {start: {Position}, end: {Position}}
  */
 Room.prototype.move = function(data) {
-	console.log("move");
-	console.log(data);
 	var scoreDiff = this.game().move(data.start, data.end);
 	this.mergeScores(scoreDiff);
 	this.renderer.draw(this);
@@ -109,12 +108,9 @@ Room.prototype.update = function(data) {
 
     } else if (target === "gameState") {
         this.turn(data.turn);
-        //$("#p" + ((this.turn() - 1) % 3 + 3) % 3).css('font-weight', 'normal');
-        //$("#p" + this.turn()).css('font-weight', 'bold');
 
     } else if (target === "me") {
         this.me(data);
-        //$("#p" + this.renderer.index(this.me()) + "-name").html("(you)");
 
 	} else if (target === "board") {
 		console.log("update board object")
