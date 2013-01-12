@@ -1,0 +1,25 @@
+.rooms{
+	padding: 20px;
+}
+.room{
+	border-style: solid;
+	border-width: 1px;
+	width: 150px;
+	border-radius: 3px;
+	margin: 5px;
+}
+.room:hover{
+	background-color: #BBFFBB;
+}
+
+.players{
+	height: 60px;
+}
+
+.player{
+	float: left;
+	margin-right: 20px;
+	width: 100px;
+	text-align: center;
+	height: 50px;
+}
