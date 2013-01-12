@@ -17,7 +17,6 @@ var Room = function() {
 		self.move(data);
 	});
 	this.game = ko.observable(undefined);
-	this.renderer = new Render("#mv-canvas", this);
 	this.me = ko.observable(-1);
 	//my player id
 
@@ -35,6 +34,9 @@ var Room = function() {
 		var player = self.players()[self.turn()];
 		return player ? player.id : -1;
 	}, this);
+
+    this.input = new Input("#mv-canvas", this);
+	this.renderer = new Render("#mv-canvas");
 }
 
 Room.prototype.dummyPlayers = function() {
@@ -57,6 +59,16 @@ Room.prototype.getPlayer = function(id) {
 		}
 	}
 }
+
+Room.prototype.getPlayerIndex = function(id) {
+	for (var i = 0; i < this.players().length; i++) {
+		if (this.players()[i].id === id) {
+			return i
+		}
+	}
+	return -1;
+}
+
 /*
  * @param {move} data
  * {move} = {start: {Position}, end: {Position}}
@@ -66,7 +78,7 @@ Room.prototype.move = function(data) {
 	console.log(data);
 	var scoreDiff = this.game().move(data.start, data.end);
 	this.mergeScores(scoreDiff);
-	this.renderer.draw();
+	this.renderer.draw(this);
 	for (var i = 0; i < this.players().length; i++) {
 		$("#p" + i + "-score").html(this.players()[i].score);
 	}
@@ -125,6 +137,6 @@ Room.prototype.update = function(data) {
 			this.tmpGrid = grid;
 		}
 	}
-	this.renderer.draw();
+	this.renderer.draw(this);
 }
 

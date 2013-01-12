@@ -18,3 +18,17 @@ COLORS = [{
 		activeColor : "#66d",
 		moveColor : "#dde"
 	}];
+
+RENDER = {
+    hexShape : {
+		radius : 36,
+		apothem : 31,
+		smallRadius : 36,
+		smallApothem : 31
+    },
+    offset : {
+        x : 36 + 1,
+        y : 2 * 31 + 1
+    }
+}
+
