@@ -3,11 +3,11 @@
  * @this {Room}
  * @param {Connect} connect
  */
-var Room = function(connect) {
-	this.players = this.dummyPlayers();
-	this.turn=0;
-	this.connect = connect;
-	this.socket = this.connect.socket;
+var Room = function() {
+	this.players = ko.observableArray(this.dummyPlayers());
+	this.turn = ko.observable(0);
+	this.connect = ko.observable(new Connect());
+	this.socket = this.connect().socket;
 	var self = this;
 	this.socket.on("update", function(data) {
 		self.update(data);
@@ -15,10 +15,18 @@ var Room = function(connect) {
 	this.socket.on("move", function(data) {
 		self.move(data);
 	});
-	this.game = undefined;
+	this.game = ko.observable(undefined);
 	this.renderer = new Render("#mv-canvas", this);
-	this.me=-1;
+	this.me = -1;
 	//my player id
+
+	self.createRoom = function() {
+		console.log("creating room");
+		self.connect().createGame(false, false, GAMETYPE);
+	}
+	self.joinRoom = function(r) {
+		self.connect().join(r.roomId);
+	}
 }
 
 Room.prototype.dummyPlayers = function() {
@@ -33,19 +41,18 @@ Room.prototype.dummyPlayers = function() {
 	return dummies;
 }
 
-Room.prototype.currentPlayerId = function(){
-	return this.players[this.turn].id;
+Room.prototype.currentPlayerId = function() {
+	return this.players()[this.turn()].id;
 }
 
 Room.prototype.getPlayer = function(id) {
-	for (var i in this.players) {
-		var player = this.players[i];
+	for (var i in this.players()) {
+		var player = this.players()[i];
 		if (player.id === id) {
 			return player;
 		}
 	}
 }
-
 /*
  * @param {move} data
  * {move} = {start: {Position}, end: {Position}}
@@ -53,23 +60,22 @@ Room.prototype.getPlayer = function(id) {
 Room.prototype.move = function(data) {
 	console.log("move");
 	console.log(data);
-	var scoreDiff = this.game.move(data.start, data.end);
+	var scoreDiff = this.game().move(data.start, data.end);
 	this.mergeScores(scoreDiff);
 	this.renderer.draw();
-	for (var i = 0; i < this.players.length; i++) {
-            $("#p" + i + "-score").html(this.players[i].score);
-        }
+	for (var i = 0; i < this.players().length; i++) {
+		$("#p" + i + "-score").html(this.players()[i].score);
+	}
 }
 
 Room.prototype.mergeScores = function(scores) {
 	var scoreDiff = scores
 	for (var s in scoreDiff) {
-		if (this.getPlayer(s)){
+		if (this.getPlayer(s)) {
 			this.getPlayer(s).score += scoreDiff[s];
 		}
 	}
 }
-
 /*
  * @param {update} data
  * {update} = {target: {string}, data: {object}}
@@ -77,40 +83,41 @@ Room.prototype.mergeScores = function(scores) {
 Room.prototype.update = function(data) {
 	var target = data.target;
 	var data = data.data;
-	if (target === "room"){
+	if (target === "room") {
 		this.id = data;
-		window.history.replaceState(data, data, "/room/"+data);
+		if (window.history.state !== "room") {
+			window.history.pushState("room", "room", "/room/" + data)
+		}
 	} else if (target === "players") {
-		this.players = data;
-		for (var i = 0; i < this.players.length; i++) {
-            $("#p" + i + "-score").html(this.players[i].score);
-        }
-        
+		this.players(data);
+		/*for (var i = 0; i < this.players().length; i++) {
+		 $("#p" + i + "-score").html(this.players()[i].score);
+		 }*/
+
 	} else if (target === "gameState") {
-		this.turn=data.turn;
-        $("#p" + ((this.turn - 1) % 3 + 3) % 3).css('font-weight', 'normal');
-        $("#p" + this.turn).css('font-weight', 'bold');
-        
+		this.turn(data.turn);
+		//$("#p" + ((this.turn() - 1) % 3 + 3) % 3).css('font-weight', 'normal');
+		//$("#p" + this.turn()).css('font-weight', 'bold');
+
 	} else if (target === "me") {
 		this.me = data;
-        $("#p" + this.renderer.index(this.me) + "-name").html("(you)");
-        
+		//$("#p" + this.renderer.index(this.me) + "-name").html("(you)");
+
 	} else if (target === "board") {
 		console.log("update board object")
 		console.log(data);
-        this.game = new Game(this.players, data);
-        if (this.tmpGrid) { //have previously recieved a grid
-        	this.game.setGrid(this.tmpGrid);
-        	this.tmpGrid = undefined;
-        }
+		this.game(new Game(this.players, data));
+		if (this.tmpGrid) {//have previously recieved a grid
+			this.game().setGrid(this.tmpGrid);
+			this.tmpGrid = undefined;
+		}
 
-	} else if (target === "grid"){
+	} else if (target === "grid") {
 		console.log("update grid state");
 		var grid = data;
-		if(this.game) { //if have recieved board
-			this.game.setGrid(grid);
-		}
-		else {
+		if (this.game()) {//if have recieved board
+			this.game().setGrid(grid);
+		} else {
 			this.tmpGrid = grid;
 		}
 	}

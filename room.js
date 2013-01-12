@@ -88,7 +88,6 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
  * @param {Object} data
  */
 Room.prototype.update = function(target, data) {
-	util.log(target, data)
 	this.sendAll("update", {
 		target : target,
 		data : data
@@ -111,11 +110,16 @@ Room.prototype.playerCount = function(){
  * @param {callback} callback
  */
 Room.prototype.add = function(player, callback) {
-	if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1 && this.players.indexOf(player) === -1) {
-		//replace previously removed player
-		var openId = this.openIds.shift();
+	if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1) {
+		
+		//user left the game, and is now returning
+		if(this.openIds.indexOf(player.id) !== -1){
+			var openId = this.openIds.splice(this.openIds.indexOf(player.id),1)[0];
+			player.removed = false;
+		}else{
+			var openId = this.openIds.shift();
+		}
 		var slot = this.getPlayerIndex(openId);
-
 		if ( slot === -1) {
 			util.log("no slot")
 			return;
@@ -124,13 +128,15 @@ Room.prototype.add = function(player, callback) {
 		//replace open space with new player
 		console.log("previous: " + openId + ", new: " + player.id);
 		this.game.replacePlayer(openId, player.id);
-
+		
+		
 		this.players[slot] = player;
 		this.setScores();
 		this.update("grid", this.game.grid);
 
 		this.update("players", this.publicPlayerList());
 		var playerSocket = player.socket;
+		
 		playerSocket.emit("update", {
 			target : "room",
 			data : this.id
@@ -163,8 +169,9 @@ Room.prototype.add = function(player, callback) {
  * @param {player} player
  */
 Room.prototype.remove = function(player) {
-	var index = this.players.indexOf(player);
+	var index = this.getPlayerIndex(player.id);
 	if (index !== -1) {
+		util.log("remvoed player")
 		this.openIds.push(this.players[index].id);
 		//this.players[index] = this.removedPlayer();
 		this.players[index].removed = true;
@@ -299,8 +306,8 @@ Room.prototype.gameState = function() {
 	return state;
 }
 
-Room.prototype.setAdmin = function(player) {
-	this.admin = player;
+Room.prototype.setAdmin = function(playerId) {
+	this.admin = playerId;
 }
 
 Room.prototype.privatize = function() {

@@ -5,6 +5,7 @@
  * @param {Room} room
  */
 var Render = function(canvasId, room) {
+	this.canvasId=canvasId;
 	this.canvas = $(canvasId)[0];
 	this.context = this.canvas.getContext("2d");
 	var self = this;
@@ -143,12 +144,12 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.getDimensions = function() {
-    var width = (2 * this.hexShape.radius) * this.room.game.board.width + 2;
-    if (this.room.game.board.width % 2 === 0) {
+    var width = (2 * this.hexShape.radius) * this.room.game().board.width + 2;
+    if (this.room.game().board.width % 2 === 0) {
         width += .5 * this.hexShape.radius;
     }
-    var height = (2 * this.hexShape.apothem) * this.room.game.board.height + 2;
-    if (this.room.game.board.height % 2 === 0) {
+    var height = (2 * this.hexShape.apothem) * this.room.game().board.height + 2;
+    if (this.room.game().board.height % 2 === 0) {
         height += this.hexShape.apothem;
     }
     return {width : width, height : height};
@@ -158,11 +159,10 @@ Render.prototype.getDimensions = function() {
  * @param {Event} e
  */
 Render.prototype.onClick = function(e) {
-	console.log("clicked")
 	var clicked = this.getCursorPosition(e);
 	var space = this.spaceAt(clicked.x, clicked.y);
 	try {
-		if (this.room.game.grid[space.i][space.j] === -2) {
+		if (this.room.game().grid[space.i][space.j] === -2) {
 			return;
 		}
 	} catch(e) {
@@ -174,12 +174,12 @@ Render.prototype.onClick = function(e) {
 		return;
 	}
 
-	console.log(this.room.game.grid[space.i][space.j])
-	if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game.grid[space.i][space.j] === this.room.me) {
+	console.log(this.room.game().grid[space.i][space.j])
+	if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game().grid[space.i][space.j] === this.room.me) {
 		this.clickedSpace.i = space.i;
 		this.clickedSpace.j = space.j;
 
-		this.possibleMoves = this.room.game.generateMoves(space);
+		this.possibleMoves = this.room.game().generateMoves(space);
 	} else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
 		this.clickedSpace.i = -1;
 		this.clickedSpace.j = -1;
@@ -192,7 +192,7 @@ Render.prototype.onClick = function(e) {
 
 		// Send move to server
 		this.room.move({start: this.clickedSpace, end: space});
-		this.room.connect.move({
+		this.room.connect().move({
 			start : this.clickedSpace,
 			end : space
 		});
@@ -209,8 +209,8 @@ Render.prototype.onClick = function(e) {
 
 //TODO: move this to room
 Render.prototype.index = function(id) {
-	for (var i = 0; i < this.room.players.length; i++) {
-		if (this.room.players[i].id === id) {
+	for (var i = 0; i < this.room.players().length; i++) {
+		if (this.room.players()[i].id === id) {
 			return i
 		}
 	}
@@ -220,34 +220,35 @@ Render.prototype.index = function(id) {
 // Draw
 Render.prototype.draw = function() {
 
-    if (!this.room.game) {
+    if (!this.room.game()) {
     	console.log("no game")
         return;
     }
 
 	// clear canvas
     var dim = this.getDimensions();
+    $(this.canvasId).width(dim.width).height(dim.height).show();
     this.canvas.width = dim.width;
     this.canvas.height = dim.height;
 	
-    for (var i = 0; i < this.room.game.board.width; i++) {
-		for (var j = 0; j < this.room.game.board.height; j++) {
+    for (var i = 0; i < this.room.game().board.width; i++) {
+		for (var j = 0; j < this.room.game().board.height; j++) {
 
 			var space = this.hexSpaceCenter(i, j);
 			var fill = "#fff";
 
 			// Weed out non-spaces
-			if (this.room.game.grid[i][j] == -2) {
+			if (this.room.game().grid[i][j] == -2) {
 				continue;
 			}
 
 			// Fill
-            if (this.room.game.grid[i][j] === -3) {
+            if (this.room.game().grid[i][j] === -3) {
 				fill = "#444";
-            } else if (this.room.game.grid[i][j] <= -4) {
+            } else if (this.room.game().grid[i][j] <= -4) {
             
-            } else if (this.room.game.grid[i][j] !== -1) {
-				var index = this.index(this.room.game.grid[i][j])
+            } else if (this.room.game().grid[i][j] !== -1) {
+				var index = this.index(this.room.game().grid[i][j])
 				var colors = this.colors[index];
 				if (!colors) {
 					colors = {
@@ -273,12 +274,11 @@ Render.prototype.draw = function() {
 				}
 				fill = colors.moveColor;
 			}
-
 			// Draw Hex Spaces
             this.drawHexSpace(space.x, space.y, this.hexShape.radius, fill);
 
             var s = {i: i, j: j};
-            if (this.room.game.board.gametype === "pointcontrol" && this.room.game.isControlPoint(s)) {
+            if (this.room.game().board.gametype === "pointcontrol" && this.room.game().isControlPoint(s)) {
                 this.context.beginPath();
                 this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
                 this.context.fillStyle = "#FFB00F";

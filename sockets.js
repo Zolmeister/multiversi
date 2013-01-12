@@ -4,6 +4,26 @@ var Room = require("./room");
 var util = require("./utils");
 var settings = require("./settings");
 var Player = require("./public/js/player");
+var playersNotInGames = [];
+var openGames = [];
+
+function calcOpenGames() {
+	openGames = [];
+	for (var i in Games) {
+		if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
+			//private games that have started become public
+			openGames.push({
+				roomId : parseInt(i),
+				players : Games[i].playerCount()
+			});
+		}
+	}
+	for (var i in playersNotInGames) {
+		playersNotInGames[i].socket.emit("rooms", openGames);
+	}
+	util.log("open games", openGames)
+	//util.log("sent to", playersNotInGames)
+}
 
 //TODO: proper error handling and input validation
 //TODO: obscure room IDs to prevent joining private games
@@ -11,6 +31,22 @@ module.exports = function(socket) {
 	var id = socket.id;
 	var player = new Player(id, socket);
 	var room;
+	playersNotInGames.push(player);
+	socket.emit("rooms", openGames);
+	function addPlayer(targetRoom, player, callback) {
+		if(!targetRoom || !player){
+			return;
+		}
+		targetRoom.add(player, function(targetRoom) {
+			util.log("player added")
+			room = targetRoom;
+			playersNotInGames.splice(playersNotInGames.indexOf(player), 1);
+			calcOpenGames();
+			if (callback) {
+				callback(targetRoom);
+			}
+		})
+	}
 
 	socket.on("join", function(data) {
 		//data: {room: target room id}
@@ -20,42 +56,38 @@ module.exports = function(socket) {
 		}
 		var roomNumber = data.room;
 		var targetRoom = Games[roomNumber];
-		if (targetRoom) {
-			targetRoom.add(player, function(targetRoom) {
-				room = targetRoom;
-			});
-		} else {
-			socket.emit("error", "joining room");
-		}
+		addPlayer(targetRoom, player);
 	})
-
-	socket.on("getRooms", function(data) {
-		//data: {}
-		var open = [];
-		for (var i in Games) {
-			if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
-				//private games that have started become public
-				open.push({
-					roomId : parseInt(i),
-					players : Games[i].playerCount()
-				});
-			}
-		}
-		//open: [{roomId: id, players: int}]
-		socket.emit("rooms", open);
-	})
+	
+	function removeRoom(room){
+		delete Games[room.id];
+	}
+	
 	function leaveRoom() {
 		if (room) {
+			util.log("player left room");
 			room.remove(player);
+			/*if(room.playerCount() === 0 ){
+				removeRoom(room);
+			}*/
+			calcOpenGames();
+			room = undefined;
 		}
+		
 	}
 
 
 	socket.on("leaveRoom", function() {
+		playersNotInGames.push(player);
 		leaveRoom();
 	})
 
 	socket.on("disconnect", function() {
+		//to prevent memory leaks
+		var index = playersNotInGames.indexOf(player);
+		if(index !== -1){
+			playersNotInGames.splice(index, 1);
+		}
 		leaveRoom();
 	})
 
@@ -64,28 +96,20 @@ module.exports = function(socket) {
 		var newRoom = new Room(data.gametype);
 		var isPrivate = data.isPrivate;
 		var bots = data.bots;
-		if (isPrivate) {
-			if (bots) {
-				newRoom.add(player, function(targetRoom) {
-					room = targetRoom;
-				});
-				newRoom.setAdmin(player);
-				for (var i = 0; i < 2; i++) {
-					newRoom.addBot(player);
+		addPlayer(newRoom, player, function(targetRoom) {
+			if (isPrivate) {
+				newRoom.setAdmin(player.id);
+				if (bots) {
+					for (var i = 0; i < 2; i++) {
+						newRoom.addBot();
+					}
+				} else {
+					newRoom.privatize();
 				}
-			} else {
-				newRoom.add(player, function(targetRoom) {
-					room = targetRoom;
-				});
-				newRoom.setAdmin(player);
-				newRoom.privatize();
 			}
-		} else {
-			newRoom.add(player, function(targetRoom) {
-				room = targetRoom;
-			});
-		}
-		Games[newRoom.id] = newRoom;
+			Games[newRoom.id] = newRoom;
+			calcOpenGames();
+		});
 	})
 
 	socket.on("roomAdmin", function(data) {
@@ -94,7 +118,7 @@ module.exports = function(socket) {
 		//TODO: data validation
 		var action = data.action;
 		var targetPlayer = room.getPlayer(data.target);
-		if (room.admin === player || settings.DEBUG) {
+		if (room.admin === player.id || settings.DEBUG) {
 			if (action === "kick") {
 				room.kick(targetPlayer);
 			} else if (action === "ban") {
@@ -103,6 +127,7 @@ module.exports = function(socket) {
 				room.adrminStart();
 			} else if (action === "addBot") {
 				room.addBot();
+				calcOpenGames();
 			} else {
 				socket.emit("error", "bad call");
 			}

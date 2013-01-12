@@ -2,32 +2,45 @@ function isInt(n) {
 	return typeof n === "number" && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
 }
 
-//TODO: use zepto
-//TODO: fix sockets class dependencies
-window.onload = function() {
-	room = new Room(new Connect());
-	var inRoom = parseInt(window.location.href.split("/").pop());
-	if (!isNaN(inRoom) && typeof inRoom === "number") {
-		room.connect.join(inRoom);
-	} else {
-		room.connect.getRooms(function(rooms) {
-			if (rooms.length < 1) {
-				//create room
-				console.log("no room, created one");
-				room.connect.createGame(false, false, GAMETYPE);
-			} else {
-				room.connect.join(rooms[0].roomId);
-				//join first available room
-			}
-		});
-	}
-
-	//connect.join(0);
-	/*room = new Room();
-	 room.players=[{3:'c'},{2:'b'},{1:'a'}];
-	 room.game.newGame();
-	 room.me=room.players[0];
-	 this.room.turn = this.room.me;
-	 room.renderer.draw();*/
+function leaveRoom() {
+	room.game(undefined);
+	$("#mv-canvas").hide();
+	room.connect().leaveRoom();
 }
 
+function leaveButton() {
+	window.history.back();
+}
+
+/*
+ * window history logic
+ * if coming to '/', push state as lobby
+ * 		on join room, push state as room
+ * 		on back button, leave room
+ * if coming to '/room/X', push state as lobby
+ * 		on join room, push state as room
+ * 		on back button, leave room
+ */
+$(function() {
+	var inRoom = parseInt(window.location.href.split("/").pop());
+	window.history.replaceState("lobby", "lobbly", "/");
+	room = new Room();
+	if (!isNaN(inRoom) && typeof inRoom === "number") {
+		//connecting to room via url
+		room.connect().join(inRoom);
+	}
+
+	window.addEventListener('popstate', function(e) {
+
+		var inRoom = parseInt(window.location.href.split("/").pop());
+		if (e.state === "lobby" && isNaN(inRoom)) {
+			console.log("lobby, leaving room");
+			leaveRoom();
+		} else if(e.state === "room"){
+			room.connect().join(inRoom);
+		}
+	})
+	
+	//TODO: see if this causes a race condition
+	ko.applyBindings(room);
+});

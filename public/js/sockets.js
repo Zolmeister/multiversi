@@ -3,22 +3,27 @@
  * @this {Connect}
  */
 var Connect = function() {
+	var self = this;
+	this.rooms = ko.observableArray([]);
 	this.socket = io.connect();
+	
 	this.socket.on("error", function(data) {
 		console.error(data);
 	})
+	
+	this.socket.on("rooms", function(data){
+		console.log("got rooms")
+		console.log(data)
+		self.rooms(data)
+	})
+	
 	this.join = function join(roomId) {
 		console.log("joining: "+roomId)
 		this.socket.emit("join", {
 			room : roomId
 		});
 	}
-
-	this.getRooms = function getRooms(callback) {
-		this.socket.emit("getRooms");
-		this.socket.on("rooms", callback);
-	}
-
+	
 	this.leaveRoom = function leaveRoom() {
 		this.socket.emit("leaveRoom");
 	}
