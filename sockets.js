@@ -67,9 +67,9 @@ module.exports = function(socket) {
 		if (room) {
 			util.log("player left room");
 			room.remove(player);
-			/*if(room.playerCount() === 0 ){
+			if(room.playerCount() === 0 ){
 				removeRoom(room);
-			}*/
+			}
 			calcOpenGames();
 			room = undefined;
 		}
