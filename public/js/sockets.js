@@ -31,7 +31,7 @@ var Connect = function() {
     this.createGame = function createGame(isPrivate, bots, type) {
         isPrivate = isPrivate || false;
         bots = bots || false;
-        type = type || "classic";
+        type = type || GAMETYPE;
         this.socket.emit("createGame", {
             isPrivate : isPrivate,
             bots : bots,

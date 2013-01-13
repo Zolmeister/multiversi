@@ -9,7 +9,7 @@ function Player(id, socket) {
     this.socket = socket;
     this.score = 0;
     this.bot = false;
-    this.removed = false;
+    this.removed = true;
 }
 
 //Uses knockout.js, only for client side

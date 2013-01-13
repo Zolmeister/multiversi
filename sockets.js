@@ -47,16 +47,34 @@ module.exports = function(socket) {
             }
         })
     }
-
+    
+    function firstAvailableRoomNumber(){
+        for(var i in Games){
+            var room = Games[i];
+            if (!room.isPrivate && room.playerCount()<3){
+                return i;
+            }
+        }
+        return -1;
+    }
 
     socket.on("join", function(data) {
         //data: {room: target room id}
-        if (!data || !util.isInt(data.room)) {
+        if (!data) {
             socket.emit("error", "joining room, bad data")
             return;
         }
-        var roomNumber = data.room;
+        //join first available
+        if (!data.room) {
+            var roomNumber = firstAvailableRoomNumber();
+        } else {
+            var roomNumber = data.room;
+        }
         var targetRoom = Games[roomNumber];
+        if (!targetRoom) {
+            socket.emit("error", "joining room, no such room");
+            return;
+        }
         addPlayer(targetRoom, player);
     })
     function removeRoom(room) {

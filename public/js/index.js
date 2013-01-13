@@ -22,7 +22,6 @@ $(function() {
     }
 
     window.addEventListener('popstate', function(e) {
-
         var inRoom = parseInt(window.location.href.split("/").pop());
         if (e.state === "lobby" && isNaN(inRoom)) {
             console.log("lobby, leaving room");

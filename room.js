@@ -114,10 +114,10 @@ Room.prototype.add = function(player, callback) {
         if(this.getPlayer(player.id) && !this.getPlayer(player.id).removed){
             return;
         }
+        
         //user left the game, and is now returning
         if (this.openIds.indexOf(player.id) !== -1) {
             var openId = this.openIds.splice(this.openIds.indexOf(player.id),1)[0];
-            player.removed = false;
         } else {
             var openId = this.openIds.shift();
         }
@@ -126,7 +126,7 @@ Room.prototype.add = function(player, callback) {
             util.log("no slot")
             return;
         }
-
+        player.removed = false;
         //replace open space with new player
         console.log("previous: " + openId + ", new: " + player.id);
         this.game.replacePlayer(openId, player.id);
