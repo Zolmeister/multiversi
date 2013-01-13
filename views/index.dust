@@ -33,6 +33,7 @@
 			<div class="player" data-bind="style: {backgroundColor: $root.currentPlayerId()==id ? $root.indexToColor(index()).activeColor : $root.indexToColor(index()).color}">
 				Score: <span data-bind="text: score"></span><br>
 				<span data-bind="if: bot"> (BOT)</span>
+				<span data-bind="if: removed"> (waiting)</span>
 				<span data-bind="if: id==$root.me()">YOU</span>
 			</div>
 		</div>
