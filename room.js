@@ -110,7 +110,10 @@ Room.prototype.playerCount = function() {
  */
 Room.prototype.add = function(player, callback) {
     if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1) {
-
+        //detect if player is trying to join more than once
+        if(this.getPlayer(player.id) && !this.getPlayer(player.id).removed){
+            return;
+        }
         //user left the game, and is now returning
         if (this.openIds.indexOf(player.id) !== -1) {
             var openId = this.openIds.splice(this.openIds.indexOf(player.id),1)[0];
