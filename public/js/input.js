@@ -79,15 +79,16 @@ Input.prototype.defaultClickCallback = function(space) {
     }
 
     //console.log(this.room.game().grid[space.i][space.j])
-    if ((this.clickedSpace.i === -1 && this.clickedSpace.i === -1) && this.room.game().grid[space.i][space.j] === this.room.me()) {
-        this.clickedSpace.i = space.i;
-        this.clickedSpace.j = space.j;
-
-        this.possibleMoves = this.room.game().generateMoves(space);
-    } else if (this.clickedSpace.i == space.i && this.clickedSpace.j == space.j) {
-        this.clickedSpace.i = -1;
-        this.clickedSpace.j = -1;
-        this.possibleMoves = {};
+    if (this.room.game().grid[space.i][space.j] === this.room.me()) {
+        if (this.clickedSpace.i === space.i && this.clickedSpace.j === space.j) {
+            this.clickedSpace.i = -1;
+            this.clickedSpace.j = -1;
+            this.possibleMoves = {};
+        } else {
+            this.clickedSpace.i = space.i;
+            this.clickedSpace.j = space.j;
+            this.possibleMoves = this.room.game().generateMoves(space);
+        }
     } else {
         // Validate locally
         if (!this.possibleMoves[[space.i, space.j]]) {
