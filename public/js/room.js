@@ -8,12 +8,16 @@ var Room = function() {
     this.turn = ko.observable(0);
     this.connect = ko.observable(new Connect());
     this.socket = this.connect().socket;
+    this.isPublic = ko.observable(true);
     var self = this;
     this.socket.on("update", function(data) {
         self.update(data);
     });
     this.socket.on("move", function(data) {
         self.move(data);
+    });
+    this.socket.on("removed", function(){
+        leaveButton();
     });
     this.game = ko.observable(undefined);
     this.me = ko.observable(-1);
@@ -22,7 +26,16 @@ var Room = function() {
     this.joinRoom = function(r) {
         self.connect().join(r.roomId);
     }
-
+    this.iAmAdmin = ko.computed(function() {
+        var me = self.getPlayer(self.me());
+        return me ? me.isAdmin() : false;
+    }, this)
+    this.kick = function(target) {
+        self.connect().roomAdmin("kick", target.id);
+    }
+    this.ban = function(target) {
+        self.connect().roomAdmin("ban", target.id);
+    }
     this.currentPlayerId = ko.computed(function() {
         var player = self.players()[self.turn()];
         return player ? player.id : -1;
@@ -109,13 +122,17 @@ Room.prototype.update = function(data) {
             window.history.pushState("room", "room", "/room/" + data)
         }
     } else if (target === "players") {
-        this.players(data);
+        console.log("players")
+        console.log(data)
+        //this.players(data);
         for (var i = 0; i < data.length; i++) {
             this.players()[i] = new ObservablePlayer(data[i]);
         }
+        this.players.valueHasMutated();
 
     } else if (target === "gameState") {
         this.turn(data.turn);
+        this.isPublic(data.isPublic);
 
     } else if (target === "me") {
         this.me(data);

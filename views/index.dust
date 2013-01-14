@@ -35,13 +35,23 @@
 		<div class="players" data-bind="foreach: players()">
 			<div class="player" data-bind="style: {backgroundColor: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}">
 				Score: <span data-bind="text: score"></span><br>
-				<span data-bind="if: bot"> (BOT)</span>
-				<span data-bind="if: removed"> (waiting)</span>
-				<span data-bind="if: id==$parent.me()">YOU</span>
+				<span data-bind="if: bot() && !removed()"> (BOT)</span>
+				<span data-bind="if: removed()"> (waiting)</span>
+				<span data-bind="if: id===$parent.me()">YOU</span>
+				<span data-bind="if: isAdmin">(admin)</span>
+				<div data-bind="if: $root.iAmAdmin() && id!==$parent.me() && !removed()">
+				    <button data-bind="click: $root.kick">kick</button>
+				    <button data-bind="visible: !bot(), click: $root.ban">ban</button>
+				</div>
+				
 			</div>
 		</div>
 		<br>
 		<button style="clear: both" onclick='leaveButton();'>leave room</button>
-		<button onClick='room.connect().roomAdmin("addBot", "")'>Add bot</button>
+		<div class="admin-options" data-bind="if: iAmAdmin">
+		  <h2>Admin Options</h2>
+		  <button onClick='room.connect().roomAdmin("addBot", "")'>Add bot</button>
+		  <button onClick='room.connect().roomAdmin("addBot", "")' data-bind="visible: !isPublic()">Make Public</button>
+		</div>
 	</div>
 {/body}

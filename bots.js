@@ -16,6 +16,7 @@ var Bot = function(board) {
     };
     this.bot = true;
     this.removed = false;
+    this.isAdmin = false;
 }
 /*
  * @param {grid} grid

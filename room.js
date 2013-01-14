@@ -18,8 +18,6 @@ function Room(gametype) {
     this.board = this.getBoard(gametype);
     this.game = new Game(this.players, this.board);
     console.log(this.game.grid);
-    this.admin = undefined;
-    //player
     this.turn = 0;
     //player index
     this.isPublic = true;
@@ -77,7 +75,8 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
             //color is now based on index in player list
             score : p.score,
             bot : p.bot,
-            removed : p.removed
+            removed : p.removed,
+            isAdmin : p.isAdmin
         }
         playerList.push(player);
     }
@@ -88,10 +87,21 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
  * @param {Object} data
  */
 Room.prototype.update = function(target, data) {
+    util.log(target, data);
     this.sendAll("update", {
         target : target,
         data : data
     });
+}
+
+Room.prototype.noBotPlayerCount = function(){
+    var cnt = 0;
+    for (var i = 0; i < this.players.length; i++) {
+        if (!this.players[i].removed && !this.players[i].bot) {//check if player has been removed from game
+            cnt++;
+        }
+    }
+    return cnt;
 }
 
 Room.prototype.playerCount = function() {
@@ -172,6 +182,7 @@ Room.prototype.remove = function(player) {
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
         this.players[index].removed = true;
+        this.players[index].socket.emit("removed");
         //dont actually remove player
         this.update("gameState", this.gameState());
         this.update("players", this.publicPlayerList());
@@ -183,7 +194,9 @@ Room.prototype.remove = function(player) {
  */
 Room.prototype.sendAll = function(name, data) {//send to all players
     for (var i in this.players) {
-        this.players[i].socket.emit(name, data);
+        if(!this.players[i].bot && !this.players[i].removed){
+            this.players[i].socket.emit(name, data);
+        }
     }
 }
 /*
@@ -261,8 +274,8 @@ Room.prototype.kick = function(target) {
 }
 
 Room.prototype.ban = function(target) {
-    this.kick(target);
     this.banned.push(target);
+    this.kick(target);
 }
 
 Room.prototype.adminStart = function() {
@@ -303,8 +316,9 @@ Room.prototype.gameState = function() {
     return state;
 }
 
-Room.prototype.setAdmin = function(playerId) {
-    this.admin = playerId;
+Room.prototype.setAdmin = function(player) {
+    player.isAdmin = true;
+    this.update("players", this.publicPlayerList());
 }
 
 Room.prototype.privatize = function() {

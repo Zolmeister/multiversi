@@ -47,11 +47,11 @@ module.exports = function(socket) {
             }
         })
     }
-    
-    function firstAvailableRoomNumber(){
-        for(var i in Games){
+
+    function firstAvailableRoomNumber() {
+        for (var i in Games) {
             var room = Games[i];
-            if (!room.isPrivate && room.playerCount()<3){
+            if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player)===-1) {
                 return i;
             }
         }
@@ -72,8 +72,11 @@ module.exports = function(socket) {
         }
         var targetRoom = Games[roomNumber];
         if (!targetRoom) {
-            socket.emit("error", "joining room, no such room");
-            return;
+            return createGame({
+                isPrivate : false,
+                bots : false,
+                gametype : "pointcontrol"
+            });
         }
         addPlayer(targetRoom, player);
     })
@@ -85,7 +88,7 @@ module.exports = function(socket) {
         if (room) {
             util.log("player left room");
             room.remove(player);
-            if (room.playerCount() === 0) {
+            if (room.noBotPlayerCount() === 0) {
                 removeRoom(room);
             }
             calcOpenGames();
@@ -109,14 +112,16 @@ module.exports = function(socket) {
         leaveRoom();
     })
 
-    socket.on("createGame", function(data) {
-        //data: {isPrivate: boolean, bots: boolean}
+    socket.on("createGame", createGame);
+
+    function createGame(data) {
+        //data: {isPrivate: boolean, bots: boolean, gametype: gametype}
         var newRoom = new Room(data.gametype);
         var isPrivate = data.isPrivate;
         var bots = data.bots;
         addPlayer(newRoom, player, function(targetRoom) {
             if (isPrivate) {
-                newRoom.setAdmin(player.id);
+                newRoom.setAdmin(player);
                 if (bots) {
                     for (var i = 0; i < 2; i++) {
                         newRoom.addBot();
@@ -128,7 +133,8 @@ module.exports = function(socket) {
             Games[newRoom.id] = newRoom;
             calcOpenGames();
         });
-    })
+    }
+
 
     socket.on("roomAdmin", function(data) {
         //data: {action: kick|ban|start|addBot, target: playerId}
@@ -136,11 +142,15 @@ module.exports = function(socket) {
         //TODO: data validation
         var action = data.action;
         var targetPlayer = room.getPlayer(data.target);
-        if (room.admin === player.id || settings.DEBUG) {
+        if (player.isAdmin || settings.DEBUG) {
             if (action === "kick") {
-                room.kick(targetPlayer);
+                if (targetPlayer) {
+                    room.kick(targetPlayer);
+                }
             } else if (action === "ban") {
-                room.ban(targetPlayer);
+                if (targetPlayer) {
+                    room.ban(targetPlayer);
+                }
             } else if (action === "start") {
                 room.adrminStart();
             } else if (action === "addBot") {
@@ -154,7 +164,7 @@ module.exports = function(socket) {
 
     socket.on("move", function(data) {
         //data: {start: {i: , j: }, end: {i: , j: }}
-        if (room) {
+        if (!player.removed && room) {
             room.move(data, player);
         }
     })

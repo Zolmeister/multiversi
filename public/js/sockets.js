@@ -12,8 +12,6 @@ var Connect = function() {
     })
 
     this.socket.on("rooms", function(data) {
-        console.log("got rooms")
-        console.log(data)
         self.rooms(data)
     })
 
