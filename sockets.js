@@ -93,6 +93,7 @@ module.exports = function(socket) {
             }
             calcOpenGames();
             room = undefined;
+            player.isAdmin = false;
         }
 
     }

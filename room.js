@@ -262,11 +262,10 @@ Room.prototype.addBot = function() {
 
 Room.prototype.botMove = function() {
     var curPlayer = this.players[this.turn];
-    if (curPlayer.bot) {
+    if (curPlayer.bot && !curPlayer.removed) {
         var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
         this.move(move, curPlayer);
     }
-
 }
 
 Room.prototype.kick = function(target) {

@@ -6,7 +6,8 @@
 var Room = function() {
     this.players = ko.observableArray(this.dummyPlayers());
     this.turn = ko.observable(0);
-    this.connect = ko.observable(new Connect());
+    this.connect = globalConnect;
+    
     this.socket = this.connect().socket;
     this.isPublic = ko.observable(true);
     var self = this;
@@ -43,18 +44,6 @@ var Room = function() {
 
     this.input = new Input("#mv-canvas", this);
     this.renderer = new Render("#mv-canvas");
-}
-//TODO: move to lobby class
-Room.prototype.createRoom = function(self, e, isPrivate, bots, type) {
-    self.connect().createGame(isPrivate, bots, type);
-}
-
-Room.prototype.createRoomBots = function(self) {
-    self.createRoom(self, null, true, true, GAMETYPE);
-}
-
-Room.prototype.createRoomPrivate = function(self) {
-    self.createRoom(self, null, true, false, GAMETYPE);
 }
 
 Room.prototype.indexToColor = function(index) {
