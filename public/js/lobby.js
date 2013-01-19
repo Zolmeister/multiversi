@@ -8,6 +8,7 @@ function Lobby() {
     if ( typeof dynamicJoin !== "undefined") {
         this.joinRoom(dynamicJoin);
     }
+    
     this.windowEvent = function(e) {
         var inRoom = self.inRoom();
 
@@ -19,8 +20,12 @@ function Lobby() {
         }
 
     }
+    
+    this.joinRoomClick = function(room){
+        self.joinRoom(room.roomId);
+    }
+    
     window.addEventListener('popstate', this.windowEvent);
-
     ko.applyBindings(this.room, $("#roomView")[0]);
 }
 

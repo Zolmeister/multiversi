@@ -20,7 +20,7 @@
     <div class="rooms" data-bind="visible: !room()" id="lobbyView">
         <h1>Rooms available</h1>
         <div data-bind="foreach: globalConnect().rooms">
-            <div class="room" data-bind="click: $parent.joinRoom">
+            <div class="room" data-bind="click: $root.joinRoomClick">
                 Room ID: <span data-bind="text: roomId"></span><br>
                 Number of Players: <span data-bind="text: players"></span>
             </div>
