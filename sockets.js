@@ -25,6 +25,10 @@ function calcOpenGames() {
     //util.log("sent to", playersNotInGames)
 }
 
+function removeRoom(room) {
+    delete Games[room.id];
+}
+
 //TODO: proper error handling and input validation
 //TODO: obscure room IDs to prevent joining private games
 module.exports = function(socket) {
@@ -33,6 +37,7 @@ module.exports = function(socket) {
     var room;
     playersNotInGames.push(player);
     socket.emit("rooms", openGames);
+
     function addPlayer(targetRoom, player, callback) {
         if (!targetRoom || !player) {
             return;
@@ -51,12 +56,47 @@ module.exports = function(socket) {
     function firstAvailableRoomNumber() {
         for (var i in Games) {
             var room = Games[i];
-            if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player)===-1) {
+            if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
                 return i;
             }
         }
         return -1;
     }
+
+    function leaveRoom() {
+        if (room) {
+            util.log("player left room");
+            room.remove(player);
+            if (room.noBotPlayerCount() === 0) {
+                removeRoom(room);
+            }
+            calcOpenGames();
+            room = undefined;
+            player.isAdmin = false;
+        }
+    }
+
+    function createGame(data) {
+        //data: {isPrivate: boolean, bots: boolean, gametype: gametype}
+        var newRoom = new Room(data.gametype);
+        var isPrivate = data.isPrivate;
+        var bots = data.bots;
+        addPlayer(newRoom, player, function(targetRoom) {
+            if (isPrivate) {
+                newRoom.setAdmin(player);
+                if (bots) {
+                    for (var i = 0; i < 2; i++) {
+                        newRoom.addBot();
+                    }
+                } else {
+                    newRoom.privatize();
+                }
+            }
+            Games[newRoom.id] = newRoom;
+            calcOpenGames();
+        });
+    }
+
 
     socket.on("join", function(data) {
         //data: {room: target room id}
@@ -80,24 +120,6 @@ module.exports = function(socket) {
         }
         addPlayer(targetRoom, player);
     })
-    function removeRoom(room) {
-        delete Games[room.id];
-    }
-
-    function leaveRoom() {
-        if (room) {
-            util.log("player left room");
-            room.remove(player);
-            if (room.noBotPlayerCount() === 0) {
-                removeRoom(room);
-            }
-            calcOpenGames();
-            room = undefined;
-            player.isAdmin = false;
-        }
-
-    }
-
 
     socket.on("leaveRoom", function() {
         playersNotInGames.push(player);
@@ -114,28 +136,6 @@ module.exports = function(socket) {
     })
 
     socket.on("createGame", createGame);
-
-    function createGame(data) {
-        //data: {isPrivate: boolean, bots: boolean, gametype: gametype}
-        var newRoom = new Room(data.gametype);
-        var isPrivate = data.isPrivate;
-        var bots = data.bots;
-        addPlayer(newRoom, player, function(targetRoom) {
-            if (isPrivate) {
-                newRoom.setAdmin(player);
-                if (bots) {
-                    for (var i = 0; i < 2; i++) {
-                        newRoom.addBot();
-                    }
-                } else {
-                    newRoom.privatize();
-                }
-            }
-            Games[newRoom.id] = newRoom;
-            calcOpenGames();
-        });
-    }
-
 
     socket.on("roomAdmin", function(data) {
         //data: {action: kick|ban|start|addBot, target: playerId}

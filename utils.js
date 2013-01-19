@@ -33,7 +33,7 @@ function nextRoomId() {
 }
 
 function log(name, object) {
-    if (!object) {
+    if ( typeof object === "undefind") {
         console.log(name);
     } else {
         console.log(name);
@@ -45,4 +45,4 @@ exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
-exports.log = log; 
+exports.log = log;
