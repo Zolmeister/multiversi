@@ -69,12 +69,8 @@ Room.prototype.getPlayer = function(id) {
 }
 
 Room.prototype.getPlayerIndex = function(id) {
-    for (var i = 0; i < this.players().length; i++) {
-        if (this.players()[i].id === id) {
-            return i
-        }
-    }
-    return -1;
+    //from util.js
+    return getPlayerIndex(this.players(), id);
 }
 /*
  * @param {move} data
@@ -83,7 +79,18 @@ Room.prototype.getPlayerIndex = function(id) {
 Room.prototype.move = function(data) {
     var scoreDiff = this.game().move(data.start, data.end);
     this.mergeScores(scoreDiff);
-    this.renderer.draw(this);
+    this.drawSelf();
+}
+
+/*
+ * @param {Position} clickedSpace *optional 
+ * @param {list} possible Moves *optional
+ */
+Room.prototype.drawSelf = function(clickedSpace, possibleMoves){
+    if(!this.game()){
+        return;
+    }
+    this.renderer.draw(this.me(), this.players(), this.game().board, this.game().grid, clickedSpace, possibleMoves);
 }
 
 Room.prototype.mergeScores = function(scores) {
@@ -156,6 +163,6 @@ Room.prototype.update = function(data) {
             }
         }
     }
-    this.renderer.draw(this);
+    this.drawSelf();
 }
 
