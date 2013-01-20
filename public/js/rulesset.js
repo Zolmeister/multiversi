@@ -4,7 +4,6 @@
 */
 //function RulesSet(game) {
 function RulesSet() {
-    this.controlPoints = [];
     this.movesMade = 0;
     this.totalMoves = 0;
 };
@@ -14,7 +13,6 @@ function RulesSet() {
  */
 RulesSet.prototype.newBoard = function(board, players) {
 
-    this.controlPoints = [];
     this.movesMade = 0;
     this.totalMoves = board.width * board.height;
 
@@ -42,10 +40,6 @@ RulesSet.prototype.newBoard = function(board, players) {
         for (var s in board.controlpoints) {
             var space = board.controlpoints[s];
             grid[space[0]][space[1]] = -1;
-            this.controlPoints.push({
-                i : space[0],
-                j : space[1]
-            });
         }
     }
 
@@ -92,21 +86,24 @@ RulesSet.prototype.gameEnded = function(grid, board) {
  * @param {Position} space
  * return {boolean}
  */
-RulesSet.prototype.isControlPoint = function(space) {
-    for (var i in this.controlPoints) {
-        var s = this.controlPoints[i];
-        if (space.i === s.i && space.j === s.j) {
-            return true;
+RulesSet.prototype.isControlPoint = function(pos, board) {
+    if (board.gametype === "pointcontrol") {
+        for (var s in board.controlpoints) {
+            var point = board.controlpoints[s];
+            var space = {i:point[0], j:point[1]};
+            if (space.i === pos.i && space.j === pos.j) {
+                return true;
+            }
         }
     }
-
+    
     return false;
 }
 /*
  * @param {BoardDiff} boardDiff
  * return {ScoreDiff}
  */
-RulesSet.prototype.getScoreDiff = function(boardDiff, gametype) {
+RulesSet.prototype.getScoreDiff = function(boardDiff, board) {
     /*
      * BoardDiff = {
      *     gained: {
@@ -127,14 +124,14 @@ RulesSet.prototype.getScoreDiff = function(boardDiff, gametype) {
         for (var s in spaces) {
             var space = spaces[s];
 
-            if (gametype === "classic") {
+            if (board.gametype === "classic") {
                 if (scoreDiff[id]) {
                     scoreDiff[id]++;
                 } else {
                     scoreDiff[id] = 1;
                 }
-            } else if (gametype === "pointcontrol") {
-                if (this.isControlPoint(space)) {
+            } else if (board.gametype === "pointcontrol") {
+                if (this.isControlPoint(space, board)) {
                     if (scoreDiff[id]) {
                         scoreDiff[id]++;
                     } else {
@@ -150,14 +147,14 @@ RulesSet.prototype.getScoreDiff = function(boardDiff, gametype) {
 
         for (var s in spaces) {
             var space = spaces[s];
-            if (gametype === "classic") {
+            if (board.gametype === "classic") {
                 if (scoreDiff[id]) {
                     scoreDiff[id]--;
                 } else {
                     scoreDiff[id] = -1;
                 }
-            } else if (gametype === "pointcontrol") {
-                if (this.isControlPoint(space)) {
+            } else if (board.gametype === "pointcontrol") {
+                if (this.isControlPoint(space, board)) {
                     if (scoreDiff[id]) {
                         scoreDiff[id]--;
                     } else {
@@ -202,7 +199,7 @@ RulesSet.prototype.getScores = function(grid, board, forceClassic) {
                     i : i,
                     j : j
                 };
-                if (this.isControlPoint(s)) {
+                if (this.isControlPoint(s, board)) {
                     scores[id]++;
                 }
             }

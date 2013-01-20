@@ -112,7 +112,7 @@ Input.prototype.defaultClickCallback = function(space) {
         }
     }
 
-    this.room.renderer.draw(this.room, this.clickedSpace, this.possibleMoves);
+    this.room.drawSelf(this.clickedSpace, this.possibleMoves);
 }
 
 Input.prototype.defaultRightclickCallback = function(space) {

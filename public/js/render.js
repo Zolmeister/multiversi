@@ -2,7 +2,6 @@
  * @constructor
  * @this {Render}
  * @param {string} canvasId
- * @param {Room} room
  */
 var Render = function(canvasId) {
     this.canvasId = canvasId;
@@ -73,39 +72,42 @@ Render.prototype.getDimensions = function(board) {
         height : height
     };
 }
-// Draw
-Render.prototype.draw = function(room, clickedSpace, possibleMoves) {
-    if (!room) {
+/*
+ * @param {player} me
+ * @param {list} players
+ * @param {Board} board
+ * @param {Grid} grid
+ * @param {Position} clickedSpace
+ * @param {list} possibleMoves
+ */
+Render.prototype.draw = function(me, players, board, grid, clickedSpace, possibleMoves) {
+    if (!board || !grid || !players) {
         return;
     }
-
-    if (!room.game()) {
-        console.log("no game")
-        return;
-    }
-
+    var rules = new RulesSet();
     // clear canvas
-    var dim = this.getDimensions(room.game().board);
+    //TODO: make more efficient
+    var dim = this.getDimensions(board);
     $(this.canvasId).width(dim.width).height(dim.height).show();
     this.canvas.width = dim.width;
     this.canvas.height = dim.height;
 
-    for (var i = 0; i < room.game().board.width; i++) {
-        for (var j = 0; j < room.game().board.height; j++) {
+    for (var i = 0; i < board.width; i++) {
+        for (var j = 0; j < board.height; j++) {
 
             var space = this.hexSpaceCenter(i, j);
             var fill = "#fff";
 
             // Weed out non-spaces
-            if (room.game().grid[i][j] == -2) {
+            if (grid[i][j] == -2) {
                 continue;
             }
 
             // Fill
-            if (room.game().grid[i][j] === -3) {
+            if (grid[i][j] === -3) {
                 fill = "#444";
-            } else if (room.game().grid[i][j] !== -1) {
-                var index = room.getPlayerIndex(room.game().grid[i][j])
+            } else if (grid[i][j] !== -1) {
+                var index = getPlayerIndex(players, grid[i][j])
                 var colors = COLORS[index];
                 if (!colors) {
                     colors = {
@@ -120,7 +122,7 @@ Render.prototype.draw = function(room, clickedSpace, possibleMoves) {
                     fill = colors.color;
                 }
             } else if (possibleMoves && possibleMoves[[i, j]]) {
-                var index = room.getPlayerIndex(room.me());
+                var index = getPlayerIndex(players, me);
                 var colors = COLORS[index];
                 if (!colors) {
                     colors = {
@@ -138,7 +140,7 @@ Render.prototype.draw = function(room, clickedSpace, possibleMoves) {
                 i : i,
                 j : j
             };
-            if (room.game().board.gametype === "pointcontrol" && room.game().isControlPoint(s)) {
+            if (board.gametype === "pointcontrol" && rules.isControlPoint(s, board)) {
                 this.context.beginPath();
                 this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
                 this.context.fillStyle = "#FFB00F";

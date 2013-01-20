@@ -39,7 +39,7 @@ Game.prototype.getPlayerScore = function(playerId) {
 }
 
 Game.prototype.isControlPoint = function(s) {
-    return this.rules.isControlPoint(s);
+    return this.rules.isControlPoint(s, this.board);
 }
 /*
  * @param {Position} start
@@ -302,7 +302,7 @@ Game.prototype.move = function(start, end) {
         boardDiff.gained[startId].push(space);
         this.grid[space.i][space.j] = startId;
     }
-    var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board.gametype);
+    var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board);
     this.rules.movesMade++;
     return scoreDiff;
 }
