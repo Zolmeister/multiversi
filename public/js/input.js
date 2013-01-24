@@ -7,7 +7,7 @@
 var Input = function(canvasId, room) {
     this.canvasId = canvasId;
     this.canvas = $(canvasId)[0];
-    this.context = this.canvas.getContext("2d");
+    // this.context = this.canvas.getContext("2d");
     var self = this;
     $(this.canvas).on("mousedown", function(e) {
         self.onClick(e);

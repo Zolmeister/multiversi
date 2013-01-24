@@ -3,6 +3,10 @@
 <link href="/css/index.css" rel="stylesheet">
 {/css}
 {<js}
+
+<!-- Raphael breaks with require.js -->
+<script src="/js/lib/raphael-min.js"></script>
+
 <!-- TODO: use require.js -->
 <script src="/js/settings.js"></script>
 <script src="/js/utils.js"></script>
@@ -31,7 +35,7 @@
         <button data-bind="click: createRoomBots">Play with bots</button>
     </div>
     <div data-bind="visible: $root" id="roomView">
-        <canvas id="mv-canvas"></canvas>
+        <div id="mv-canvas"></div>
         <div data-bind="if: $root">
             <h1>Players</h1>
             <div class="players" data-bind="foreach: players()">

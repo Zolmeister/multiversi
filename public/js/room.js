@@ -90,7 +90,7 @@ Room.prototype.drawSelf = function(clickedSpace, possibleMoves){
     if(!this.game()){
         return;
     }
-    this.renderer.draw(this.me(), this.players(), this.game().board, this.game().grid, clickedSpace, possibleMoves);
+    // this.renderer.draw(this.me(), this.players(), this.game().board, this.game().grid, clickedSpace, possibleMoves);
 }
 
 Room.prototype.mergeScores = function(scores) {
@@ -146,23 +146,24 @@ Room.prototype.update = function(data) {
             console.log("update board object")
             console.log(data[target]);
             this.game(new Game(this.players(), data[target]));
-            if (this.tmpGrid) {//have previously recieved a grid
+            if (this.tmpGrid) { //have previously recieved a grid
                 this.game().setGrid(this.tmpGrid);
                 this.tmpGrid = undefined;
             }
 
+            this.renderer.setBoard(data[target]);
         }
 
         if (target === "grid") {
             console.log("update grid state");
             var grid = data[target];
-            if (this.game()) {//if have recieved board
+            if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
             } else {
                 this.tmpGrid = grid;
             }
         }
     }
-    this.drawSelf();
+    // this.drawSelf();
 }
 
