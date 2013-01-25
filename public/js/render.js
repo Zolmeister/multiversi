@@ -9,6 +9,10 @@ var Render = function(canvasId) {
 
     this.board = undefined;
     this.spaces = {};
+    this.debugNumbers = {};
+
+    // Raphael sets
+    this.playerSpaces = {};
 }
 
 /*
@@ -63,25 +67,70 @@ Render.prototype.spaceAt = function(canvas_x, canvas_y) {
 }
 
 Render.prototype.setBoard = function(board) {
-
+    
+    // This is necessary because the board gets passed to the Room twice
+    // TODO: ^Fix that
     if (this.board) {
         return;
     }
 
     this.board = board;
 
-    var dim = this.getDimensions(this.board);
+    var dim = this.getDimensions(board);
     this.paper = Raphael($(this.canvasId)[0], dim.width, dim.height);
+    
+    this.spacesSet = this.paper.set();
+    this.controlPoints = this.paper.set();
 
+    // i,j custom attributes
+    this.paper.customAttributes.i = function(i) {
+        return {i : i};
+    }
+    
+    this.paper.customAttributes.j = function(j) {
+        return {j : j};
+    }
+    
+    // Create space SVG elements
     this.spaces = new Array(this.board.width);
+    
     for (var i = 0; i < this.board.width; i++) {
         this.spaces[i] = new Array(this.board.height);
         for (var j = 0; j < this.board.height; j++) {
 
             var c = this.hexSpaceCenter(i, j);
-            this.spaces[i][j] = this.paper.circle(c.x, c.y, RENDER.hexShape.apothem);
-        };
-    };
+            // Every space must have a "fill" or it won't accept onClick events
+            var space = this.paper.circle(c.x, c.y, RENDER.hexShape.apothem).attr({
+                i : i,
+                j : j,
+                fill : "#fff"
+            });                  
+            
+            this.spacesSet.push(space);
+            this.spaces[i][j] = space;
+        }
+    }
+
+    for (var s in this.board.nonrendered) {
+        var space = this.board.nonrendered[s];
+        this.spaces[space[0]][space[1]].attr({
+            stroke: "#fff",
+            fill: "",
+            opacity: 0
+        });
+    }
+    
+    for (var s in this.board.nonjumpable) {
+        var space = this.board.nonjumpable[s];
+        this.spaces[space[0]][space[1]].attr({
+            fill: "#444"
+        });
+    }
+    
+    // Set click callback
+    this.spacesSet.click(function(e) {
+        console.log("click: " + this.attr("i") + " " + this.attr("j"));
+    });
 }
 
 Render.prototype.getDimensions = function(board) {

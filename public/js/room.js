@@ -39,7 +39,7 @@ var Room = function() {
         return player ? player.id : -1;
     }, this);
 
-    this.input = new Input("#mv-canvas", this);
+    // this.input = new Input("#mv-canvas", this);
     this.renderer = new Render("#mv-canvas");
 }
 
@@ -159,6 +159,8 @@ Room.prototype.update = function(data) {
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
+
+                //this.renderer.setGrid(grid);
             } else {
                 this.tmpGrid = grid;
             }
