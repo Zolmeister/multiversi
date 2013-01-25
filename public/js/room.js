@@ -40,7 +40,7 @@ var Room = function() {
     }, this);
 
     // this.input = new Input("#mv-canvas", this);
-    this.renderer = new Render("#mv-canvas");
+    this.renderer = new Render("#mv-canvas", this);
 }
 
 Room.prototype.indexToColor = function(index) {
@@ -128,6 +128,9 @@ Room.prototype.update = function(data) {
             }
             this.players.valueHasMutated();
 
+            if (this.players().length === 3) {
+                this.renderer.setPlayers(this.players());
+            }
         }
 
         if (target === "turn") {
@@ -159,8 +162,8 @@ Room.prototype.update = function(data) {
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
+                this.renderer.setGrid(grid);
 
-                //this.renderer.setGrid(grid);
             } else {
                 this.tmpGrid = grid;
             }

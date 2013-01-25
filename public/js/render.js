@@ -10,9 +10,13 @@ var Render = function(canvasId) {
     this.board = undefined;
     this.spaces = {};
 
-
     // Raphael sets
     this.playerSpaces = {};
+    // this.players = {
+    //     0 : 0,
+    //     1 : 1,
+    //     2 : 2
+    // };
 }
 
 /*
@@ -85,6 +89,13 @@ Render.prototype.setBoard = function(board) {
         this.debugNumbers = this.paper.set();
     }
 
+    this.playerSpaces = {
+        0 : this.paper.set(),
+        1 : this.paper.set(),
+        2 : this.paper.set()
+    };
+
+
     // i,j custom attributes
     this.paper.customAttributes.i = function(i) {
         return {i : i};
@@ -146,6 +157,17 @@ Render.prototype.setBoard = function(board) {
 
         this.controlPointSet.push(point);
     }
+        
+    for (var i = 0; i < 3; i++) {
+        for (var s in board.starting[i]) {
+            var space = board.starting[i][s];
+
+            this.playerSpaces[i].push(this.spaces[space[0]][space[1]]);
+            this.spaces[space[0]][space[1]].attr({
+                fill : COLORS[i].color
+            });
+        }
+    }
 
     if (DEBUG) {
         this.debugNumbers.toFront();
@@ -155,6 +177,37 @@ Render.prototype.setBoard = function(board) {
     this.spacesSet.click(function(e) {
         console.log("click: " + this.attr("i") + " " + this.attr("j"));
     });
+}
+
+Render.prototype.setPlayers = function(players) {
+    this.players = {}
+    for (var i = 0; i < 3; i++) {
+        this.players[players[i].id] = i;
+    }
+}
+
+Render.prototype.setGrid = function(grid) {
+    for (var i = 0; i < 3; i++) {
+        this.playerSpaces[i].clear();
+    }
+    
+    for (var i = 0; i < this.board.width; i++) {
+        for (var j = 0; j < this.board.height; j++) {
+            // reset playerSpaces, set fills of spaces
+            var player = this.players[grid[i][j]];
+
+            if (!player) {
+                continue;
+            }
+
+            var space = this.spaces[i][j];
+            this.playerSpaces[player].push(space);
+
+            space.attr({
+                fill : COLORS[player].color
+            });
+        }
+    }
 }
 
 Render.prototype.getDimensions = function(board) {
