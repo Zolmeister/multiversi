@@ -9,7 +9,7 @@ var Render = function(canvasId) {
 
     this.board = undefined;
     this.spaces = {};
-    this.debugNumbers = {};
+
 
     // Raphael sets
     this.playerSpaces = {};
@@ -80,7 +80,10 @@ Render.prototype.setBoard = function(board) {
     this.paper = Raphael($(this.canvasId)[0], dim.width, dim.height);
     
     this.spacesSet = this.paper.set();
-    this.controlPoints = this.paper.set();
+    this.controlPointSet = this.paper.set();
+    if (DEBUG) {
+        this.debugNumbers = this.paper.set();
+    }
 
     // i,j custom attributes
     this.paper.customAttributes.i = function(i) {
@@ -108,6 +111,11 @@ Render.prototype.setBoard = function(board) {
             
             this.spacesSet.push(space);
             this.spaces[i][j] = space;
+
+            if (DEBUG) {
+                var txt = this.paper.text(c.x, c.y, i + " " + j);
+                this.debugNumbers.push(txt);
+            }
         }
     }
 
@@ -125,6 +133,22 @@ Render.prototype.setBoard = function(board) {
         this.spaces[space[0]][space[1]].attr({
             fill: "#444"
         });
+    }
+    
+    for (var s in this.board.controlpoints) {
+        var space = this.board.controlpoints[s];
+
+        var c = this.hexSpaceCenter(space[0], space[1]);
+        var point = this.paper.circle(c.x, c.y, 18).attr({
+            stroke: "",
+            fill: "#FFB00F"
+        });
+
+        this.controlPointSet.push(point);
+    }
+
+    if (DEBUG) {
+        this.debugNumbers.toFront();
     }
     
     // Set click callback
