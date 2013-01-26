@@ -9,16 +9,6 @@ var Input = function(canvasId, room) {
     this.canvas = $(canvasId)[0];
     
     var self = this;
-    // $(this.canvas).on("mousedown", function(e) {
-    //     self.onClick(e);
-    // }, false);
-
-    // $(this.canvas).on(("contextmenu"), function(e) {
-    //     return false;
-    // });
-
-    this.clickCallback = this.defaultClickCallback;
-    this.rightclickCallback = this.defaultRightclickCallback;
 
     this.room = room;
 

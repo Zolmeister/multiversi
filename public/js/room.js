@@ -129,7 +129,7 @@ Room.prototype.update = function(data) {
             this.players.valueHasMutated();
 
             if (this.players().length === 3) {
-                this.renderer.setPlayers(this.players());
+                this.renderer.setPlayers(this.players(), this.me());
             }
         }
 

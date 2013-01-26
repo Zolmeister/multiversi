@@ -6,17 +6,32 @@
 var Render = function(canvasId) {
     this.canvasId = canvasId;
     this.paper = undefined;
-
     this.board = undefined;
+
+    // Mirrors Grid, but keeps track on SVG elems
+    // instead of player Ids
     this.spaces = {};
 
+    // Maps player.id to turn number
+    this.players = {};
+    this.me = undefined;
+
     // Raphael sets
+    // For easy access to all spaces of a certain type
+    this.spacesSet = undefined;
     this.playerSpaces = {};
-    // this.players = {
-    //     0 : 0,
-    //     1 : 1,
-    //     2 : 2
-    // };
+    this.controlPointSet = undefined;
+    this.possibleMovesSet = undefined;
+    this.clickedSpace = undefined;
+
+    // Event handlers
+    // For some reason this doesn't work if you define this outside
+    // of the Render class
+    // TODO: ^Fix that
+    this.playerSpacesClickHandler = function(e) {
+        console.log("click: " + this.attr('i') + " " + this.attr('j'));
+    };
+    this.possibleMovesClickHandler = undefined;
 }
 
 /*
@@ -38,35 +53,18 @@ Render.prototype.hexSpaceCenter = function(i, j) {
     };
 }
 
-/*
- * @param {Coordinate.X} canvas_x
- * @param {Coordinate.Y} canvas_y
- * @return {Position}
- */
-Render.prototype.spaceAt = function(canvas_x, canvas_y) {
-    var high_i = Math.floor(canvas_x / (1.5 * RENDER.hexShape.radius));
-    var high_j = Math.floor(canvas_y / (2 * RENDER.hexShape.apothem));
-
-    var min_i = -1, min_j = -1, min_d = 1600;
-    var space, d;
-
-    for (var i = high_i - 1; i < high_i + 1; i++) {
-        for (var j = high_j - 1; j < high_j + 1; j++) {
-
-            space = this.hexSpaceCenter(i, j);
-            d = distance2(canvas_x, canvas_y, space.x, space.y);
-
-            if (d < min_d) {
-                min_i = i;
-                min_j = j;
-                min_d = d;
-            }
-        }
+Render.prototype.getDimensions = function(board) {
+    var width = (2 * RENDER.hexShape.radius) * board.width + 2;
+    if (board.width % 2 === 0) {
+        width += .5 * RENDER.hexShape.radius;
     }
-
+    var height = (2 * RENDER.hexShape.apothem) * board.height + 2;
+    if (board.height % 2 === 0) {
+        height += RENDER.hexShape.apothem;
+    }
     return {
-        i : min_i,
-        j : min_j
+        width : width,
+        height : height
     };
 }
 
@@ -74,7 +72,7 @@ Render.prototype.setBoard = function(board) {
     
     // This is necessary because the board gets passed to the Room twice
     // TODO: ^Fix that
-    if (this.board) {
+    if (this.board !== undefined) {
         return;
     }
 
@@ -95,8 +93,10 @@ Render.prototype.setBoard = function(board) {
         2 : this.paper.set()
     };
 
-
     // i,j custom attributes
+    // This allows us to set the [i, j] coordinate
+    // of the element internally so we can easily
+    // access it from event callbacks.
     this.paper.customAttributes.i = function(i) {
         return {i : i};
     }
@@ -130,6 +130,7 @@ Render.prototype.setBoard = function(board) {
         }
     }
 
+    // Modify attributes of special spaces
     for (var s in this.board.nonrendered) {
         var space = this.board.nonrendered[s];
         this.spaces[space[0]][space[1]].attr({
@@ -157,7 +158,8 @@ Render.prototype.setBoard = function(board) {
 
         this.controlPointSet.push(point);
     }
-        
+    
+    // Set starting position colors
     for (var i = 0; i < 3; i++) {
         for (var s in board.starting[i]) {
             var space = board.starting[i][s];
@@ -169,169 +171,114 @@ Render.prototype.setBoard = function(board) {
         }
     }
 
+
     if (DEBUG) {
         this.debugNumbers.toFront();
+        this.debugNumbers.attr({
+            fill : ""
+        });
     }
-    
-    // Set click callback
-    this.spacesSet.click(function(e) {
-        console.log("click: " + this.attr("i") + " " + this.attr("j"));
-    });
 }
 
-Render.prototype.setPlayers = function(players) {
+// Call this when the player list updates
+// Resets internal mapping between player Ids and turn numbers
+Render.prototype.setPlayers = function(players, me) {
     this.players = {}
     for (var i = 0; i < 3; i++) {
         this.players[players[i].id] = i;
     }
+
+    if (me !== undefined && me !== -1) {
+        this.me = this.players[me];
+    }
 }
 
+// Apply the current grid to the Renderer.
+// Resets the playerSpaces sets to reflect
+// the spaces that each player currently has.
+//
+// I'm not a fan of the way this is implemented,
+// so it might change in the future. I would
+// prefer the one argument to be:
+//
+//      {
+//          0 : [spaces that player 0 has, ...],
+//          1 : [...],
+//          2 : [...]
+//      }
+//
+// That way the Renderer can be ignorant of
+// player Ids.
 Render.prototype.setGrid = function(grid) {
+
+    if (this.playerSpaces === undefined || this.me === undefined) {
+        return;
+    }
+
+    this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
+    
     for (var i = 0; i < 3; i++) {
         this.playerSpaces[i].clear();
-    }
+    };
     
     for (var i = 0; i < this.board.width; i++) {
         for (var j = 0; j < this.board.height; j++) {
-            // reset playerSpaces, set fills of spaces
+            // reset playerSpaces
             var player = this.players[grid[i][j]];
 
-            if (!player) {
+            if (!(player >= 0 && player < 3)) {
                 continue;
             }
 
             var space = this.spaces[i][j];
             this.playerSpaces[player].push(space);
-
-            space.attr({
-                fill : COLORS[player].color
-            });
         }
     }
+    
+    this.playerSpaces[this.me].click(this.playerSpacesClickHandler);
+    this.playerSpaces[this.me].attr({
+            fill : COLORS[this.me].color
+    });
 }
 
-Render.prototype.getDimensions = function(board) {
-    var width = (2 * RENDER.hexShape.radius) * board.width + 2;
-    if (board.width % 2 === 0) {
-        width += .5 * RENDER.hexShape.radius;
+// setPossibleMoves({}, ...) to clear possibleMoves
+Render.prototype.setPossibleMoves = function(possibleMoves, turn) {
+    
+    // Clearing possilveMovesSet
+    if (turn === undefined && possibleMoves.length === 0) {
+        turn = 0;
+    } else {
+        return;
     }
-    var height = (2 * RENDER.hexShape.apothem) * board.height + 2;
-    if (board.height % 2 === 0) {
-        height += RENDER.hexShape.apothem;
+
+    // Clear previous possibleMovesSet
+    if (this.possibleMovesSet) {
+        this.possibleMovesSet.attr({
+            fill : "#fff"
+        });
+
+        this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
+        this.possibleMovesSet.clear();
+    } else {
+        this.possibleMovesSet = this.paper.set();
     }
-    return {
-        width : width,
-        height : height
-    };
+
+    // Create new possibleMovesSet
+    for (var s in possibleMoves) {
+        var space = possibleMoves[s];
+        this.possibleMovesSet.push(this.spaces[space.i][space.j]);
+    }
+
+    // Set possibleMovesSet attributes
+    this.possibleMovesSet.attr({
+        fill : COLORS[turn].color
+    });
+    if (this.possibleMovesClickHandler) {
+        this.possibleMovesSet.click(this.possibleMovesClickHandler);
+    }
 }
 
-/*
- * @param {player} me
- * @param {list} players
- * @param {Board} board
- * @param {Grid} grid
- * @param {Position} clickedSpace
- * @param {list} possibleMoves
- */
-// Render.prototype.draw = function(me, players, board, grid, clickedSpace, possibleMoves) {
-//     if (!board || !grid || !players) {
-//         return;
-//     }
-//     var rules = new RulesSet();
-//     // clear canvas
-//     //TODO: make more efficient
-//     var dim = this.getDimensions(board);
-//     this.paper.setSize(dim.width, dim.height)
-//     // $(this.canvasId).width(dim.width).height(dim.height).show();
-//     // this.canvas.width = dim.width;
-//     // this.canvas.height = dim.height;
-// 
-//     for (var i = 0; i < board.width; i++) {
-//         for (var j = 0; j < board.height; j++) {
-// 
-//             var space = this.hexSpaceCenter(i, j);
-//             var fill = "#fff";
-// 
-//             // Weed out non-spaces
-//             if (grid[i][j] == -2) {
-//                 continue;
-//             }
-// 
-//             // Fill
-//             if (grid[i][j] === -3) {
-//                 fill = "#444";
-//             } else if (grid[i][j] !== -1) {
-//                 var index = getPlayerIndex(players, grid[i][j])
-//                 var colors = COLORS[index];
-//                 if (!colors) {
-//                     colors = {
-//                         color : "#333",
-//                         activeColor : "#333",
-//                         moveColor : "#333"
-//                     }
-//                 }
-//                 if (clickedSpace && i === clickedSpace.i && j === clickedSpace.j) {
-//                     fill = colors.activeColor;
-//                 } else {
-//                     fill = colors.color;
-//                 }
-//             } else if (possibleMoves && possibleMoves[[i, j]]) {
-//                 var index = getPlayerIndex(players, me);
-//                 var colors = COLORS[index];
-//                 if (!colors) {
-//                     colors = {
-//                         color : "#333",
-//                         activeColor : "#333",
-//                         moveColor : "#333"
-//                     }
-//                 }
-//                 fill = colors.moveColor;
-//             }
-//             // Draw Hex Spaces
-//             this.drawHexSpace(space.x, space.y, RENDER.hexShape.radius, fill);
-// 
-//             var s = {
-//                 i : i,
-//                 j : j
-//             };
-//             if (board.gametype === "pointcontrol" && rules.isControlPoint(s, board)) {
-//                 // this.context.beginPath();
-//                 // this.context.arc(space.x, space.y, 18, 0, 2 * Math.PI, false);
-//                 // this.context.fillStyle = "#FFB00F";
-//                 // this.context.fill();
-//             }
-// 
-//             if (DEBUG) {
-//                 // this.context.fillStyle = "#000";
-//                 // this.context.font = "12px sans-serif";
-//                 // this.context.fillText(i + " " + j, space.x - 7, space.y + 4);
-//             }
-//         }
-//     }
-//     this.rendered = true;
-// }
-
-// Render.prototype.drawHexSpace = function(x, y, radius, fill) {
-// 
-//     if (!this.rendered)
-//         this.paper.circle(x, y, 31);
-// 
-// 
-//     // this.context.beginPath();
-//     // this.context.translate(x, y);
-// 
-//     // for (var i = 0; i < 6; i++) {
-//     //     this.context.rotate((2 * Math.PI) / 6);
-//     //     this.context.lineTo(radius, 0);
-//     // }
-// 
-//     // this.context.closePath();
-//     // if (fill) {
-//     //     this.context.fillStyle = fill;
-//     //     this.context.fill();
-//     // }
-//     // this.context.stroke();
-// 
-//     // this.context.setTransform(1, 0, 0, 1, 0, 0);
-// }
+Render.prototype.setClickedSpace = function(space) {
+    this.clickedSpace = this.spaces[space.i][space.j];
+}
 
