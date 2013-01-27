@@ -25,12 +25,7 @@ var Render = function(canvasId) {
     this.clickedSpace = undefined;
 
     // Event handlers
-    // For some reason this doesn't work if you define this outside
-    // of the Render class
-    // TODO: ^Fix that
-    this.playerSpacesClickHandler = function(e) {
-        console.log("click: " + this.attr('i') + " " + this.attr('j'));
-    };
+    this.playerSpacesClickHandler = undefined;
     this.possibleMovesClickHandler = undefined;
 }
 
@@ -165,18 +160,38 @@ Render.prototype.setBoard = function(board) {
             var space = board.starting[i][s];
 
             this.playerSpaces[i].push(this.spaces[space[0]][space[1]]);
-            this.spaces[space[0]][space[1]].attr({
-                fill : COLORS[i].color
-            });
         }
     }
 
 
     if (DEBUG) {
         this.debugNumbers.toFront();
-        this.debugNumbers.attr({
-            fill : ""
+    }
+
+    this.applyAttributes();
+}
+
+Render.prototype.applyAttributes = function() {
+    for (var i = 0; i < 3; i++) {
+        this.playerSpaces[i].attr({
+            fill : COLORS[i].color
         });
+    }
+    if (this.possibleMovesSet){
+        this.possibleMovesSet.attr({
+            fill : COLORS[this.me].moveColor
+        });
+    }
+
+    // You must "unclick" the elements first, otherwise the handler
+    // is called thousands of times
+    if (this.playerSpaces[this.me] && this.playerSpacesClickHandler) {
+        this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
+        this.playerSpaces[this.me].click(this.playerSpacesClickHandler);
+    }
+    if (this.possibleMovesSet && this.possibleMovesClickHandler) {
+        this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
+        this.possibleMovesSet.click(this.possibleMovesClickHandler);
     }
 }
 
@@ -220,7 +235,7 @@ Render.prototype.setGrid = function(grid) {
     for (var i = 0; i < 3; i++) {
         this.playerSpaces[i].clear();
     };
-    
+
     for (var i = 0; i < this.board.width; i++) {
         for (var j = 0; j < this.board.height; j++) {
             // reset playerSpaces
@@ -235,22 +250,47 @@ Render.prototype.setGrid = function(grid) {
         }
     }
     
-    this.playerSpaces[this.me].click(this.playerSpacesClickHandler);
-    this.playerSpaces[this.me].attr({
-            fill : COLORS[this.me].color
-    });
+    this.applyAttributes();
 }
 
-// setPossibleMoves({}, ...) to clear possibleMoves
-Render.prototype.setPossibleMoves = function(possibleMoves, turn) {
+Render.prototype.setMove = function(boardDiff) {
     
-    // Clearing possilveMovesSet
-    if (turn === undefined && possibleMoves.length === 0) {
-        turn = 0;
-    } else {
+    if (this.playerSpaces === undefined || this.me === undefined) {
         return;
     }
 
+    for (var id in boardDiff.lost) {
+        var player = this.players[id];
+        var spaces = boardDiff.lost[id];
+
+        for (var s in spaces) {
+            var space = spaces[s];
+
+            this.playerSpaces[player].exclude(this.spaces[space.i][space.j]);
+
+            if (player === this.me) {
+                this.spaces[space.i][space.j].unclick(this.playerSpacesClickHandler);
+            }
+        }
+    }
+    
+    for (var id in boardDiff.gained) {
+        var player = this.players[id];
+        var spaces = boardDiff.gained[id];
+
+        for (var s in spaces) {
+            var space = spaces[s];
+
+            this.playerSpaces[player].push(this.spaces[space.i][space.j]);
+        }
+    }
+
+    this.applyAttributes();
+}
+
+// setPossibleMoves({}) to clear possibleMoves
+Render.prototype.setPossibleMoves = function(possibleMoves) {
+    
     // Clear previous possibleMovesSet
     if (this.possibleMovesSet) {
         this.possibleMovesSet.attr({
@@ -265,17 +305,12 @@ Render.prototype.setPossibleMoves = function(possibleMoves, turn) {
 
     // Create new possibleMovesSet
     for (var s in possibleMoves) {
-        var space = possibleMoves[s];
+        var space = possibleMoves[s][possibleMoves[s].length - 1];
         this.possibleMovesSet.push(this.spaces[space.i][space.j]);
     }
 
-    // Set possibleMovesSet attributes
-    this.possibleMovesSet.attr({
-        fill : COLORS[turn].color
-    });
-    if (this.possibleMovesClickHandler) {
-        this.possibleMovesSet.click(this.possibleMovesClickHandler);
-    }
+
+    this.applyAttributes();
 }
 
 Render.prototype.setClickedSpace = function(space) {

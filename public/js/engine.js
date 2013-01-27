@@ -271,7 +271,7 @@ Game.prototype.validateMove = function(start, end, playerId) {
 /*
  * @param {Position} start
  * @param {Position} end
- * @return {dict} scoreDiff {id: diffNumber}
+ * @return {dict} boardDiff {gained: {id : [ Position, ... ]}, lost: ... }
  */
 Game.prototype.move = function(start, end) {
     // Make grid changes
@@ -284,7 +284,7 @@ Game.prototype.move = function(start, end) {
     boardDiff.gained[startId] = [];
 
     if (!spaces) {
-        console.log("no spaces");
+        console.log("Can't genereate spaces between (" + start.i + ", " + start.j + ") and (" + end.i + ", " + end.j + ")");
         return;
     }
 
@@ -302,8 +302,17 @@ Game.prototype.move = function(start, end) {
         boardDiff.gained[startId].push(space);
         this.grid[space.i][space.j] = startId;
     }
-    var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board);
+
     this.rules.movesMade++;
+    return boardDiff;
+}
+
+/*
+ * @param {Position} start
+ * @return {dict} scoreDiff {id: diffNumber}
+ */
+Game.prototype.scoreDiff = function(boardDiff) {
+    var scoreDiff = this.rules.getScoreDiff(boardDiff, this.board);
     return scoreDiff;
 }
 

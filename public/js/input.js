@@ -4,71 +4,36 @@
  * @param {string} canvasId
  * @param {Room} room
  */
-var Input = function(canvasId, room) {
-    this.canvasId = canvasId;
-    this.canvas = $(canvasId)[0];
+var Input = function(room) {
     
     var self = this;
-
     this.room = room;
 
     this.clickedSpace = {
         i : -1,
         j : -1
     };
-
     this.possibleMoves = {};
-}
-/*
- * @param {Event} e
- * @return {Coordinate} {x,y}
- */
-Input.prototype.getCursorPosition = function(e) {
-    var x, y;
-    if (e.pageX != undefined && e.pageY != undefined) {
-        x = e.pageX;
-        y = e.pageY;
-    } else {
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+
+    this.onClickHandler = this.defaultPlayerOnClick;
+    this.possibleMoveOnClickHandler = this.defaultPossibleMoveOnClick;
+
+    this.playerOnClick = function(e) {
+        self.onClickHandler.call(self, {i : this.attr('i'), j : this.attr('j')});
     }
 
-    x -= this.canvas.offsetLeft;
-    y -= this.canvas.offsetTop;
-
-    return {
-        x : x,
-        y : y
-    };
-}
-/*
- * @param {Event} e
- */
-Input.prototype.onClick = function(e) {
-    var clicked = this.getCursorPosition(e);
-    var space = this.room.renderer.spaceAt(clicked.x, clicked.y);
-    try {
-        if (this.room.game().grid[space.i][space.j] === -2) {
-            return;
-        }
-    } catch(e) {
-        return;
-    }
-
-    if (e.which === 1) {
-        return this.clickCallback(space);
-    } else if (e.which === 3) {
-        return this.rightclickCallback(space);
+    this.possibleMovesOnClick = function(e) {
+        self.possibleMoveOnClickHandler.call(self, {i : this.attr('i'), j : this.attr('j')});
     }
 }
 
-Input.prototype.defaultClickCallback = function(space) {
+Input.prototype.defaultPlayerOnClick = function(space) {
+
     if (this.room.currentPlayerId() !== this.room.me()) {
         console.log("not your turn")
         return;
     }
 
-    //console.log(this.room.game().grid[space.i][space.j])
     if (this.room.game().grid[space.i][space.j] === this.room.me()) {
         if (this.clickedSpace.i === space.i && this.clickedSpace.j === space.j) {
             this.clickedSpace.i = -1;
@@ -79,33 +44,36 @@ Input.prototype.defaultClickCallback = function(space) {
             this.clickedSpace.j = space.j;
             this.possibleMoves = this.room.game().generateMoves(space);
         }
-    } else {
-        // Validate locally
-        if (!this.possibleMoves[[space.i, space.j]]) {
-            return;
-        }
-
-        // Send move to server
-        this.room.move({
-            start : this.clickedSpace,
-            end : space
-        });
-        this.room.connect().move({
-            start : this.clickedSpace,
-            end : space
-        });
-
-        this.possibleMoves = {};
-        this.clickedSpace = {
-            i : -1,
-            j : -1
-        }
     }
 
-    this.room.drawSelf(this.clickedSpace, this.possibleMoves);
+    this.room.renderer.setPossibleMoves(this.possibleMoves);
+}
+
+Input.prototype.defaultPossibleMoveOnClick = function(space) {
+
+    // Validate locally
+    if (!this.possibleMoves[[space.i, space.j]]) {
+        return;
+    }
+
+    // Send move to server
+    this.room.move({
+        start : this.clickedSpace,
+        end : space
+    });
+    this.room.connect().move({
+        start : this.clickedSpace,
+        end : space
+    });
+
+    this.possibleMoves = {};
+    this.room.renderer.setPossibleMoves({});
+    this.clickedSpace = {
+        i : -1,
+        j : -1
+    }
 }
 
 Input.prototype.defaultRightclickCallback = function(space) {
-
 }
 

@@ -39,8 +39,10 @@ var Room = function() {
         return player ? player.id : -1;
     }, this);
 
-    // this.input = new Input("#mv-canvas", this);
-    this.renderer = new Render("#mv-canvas", this);
+    this.input = new Input(this);
+    this.renderer = new Render("#mv-canvas");
+    this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
+    this.renderer.possibleMovesClickHandler = this.input.possibleMovesOnClick;
 }
 
 Room.prototype.indexToColor = function(index) {
@@ -77,20 +79,10 @@ Room.prototype.getPlayerIndex = function(id) {
  * {move} = {start: {Position}, end: {Position}}
  */
 Room.prototype.move = function(data) {
-    var scoreDiff = this.game().move(data.start, data.end);
-    this.mergeScores(scoreDiff);
-    this.drawSelf();
-}
+    var boardDiff = this.game().move(data.start, data.end);
+    this.mergeScores(this.game().scoreDiff(boardDiff));
 
-/*
- * @param {Position} clickedSpace *optional 
- * @param {list} possible Moves *optional
- */
-Room.prototype.drawSelf = function(clickedSpace, possibleMoves){
-    if(!this.game()){
-        return;
-    }
-    // this.renderer.draw(this.me(), this.players(), this.game().board, this.game().grid, clickedSpace, possibleMoves);
+    this.renderer.setMove(boardDiff);
 }
 
 Room.prototype.mergeScores = function(scores) {
@@ -108,7 +100,8 @@ Room.prototype.mergeScores = function(scores) {
  */
 Room.prototype.update = function(data) {
     for (var target in data) {
-        console.log(target)
+        console.log(target + ": ");
+        console.log(data[target]);
         if (target === "room") {
             this.id = data[target];
             if (window.history.state !== "room") {
@@ -117,12 +110,14 @@ Room.prototype.update = function(data) {
         }
 
         if (target === "move") {
-            this.move(data[target]);
+            if (this.currentPlayerId() !== this.me()) {
+                this.move(data[target]);
+            } else {
+                // Already know about this move, thanks!
+            }
         }
 
         if (target === "players") {
-            console.log("players")
-            console.log(data[target])
             for (var i = 0; i < data[target].length; i++) {
                 this.players()[i] = new ObservablePlayer(data[target][i]);
             }
@@ -147,7 +142,6 @@ Room.prototype.update = function(data) {
 
         if (target === "board") {
             console.log("update board object")
-            console.log(data[target]);
             this.game(new Game(this.players(), data[target]));
             if (this.tmpGrid) { //have previously recieved a grid
                 this.game().setGrid(this.tmpGrid);
@@ -169,6 +163,5 @@ Room.prototype.update = function(data) {
             }
         }
     }
-    // this.drawSelf();
 }
 

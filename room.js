@@ -218,8 +218,8 @@ Room.prototype.move = function(data, player) {
         return;
     }
 
-    var scoreDiff = this.game.move(data.start, data.end);
-    this.mergeScores(scoreDiff);
+    var boardDiff = this.game.move(data.start, data.end);
+    this.mergeScores(this.game.scoreDiff(boardDiff));
     this.update("move", data);
 
     if (this.game.gameEnded()) {
