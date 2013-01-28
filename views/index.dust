@@ -21,19 +21,6 @@
 <script src="/js/index.js"></script>
 {/js}
 {<body}
-    <div class="rooms" data-bind="visible: !room()" id="lobbyView">
-        <h1>Rooms available</h1>
-        <div data-bind="foreach: globalConnect().rooms">
-            <div class="room" data-bind="click: $root.joinRoomClick">
-                Room ID: <span data-bind="text: roomId"></span><br>
-                Number of Players: <span data-bind="text: players"></span>
-            </div>
-        </div>
-        <button data-bind="click: joinRoom">Join Game</button>
-        <button data-bind="click: createRoom">Create Room</button>
-        <button data-bind="click: createRoomPrivate">Create Private Room</button>
-        <button data-bind="click: createRoomBots">Play with bots</button>
-    </div>
     <div data-bind="visible: $root" id="roomView">
         <div id="mv-canvas"></div>
         <div data-bind="if: $root">
@@ -51,13 +38,30 @@
                     </div>
                 </div>
             </div>
-            <br>
-            <button style="clear: both" onclick='leaveButton();'>leave room</button>
             <div class="admin-options" data-bind="if: iAmAdmin">
                 <h2>Admin Options</h2>
                 <button onClick='globalConnect().roomAdmin("addBot", "")'>Add bot</button>
                 <button onClick='globalConnect().roomAdmin("addBot", "")' data-bind="visible: !isPublic()">Make Public</button>
             </div>
+        </div>
+    </div>
+    <div class="rooms"  id="lobbyView">
+        <div data-bind="visible: !room()">
+            <h1>Rooms available</h1>
+            <div data-bind="foreach: globalConnect().rooms">
+                <div class="room" data-bind="click: $root.joinRoomClick">
+                    Room ID: <span data-bind="text: roomId"></span><br>
+                    Number of Players: <span data-bind="text: players"></span>
+                </div>
+            </div>
+            <button data-bind="click: joinRoom">Join Game</button>
+            <button data-bind="click: createRoom">Create Room</button>
+            <button data-bind="click: createRoomPrivate">Create Private Room</button>
+            <button data-bind="click: createRoomBots">Play with bots</button>
+        </div>
+        <div data-bind="visible: room()">
+            <br>
+            <button style="clear: both" data-bind="click: leaveRoom">leave room</button>
         </div>
     </div>
 {/body}

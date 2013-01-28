@@ -1,25 +1,25 @@
 /*
  * @constructor
  * @this {Room}
- * @param {Connect} connect
+ * @param {Id} id
+ * @param {Board} board
+ * @param {me} me
+ * @param {Grid} grid *optional
  */
-var Room = function() {
+var Room = function(id, board, me, grid) {
+    var self = this;
+    
     this.players = ko.observableArray(this.dummyPlayers());
-    this.turn = ko.observable(0);
+    this.turn = ko.observable(-1);
     this.connect = globalConnect;
-
     this.socket = this.connect().socket;
     this.isPublic = ko.observable(true);
-    var self = this;
-    this.socket.on("gameState", function(data) {
-        self.update(data);
-    });
-    this.socket.on("removed", function() {
-        leaveButton();
-    });
-    this.game = ko.observable(undefined);
-    this.me = ko.observable(-1);
-
+    this.me = ko.observable(me);
+    this.game=ko.observable(new Game(this.players(), board));
+    if(grid){
+        this.game().setGrid(grid);
+    }
+            
     //TODO: move these to lobby class
     this.joinRoom = function(r) {
         self.connect().join(r.roomId);
@@ -43,6 +43,11 @@ var Room = function() {
     this.renderer = new Render("#mv-canvas");
     this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
     this.renderer.possibleMovesClickHandler = this.input.possibleMovesOnClick;
+    this.renderer.setBoard(board);
+}
+
+Room.prototype.selfDestruct = function(){
+    this.renderer.paper.remove();
 }
 
 Room.prototype.indexToColor = function(index) {
@@ -102,12 +107,6 @@ Room.prototype.update = function(data) {
     for (var target in data) {
         console.log(target + ": ");
         console.log(data[target]);
-        if (target === "room") {
-            this.id = data[target];
-            if (window.history.state !== "room") {
-                window.history.pushState("room", "room", "/room/" + data[target])
-            }
-        }
 
         if (target === "move") {
             if (this.currentPlayerId() !== this.me()) {
@@ -122,10 +121,7 @@ Room.prototype.update = function(data) {
                 this.players()[i] = new ObservablePlayer(data[target][i]);
             }
             this.players.valueHasMutated();
-
-            if (this.players().length === 3) {
-                this.renderer.setPlayers(this.players(), this.me());
-            }
+            this.renderer.setPlayers(this.players(), this.me());
         }
 
         if (target === "turn") {
@@ -135,22 +131,7 @@ Room.prototype.update = function(data) {
         if (target === "isPublic") {
             this.isPublic(data[target]);
         }
-
-        if (target === "me") {
-            this.me(data[target]);
-        }
-
-        if (target === "board") {
-            console.log("update board object")
-            this.game(new Game(this.players(), data[target]));
-            if (this.tmpGrid) { //have previously recieved a grid
-                this.game().setGrid(this.tmpGrid);
-                this.tmpGrid = undefined;
-            }
-
-            this.renderer.setBoard(data[target]);
-        }
-
+        
         if (target === "grid") {
             console.log("update grid state");
             var grid = data[target];
@@ -159,7 +140,7 @@ Room.prototype.update = function(data) {
                 this.renderer.setGrid(grid);
 
             } else {
-                this.tmpGrid = grid;
+                console.error("havent recieved board")
             }
         }
     }

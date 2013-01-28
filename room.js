@@ -141,25 +141,18 @@ Room.prototype.add = function(player, callback) {
 
         this.players[slot] = player;
         this.setScores();
-        this.update("grid", this.game.grid);
 
-        this.update("players", this.publicPlayerList());
-        var playerSocket = player.socket;
-
-        playerSocket.emit("gameState", {
-            room : this.id
+        player.socket.emit("gameState", {
+            room : this.id,
+            me : player.id,
+            board : this.board,
+            isPublic : this.isPublic,
+            turn : this.turn,
+            grid : this.game.grid,
+            players : this.publicPlayerList()
         })
-        playerSocket.emit("gameState", {
-            me : player.id
-        });
-        playerSocket.emit("gameState", {
-            board : this.board
-        });
-        playerSocket.emit("gameState", {
-            isPublic : this.isPublic
-        });
-        playerSocket.emit("gameState", {
-            turn : this.turn
+        this.sendAll("gameState", {
+            players : this.publicPlayerList()
         });
 
         if (callback) {
@@ -259,6 +252,7 @@ Room.prototype.addBot = function() {
     util.log("adding bot");
     this.add(new Bot(this.board));
     this.botMove();
+    this.update("players", this.publicPlayerList())
 }
 
 Room.prototype.botMove = function() {
@@ -300,9 +294,9 @@ Room.prototype.newGame = function() {
     this.setScores(this.game.getScores());
     this.turn = 0;
     this.update("turn", this.turn);
-    this.update("isPublic", this.isPublic);
+    //this.update("isPublic", this.isPublic);
     this.update("players", this.publicPlayerList());
-    this.update("board", this.board);
+    //this.update("board", this.board);
     this.update("grid", this.game.grid);
 }
 

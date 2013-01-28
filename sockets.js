@@ -105,7 +105,7 @@ module.exports = function(socket) {
             return;
         }
         //join first available
-        if (!data.room) {
+        if (!util.isInt(data.room)) {
             var roomNumber = firstAvailableRoomNumber();
         } else {
             var roomNumber = data.room;

@@ -8,7 +8,7 @@ function Lobby() {
     if ( typeof dynamicJoin !== "undefined") {
         this.joinRoom(dynamicJoin);
     }
-    
+
     this.windowEvent = function(e) {
         var inRoom = self.inRoom();
 
@@ -20,18 +20,37 @@ function Lobby() {
         }
 
     }
-    
-    this.joinRoomClick = function(room){
+
+    this.joinRoomClick = function(room) {
         self.joinRoom(room.roomId);
     }
-    
+
     window.addEventListener('popstate', this.windowEvent);
     ko.applyBindings(this.room, $("#roomView")[0]);
+
+    globalConnect().socket.on('gameState', function(data) {
+        if (!self.room()) {
+            if (data.room && data.board && data.me) {
+                self.setRoom(data.room, data.board, data.me, data.grid);
+                self.room().update(data);
+            }
+        } else {
+            self.room().update(data);
+        }
+    })
+    globalConnect().socket.on("removed", function() {
+        this.leaveRoom();
+    });
 }
 
+Lobby.prototype.setRoom = function(roomId, board, me, grid) {
+    if (window.history.state !== "room") {
+        window.history.pushState("room", "room", "/room/" + roomId)
+    }
+    this.room(new Room(roomId, board, me, grid));
+}
 //TODO: move to lobby class
 Lobby.prototype.createRoom = function(self, e, isPrivate, bots, type) {
-    this.room(new Room());
     globalConnect().createGame(isPrivate, bots, type);
 }
 
@@ -44,14 +63,17 @@ Lobby.prototype.createRoomPrivate = function(self) {
 }
 
 Lobby.prototype.leaveRoom = function() {
-    this.room(undefined);
-    globalConnect().socket.removeAllListeners('gameState')
-    globalConnect().socket.removeAllListeners('removed')
-    globalConnect().leaveRoom();
+    if (this.room()) {
+        this.room().selfDestruct();
+        this.room(undefined);
+        globalConnect().leaveRoom();
+        if (window.history.state === "room") {
+            window.history.back();
+        }
+    }
 }
 
 Lobby.prototype.joinRoom = function(roomId) {
-    this.room(new Room());
     globalConnect().join(roomId);
 }
 
