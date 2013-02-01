@@ -33,7 +33,7 @@ function nextRoomId() {
 }
 
 function log(name, object) {
-    if ( typeof object === "undefind") {
+    if ( typeof object === "undefined") {
         console.log(name);
     } else {
         console.log(name);
