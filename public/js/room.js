@@ -43,7 +43,6 @@ var Room = function(id, board, me, grid) {
     this.renderer = new Render("#mv-canvas");
     this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
     this.renderer.possibleMovesClickHandler = this.input.possibleMovesOnClick;
-    this.renderer.setBoard(board);
 }
 
 Room.prototype.selfDestruct = function(){
@@ -62,6 +61,7 @@ Room.prototype.dummyPlayers = function() {
             emit : function() {
             }
         })));
+        dummies[i] = dummy;
     }
     return dummies;
 }
@@ -121,6 +121,7 @@ Room.prototype.update = function(data) {
                 this.players()[i] = new ObservablePlayer(data[target][i]);
             }
             this.players.valueHasMutated();
+            this.renderer.setBoard(this.game().board);
             this.renderer.setPlayers(this.players(), this.me());
         }
 
@@ -137,7 +138,7 @@ Room.prototype.update = function(data) {
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
-                this.renderer.setGrid(grid);
+                this.renderer.setGrid(grid, this.game().board);
 
             } else {
                 console.error("havent recieved board")

@@ -6,14 +6,14 @@
 var Render = function(canvasId) {
     this.canvasId = canvasId;
     this.paper = undefined;
-    this.board = undefined;
+    this.lastBoard = undefined;
 
     // Mirrors Grid, but keeps track on SVG elems
     // instead of player Ids
     this.spaces = {};
 
     // Maps player.id to turn number
-    this.players = {};
+    this.players = {}
     this.me = undefined;
 
     // Raphael sets
@@ -65,13 +65,12 @@ Render.prototype.getDimensions = function(board) {
 
 Render.prototype.setBoard = function(board) {
     
-    // This is necessary because the board gets passed to the Room twice
-    // TODO: ^Fix that
-    if (this.board !== undefined) {
+    if (board == this.lastBoard) {
         return;
     }
 
-    this.board = board;
+    // Keep record of the current initialization
+    this.lastBoard = board;
 
     var dim = this.getDimensions(board);
     this.paper = Raphael($(this.canvasId)[0], dim.width, dim.height);
@@ -101,11 +100,11 @@ Render.prototype.setBoard = function(board) {
     }
     
     // Create space SVG elements
-    this.spaces = new Array(this.board.width);
+    this.spaces = new Array(board.width);
     
-    for (var i = 0; i < this.board.width; i++) {
-        this.spaces[i] = new Array(this.board.height);
-        for (var j = 0; j < this.board.height; j++) {
+    for (var i = 0; i < board.width; i++) {
+        this.spaces[i] = new Array(board.height);
+        for (var j = 0; j < board.height; j++) {
 
             var c = this.hexSpaceCenter(i, j);
             // Every space must have a "fill" or it won't accept onClick events
@@ -114,20 +113,23 @@ Render.prototype.setBoard = function(board) {
                 j : j,
                 fill : "#fff"
             });                  
-            
+
             this.spacesSet.push(space);
             this.spaces[i][j] = space;
 
             if (DEBUG) {
-                var txt = this.paper.text(c.x, c.y, i + " " + j);
+                var txt = this.paper.text(c.x, c.y, i + " " + j).attr({
+                    i : i,
+                    j : j
+                });
                 this.debugNumbers.push(txt);
             }
         }
     }
 
     // Modify attributes of special spaces
-    for (var s in this.board.nonrendered) {
-        var space = this.board.nonrendered[s];
+    for (var s in board.nonrendered) {
+        var space = board.nonrendered[s];
         this.spaces[space[0]][space[1]].attr({
             stroke: "#fff",
             fill: "",
@@ -135,15 +137,15 @@ Render.prototype.setBoard = function(board) {
         });
     }
     
-    for (var s in this.board.nonjumpable) {
-        var space = this.board.nonjumpable[s];
+    for (var s in board.nonjumpable) {
+        var space = board.nonjumpable[s];
         this.spaces[space[0]][space[1]].attr({
             fill: "#444"
         });
     }
     
-    for (var s in this.board.controlpoints) {
-        var space = this.board.controlpoints[s];
+    for (var s in board.controlpoints) {
+        var space = board.controlpoints[s];
 
         var c = this.hexSpaceCenter(space[0], space[1]);
         var point = this.paper.circle(c.x, c.y, 18).attr({
@@ -171,7 +173,22 @@ Render.prototype.setBoard = function(board) {
     this.applyAttributes();
 }
 
+// Call this when the player list updates
+// Resets internal mapping between player Ids and turn numbers
+Render.prototype.setPlayers = function(players, me) {
+    this.players = {}
+    for (var i = 0; i < players.length; i++) {
+        this.players[players[i].id] = i;
+    }
+
+    if (me !== undefined && me !== -1) {
+        this.me = this.players[me];
+        this.applyAttributes();
+    }
+}
+
 Render.prototype.applyAttributes = function() {
+
     for (var i = 0; i < 3; i++) {
         this.playerSpaces[i].attr({
             fill : COLORS[i].color
@@ -195,19 +212,6 @@ Render.prototype.applyAttributes = function() {
     }
 }
 
-// Call this when the player list updates
-// Resets internal mapping between player Ids and turn numbers
-Render.prototype.setPlayers = function(players, me) {
-    this.players = {}
-    for (var i = 0; i < 3; i++) {
-        this.players[players[i].id] = i;
-    }
-
-    if (me !== undefined && me !== -1) {
-        this.me = this.players[me];
-    }
-}
-
 // Apply the current grid to the Renderer.
 // Resets the playerSpaces sets to reflect
 // the spaces that each player currently has.
@@ -224,7 +228,7 @@ Render.prototype.setPlayers = function(players, me) {
 //
 // That way the Renderer can be ignorant of
 // player Ids.
-Render.prototype.setGrid = function(grid) {
+Render.prototype.setGrid = function(grid, board) {
 
     if (this.playerSpaces === undefined || this.me === undefined) {
         return;
@@ -236,8 +240,8 @@ Render.prototype.setGrid = function(grid) {
         this.playerSpaces[i].clear();
     };
 
-    for (var i = 0; i < this.board.width; i++) {
-        for (var j = 0; j < this.board.height; j++) {
+    for (var i = 0; i < board.width; i++) {
+        for (var j = 0; j < board.height; j++) {
             // reset playerSpaces
             var player = this.players[grid[i][j]];
 
@@ -254,12 +258,14 @@ Render.prototype.setGrid = function(grid) {
 }
 
 Render.prototype.setMove = function(boardDiff) {
-    
+
     if (this.playerSpaces === undefined || this.me === undefined) {
         return;
     }
 
     for (var id in boardDiff.lost) {
+        // TODO: This is broken for some reason. It's not getting the correct
+        // ids.
         var player = this.players[id];
         var spaces = boardDiff.lost[id];
 
