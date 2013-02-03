@@ -264,8 +264,6 @@ Render.prototype.setMove = function(boardDiff) {
     }
 
     for (var id in boardDiff.lost) {
-        // TODO: This is broken for some reason. It's not getting the correct
-        // ids.
         var player = this.players[id];
         var spaces = boardDiff.lost[id];
 

@@ -118,10 +118,16 @@ Room.prototype.update = function(data) {
 
         if (target === "players") {
             for (var i = 0; i < data[target].length; i++) {
-                this.players()[i] = new ObservablePlayer(data[target][i]);
+                var player = new ObservablePlayer(data[target][i]);
+                this.game().replacePlayer(this.players()[i].id, player.id);
+                this.players()[i] = player
             }
             this.players.valueHasMutated();
+
+            // Don't move this. For some reason the renderer breaks
+            // unless you call setBoard here.
             this.renderer.setBoard(this.game().board);
+
             this.renderer.setPlayers(this.players(), this.me());
         }
 
