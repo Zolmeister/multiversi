@@ -137,8 +137,8 @@ Room.prototype.add = function(player, callback) {
             board : this.board,
             isPublic : this.isPublic,
             turn : this.turn,
-            grid : this.game.grid,
-            players : this.publicPlayerList()
+            players : this.publicPlayerList(),
+            grid : this.game.grid
         })
         this.sendAll("gameState", {
             players : this.publicPlayerList()
