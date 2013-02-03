@@ -142,7 +142,7 @@ Room.prototype.add = function(player, callback) {
         })
         this.sendAll("gameState", {
             players : this.publicPlayerList()
-        });
+        }, [player]);
 
         if (callback) {
             callback(this);
@@ -176,10 +176,12 @@ Room.prototype.remove = function(player) {
 /*
  * @param {string} name
  * @param {Object} data
+ * @param {List} {Player} exclude *optional
  */
-Room.prototype.sendAll = function(name, data) {//send to all players
+Room.prototype.sendAll = function(name, data, exclude) {//send to all players
+    exclude = exclude || [];
     for (var i in this.players) {
-        if (!this.players[i].bot && !this.players[i].removed) {
+        if (!this.players[i].bot && !this.players[i].removed && exclude.indexOf(this.players[i])===-1) {
             this.players[i].socket.emit(name, data);
         }
     }

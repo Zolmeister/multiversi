@@ -10,7 +10,8 @@
         "consolidate": "*",
         "dustjs-linkedin": "*",
         "jasmine-node": "*",
-        "socket.io": "*"
+        "socket.io": "*",
+	"socket.io-client":"*"
     },
     "devDependencies": {},
     "optionalDependencies": {},

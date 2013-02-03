@@ -78,9 +78,10 @@ module.exports = function(socket) {
 
     function createGame(data) {
         //data: {isPrivate: boolean, bots: boolean, gametype: gametype}
+        var gametype = data.gametype || "classic";
         var newRoom = new Room(data.gametype);
-        var isPrivate = data.isPrivate;
-        var bots = data.bots;
+        var isPrivate = data.isPrivate || false;
+        var bots = data.bots || false;
         addPlayer(newRoom, player, function(targetRoom) {
             if (isPrivate) {
                 newRoom.setAdmin(player);
