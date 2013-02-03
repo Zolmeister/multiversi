@@ -238,9 +238,13 @@ Render.prototype.applyAttributes = function() {
     }
 
     if (this.possibleMovesSet !== undefined){
-        this.possibleMovesSet.attr({
-            fill : COLORS[this.me].moveColor
-        });
+
+        var turn = this.turnOrder.lastIndexOf(this.me);
+        if (turn >= 0) {
+            this.possibleMovesSet.attr({
+                fill : COLORS[turn].moveColor
+            });
+        }
 
         if (this.possibleMovesSet && this.possibleMovesClickHandler) {
             this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
