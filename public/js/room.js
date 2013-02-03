@@ -43,6 +43,9 @@ var Room = function(id, board, me, grid) {
     this.renderer = new Render("#mv-canvas");
     this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
     this.renderer.possibleMovesClickHandler = this.input.possibleMovesOnClick;
+
+    this.renderer.setPlayers(this.players(), this.me());
+    this.renderer.setBoard(this.game().board);
 }
 
 Room.prototype.selfDestruct = function(){
@@ -56,7 +59,9 @@ Room.prototype.indexToColor = function(index) {
 Room.prototype.dummyPlayers = function() {
     var dummies = [];
     for (var i = 0; i < 3; i++) {
-        var id = i;
+        // Server sets Dummy Ids to [1,3],
+        // this much match
+        var id = i + 1;
         var dummy = ko.observable(new ObservablePlayer(new Player(id, {
             emit : function() {
             }
@@ -119,16 +124,24 @@ Room.prototype.update = function(data) {
         if (target === "players") {
             for (var i = 0; i < data[target].length; i++) {
                 var player = new ObservablePlayer(data[target][i]);
-                this.game().replacePlayer(this.players()[i].id, player.id);
+
+                var playerFromId = this.players()[i].id;
+                
+                // If the player is a dummy player, you have to do this
+                if (playerFromId === undefined) {
+                    playerFromId = this.players()[i]().id;
+                }
+                
+                console.log("Replace player: " + playerFromId + " to " + player.id);
+
+                if (playerFromId !== player.id) {
+                    this.game().replacePlayer(playerFromId, player.id);
+                    this.renderer.replacePlayer(playerFromId, player.id);
+                }
+
                 this.players()[i] = player
             }
             this.players.valueHasMutated();
-
-            // Don't move this. For some reason the renderer breaks
-            // unless you call setBoard here.
-            this.renderer.setBoard(this.game().board);
-
-            this.renderer.setPlayers(this.players(), this.me());
         }
 
         if (target === "turn") {
