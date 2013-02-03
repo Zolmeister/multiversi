@@ -12,10 +12,13 @@ function Room(gametype) {
     //TODO: replace with uuid?
     this.openIds = [];
     //list of removed player ids, for grid replacement
-    this.players = this.dummyPlayers();
+    this.players = util.dummyPlayers();
+    for(var player in this.players){
+        this.openIds.push(this.players[player].id);
+    }
     //list of player objects
     this.banned = [];
-    this.board = this.getBoard(gametype);
+    this.board = util.getBoard(gametype);
     this.game = new Game(this.players, this.board);
     this.turn = 0;
     //player index
@@ -25,20 +28,6 @@ function Room(gametype) {
     //for new rooms, change on hit 3 players
 }
 
-Room.prototype.dummyPlayers = function() {
-    var dummies = [];
-    for (var i = 1; i < 4; i++) {
-        var id = i;
-        var dummy = new Player(id, {
-            emit : function() {
-            }
-        });
-        dummy.removed = true;
-        dummies.push(dummy);
-        this.openIds.push(id);
-    }
-    return dummies;
-}
 /*
  * @param {id} id
  * @return {Player}
@@ -287,13 +276,6 @@ Room.prototype.adminStart = function() {
     }
 }
 
-Room.prototype.getBoard = function(board) {
-    var boards = {
-        "classic" : './resources/boards/original.json',
-        "pointcontrol" : './resources/boards/pointcontrol.json',
-    }
-    return boards[board] ? require(boards[board]) : require(boards["classic"]);
-}
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
     this.started = true;

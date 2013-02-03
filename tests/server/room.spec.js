@@ -1,12 +1,13 @@
-var Room = require("../../room")
-var Game = require("../../public/js/engine")
+var Room = require("../../room");
+var Game = require("../../public/js/engine");
+var util = require("../../utils");
 var types = ["classic", "pointcontrol"];
 for (var gametype in types) {
     describe("Room", function() {
         var room = new Room(types[gametype]);
 
         afterEach(function() {
-            room.players = room.dummyPlayers();
+            room.players = util.dummyPlayers();
         })
         it("has default properties", function() {
             expect( typeof room.id).toBe("string");
@@ -16,15 +17,6 @@ for (var gametype in types) {
             expect(room.game instanceof Game).toBe(true);
             expect( typeof room.isPublic).toBe("boolean");
             expect( typeof room.started).toBe("boolean");
-        })
-        it("generates dummy players", function() {
-            var dummies = room.dummyPlayers();
-            for (var i = 0; i < dummies.length; i++) {
-                var dummy = dummies[i];
-                expect( typeof dummy.id).toBe("number");
-                expect(dummy.removed).toBe(true);
-                expect( typeof dummy.socket.emit).toBe("function")
-            }
         })
         it("returns player by id", function() {
             var player = room.players[0];

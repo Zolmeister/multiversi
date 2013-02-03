@@ -1,4 +1,5 @@
 var sys = require('sys');
+var Player = require("./public/js/player");
 /*
  * @param {2dArray} grid
  * @return {2dArray} s
@@ -41,8 +42,34 @@ function log(name, object) {
     }
 }
 
+function getBoard(board) {
+    //TODO: move to settings
+    var boards = {
+        "classic" : './resources/boards/original.json',
+        "pointcontrol" : './resources/boards/pointcontrol.json',
+    }
+    return boards[board] ? require(boards[board]) : require(boards["classic"]);
+}
+
+function dummyPlayers() {
+    //TODO: maybe this should go in player class?
+    var dummies = [];
+    for (var i = 1; i < 4; i++) {
+        var id = i;
+        var dummy = new Player(id, {
+            emit : function() {
+            }
+        });
+        dummy.removed = true;
+        dummies.push(dummy);
+    }
+    return dummies;
+}
+
 exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
 exports.log = log;
+exports.getBoard = getBoard;
+exports.dummyPlayers = dummyPlayers;
