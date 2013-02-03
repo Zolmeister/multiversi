@@ -5,24 +5,39 @@
  */
 var Render = function(canvasId) {
     this.canvasId = canvasId;
-    this.paper = undefined;
+    this.paper = Raphael($(this.canvasId)[0], 0, 0);
     this.lastBoard = undefined;
 
     // Mirrors Grid, but keeps track on SVG elems
     // instead of player Ids
     this.spaces = {};
 
-    // Maps player.id to turn number
-    this.players = {}
+    // List of Ids to keep track of turn order
+    this.turnOrder = [0, 0, 0];
+
+    // Id of client's player
     this.me = undefined;
 
     // Raphael sets
     // For easy access to all spaces of a certain type
     this.spacesSet = undefined;
-    this.playerSpaces = {};
+    this.playerSpaces = undefined;
     this.controlPointSet = undefined;
     this.possibleMovesSet = undefined;
     this.clickedSpace = undefined;
+    
+    // i,j custom attributes
+    // This allows us to set the [i, j] coordinate
+    // of the element internally so we can easily
+    // access it from event callbacks.
+    this.paper.customAttributes.i = function(i) {
+        return {i : i};
+    }
+    
+    this.paper.customAttributes.j = function(j) {
+        return {j : j};
+    }
+    
 
     // Event handlers
     this.playerSpacesClickHandler = undefined;
@@ -64,7 +79,11 @@ Render.prototype.getDimensions = function(board) {
 }
 
 Render.prototype.setBoard = function(board) {
-    
+
+    if (this.playerSpaces == undefined) {
+        return;
+    }
+
     if (board == this.lastBoard) {
         return;
     }
@@ -73,7 +92,7 @@ Render.prototype.setBoard = function(board) {
     this.lastBoard = board;
 
     var dim = this.getDimensions(board);
-    this.paper = Raphael($(this.canvasId)[0], dim.width, dim.height);
+    this.paper.setSize(dim.width, dim.height);
     
     this.spacesSet = this.paper.set();
     this.controlPointSet = this.paper.set();
@@ -81,24 +100,6 @@ Render.prototype.setBoard = function(board) {
         this.debugNumbers = this.paper.set();
     }
 
-    this.playerSpaces = {
-        0 : this.paper.set(),
-        1 : this.paper.set(),
-        2 : this.paper.set()
-    };
-
-    // i,j custom attributes
-    // This allows us to set the [i, j] coordinate
-    // of the element internally so we can easily
-    // access it from event callbacks.
-    this.paper.customAttributes.i = function(i) {
-        return {i : i};
-    }
-    
-    this.paper.customAttributes.j = function(j) {
-        return {j : j};
-    }
-    
     // Create space SVG elements
     this.spaces = new Array(board.width);
     
@@ -161,7 +162,7 @@ Render.prototype.setBoard = function(board) {
         for (var s in board.starting[i]) {
             var space = board.starting[i][s];
 
-            this.playerSpaces[i].push(this.spaces[space[0]][space[1]]);
+            this.playerSpaces[this.turnOrder[i]].push(this.spaces[space[0]][space[1]]);
         }
     }
 
@@ -176,39 +177,75 @@ Render.prototype.setBoard = function(board) {
 // Call this when the player list updates
 // Resets internal mapping between player Ids and turn numbers
 Render.prototype.setPlayers = function(players, me) {
-    this.players = {}
+    for (var set in this.playerSpaces) {
+        this.playerSpaces[set].clear();
+    }
+
+    this.playerSpaces = {};
+
     for (var i = 0; i < players.length; i++) {
-        this.players[players[i].id] = i;
+        var id = players[i].id;
+
+        // Dummy player
+        if (id == undefined) {
+            id = players[i]().id;
+        }
+
+        this.playerSpaces[id] = this.paper.set();
+        this.turnOrder[i] = id;
     }
 
     if (me !== undefined && me !== -1) {
-        this.me = this.players[me];
+        this.me = me;
         this.applyAttributes();
     }
 }
 
+Render.prototype.replacePlayer = function(playerIdFrom, playerIdTo) {
+
+    if (!this.playerSpaces) {
+        return;
+    }
+
+    if (playerIdFrom === this.me) {
+        this.me = playerIdTo;
+    }
+    this.playerSpaces[playerIdTo] = this.playerSpaces[playerIdFrom];
+    delete this.playerSpaces[playerIdFrom];
+
+    var i = this.turnOrder.lastIndexOf(playerIdFrom);
+
+    // turnOrder Ids must be strings for comparisons/searching
+    this.turnOrder[i] = playerIdTo + "";
+}
+
 Render.prototype.applyAttributes = function() {
 
-    for (var i = 0; i < 3; i++) {
-        this.playerSpaces[i].attr({
-            fill : COLORS[i].color
-        });
+    if (this.playerSpaces !== undefined) {
+        
+        for (var i = 0; i < 3; i++) {
+            this.playerSpaces[this.turnOrder[i]].attr({
+                fill : COLORS[i].color
+            });
+        }
+
+        // You must "unclick" the elements first, otherwise the handler
+        // is called thousands of times
+        if (this.playerSpaces[this.me] && this.playerSpacesClickHandler) {
+            this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
+            this.playerSpaces[this.me].click(this.playerSpacesClickHandler);
+        }
     }
-    if (this.possibleMovesSet){
+
+    if (this.possibleMovesSet !== undefined){
         this.possibleMovesSet.attr({
             fill : COLORS[this.me].moveColor
         });
-    }
 
-    // You must "unclick" the elements first, otherwise the handler
-    // is called thousands of times
-    if (this.playerSpaces[this.me] && this.playerSpacesClickHandler) {
-        this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
-        this.playerSpaces[this.me].click(this.playerSpacesClickHandler);
-    }
-    if (this.possibleMovesSet && this.possibleMovesClickHandler) {
-        this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
-        this.possibleMovesSet.click(this.possibleMovesClickHandler);
+        if (this.possibleMovesSet && this.possibleMovesClickHandler) {
+            this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
+            this.possibleMovesSet.click(this.possibleMovesClickHandler);
+        }
     }
 }
 
@@ -234,23 +271,25 @@ Render.prototype.setGrid = function(grid, board) {
         return;
     }
 
-    this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
+    if (this.playerSpaces.hasOwnProperty(this.me)) {
+        this.playerSpaces[this.me].unclick(this.playerSpacesClickHandler);
+    }
     
     for (var i = 0; i < 3; i++) {
-        this.playerSpaces[i].clear();
+        this.playerSpaces[this.turnOrder[i]].clear();
     };
 
     for (var i = 0; i < board.width; i++) {
         for (var j = 0; j < board.height; j++) {
-            // reset playerSpaces
-            var player = this.players[grid[i][j]];
+            
+            var id = grid[i][j];
 
-            if (!(player >= 0 && player < 3)) {
+            if (!this.playerSpaces.hasOwnProperty(id)) {
                 continue;
             }
 
             var space = this.spaces[i][j];
-            this.playerSpaces[player].push(space);
+            this.playerSpaces[id].push(space);
         }
     }
     
@@ -264,28 +303,26 @@ Render.prototype.setMove = function(boardDiff) {
     }
 
     for (var id in boardDiff.lost) {
-        var player = this.players[id];
         var spaces = boardDiff.lost[id];
 
         for (var s in spaces) {
             var space = spaces[s];
 
-            this.playerSpaces[player].exclude(this.spaces[space.i][space.j]);
+            this.playerSpaces[id].exclude(this.spaces[space.i][space.j]);
 
-            if (player === this.me) {
+            if (id === this.me) {
                 this.spaces[space.i][space.j].unclick(this.playerSpacesClickHandler);
             }
         }
     }
     
     for (var id in boardDiff.gained) {
-        var player = this.players[id];
         var spaces = boardDiff.gained[id];
 
         for (var s in spaces) {
             var space = spaces[s];
 
-            this.playerSpaces[player].push(this.spaces[space.i][space.j]);
+            this.playerSpaces[id].push(this.spaces[space.i][space.j]);
         }
     }
 
