@@ -13,7 +13,7 @@ function Room(gametype) {
     this.openIds = [];
     //list of removed player ids, for grid replacement
     this.players = util.dummyPlayers();
-    for(var player in this.players){
+    for (var player in this.players) {
         this.openIds.push(this.players[player].id);
     }
     //list of player objects
@@ -157,7 +157,7 @@ Room.prototype.add = function(player, callback) {
 /*
  * @param {player} player
  */
-Room.prototype.remove = function(player) {
+Room.prototype.remove = function(player, callback) {
     var index = this.getPlayerIndex(player.id);
     if (index !== -1) {
         util.log("remvoed player")
@@ -171,6 +171,9 @@ Room.prototype.remove = function(player) {
             isPublic : this.isPublic,
             players : this.publicPlayerList()
         })
+        if (callback) {
+            callback();
+        }
     }
 }
 /*
@@ -181,7 +184,7 @@ Room.prototype.remove = function(player) {
 Room.prototype.sendAll = function(name, data, exclude) {//send to all players
     exclude = exclude || [];
     for (var i in this.players) {
-        if (!this.players[i].bot && !this.players[i].removed && exclude.indexOf(this.players[i])===-1) {
+        if (!this.players[i].bot && !this.players[i].removed && exclude.indexOf(this.players[i]) === -1) {
             this.players[i].socket.emit(name, data);
         }
     }
@@ -191,16 +194,20 @@ Room.prototype.sendAll = function(name, data, exclude) {//send to all players
  * @param {player} player
  * {move} = {start:{Position}, end:{Position}}
  */
-Room.prototype.move = function(data, player) {
+Room.prototype.move = function(data, player, callback) {
     if (player.id !== this.currentPlayerId()) {
-        util.log("tried to move, but not your turn");
+        if (callback) {
+            callback("tried to move, but not your turn");
+        }
         return;
     }
     var valid = this.game.validateMove(data.start, data.end, player.id);
     if (!valid) {
         var d = data;
         d.id = player.id;
-        util.log("bad move", d);
+        if (callback) {
+            callback("bad move");
+        }
         return;
     }
 
@@ -216,6 +223,10 @@ Room.prototype.move = function(data, player) {
         move : data,
         turn : this.turn
     });
+    if (callback) {
+        callback();
+    }
+
     this.botMove();
 }
 /*
@@ -277,7 +288,6 @@ Room.prototype.adminStart = function() {
         });
     }
 }
-
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
     this.started = true;

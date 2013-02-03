@@ -1,13 +1,14 @@
 var Room = require("../../room");
 var Game = require("../../public/js/engine");
 var util = require("../../utils");
+var Player = require("../../public/js/player")
 var types = ["classic", "pointcontrol"];
 for (var gametype in types) {
     describe("Room", function() {
         var room = new Room(types[gametype]);
 
-        afterEach(function() {
-            room.players = util.dummyPlayers();
+        beforeEach(function() {
+            room = new Room(types[gametype]);
         })
         it("has default properties", function() {
             expect( typeof room.id).toBe("string");
@@ -65,11 +66,31 @@ for (var gametype in types) {
             room.players[0].removed = false;
             expect(room.playerCount()).toBe(1);
         })
-        it("adds a player to the player list and calls back", function() {
+        it("adds a player to the player list and calls back", function(done) {
             //TODO: lots and lots and lots of edge case testing needs to be done here
+            var player = new Player(9001, {
+                emit : function() {
+                }
+            });
+            spyOn(room,"sendAll");
+            room.add(player, function() {
+                expect(room.sendAll).toHaveBeenCalled();
+                done();
+            })
         })
-        it("removed a player from the player list and tells other players", function() {
+        it("removes a player from the player list and tells other players", function(done) {
             //TODO: lots and lots and lots of edge case testing needs to be done here
+            var player = new Player(9001, {
+                emit : function() {
+                }
+            });
+            room.add(player, function() {
+                spyOn(room,"update");
+                room.remove(player, function() {
+                    expect(room.update).toHaveBeenCalled();
+                    done();
+                });
+            })
         })
         it("sends a socket message to all non-removed non-bot clients", function() {
             room.players[0].removed = false;
@@ -87,8 +108,27 @@ for (var gametype in types) {
                 }
             }
         })
-        it("makes move if move is valid and is players turn, then send all", function() {
+        it("makes move if move is valid and is players turn, then send all", function(done) {
             //TODO: lots of edge case testing here too
+            var player = new Player(9001, {
+                emit : function() {
+                }
+            });
+            room.add(player, function() {
+                room.move({
+                    start : {
+                        i : 0,
+                        j : 0
+                    },
+                    end : {
+                        i : 0,
+                        j : 1
+                    }
+                }, player, function(data){
+                    expect(data).toBe("bad move");
+                    done()
+                })
+            })
         })
         it("should merge scores with scoreDiff", function() {
             var scoreDiff = {};
