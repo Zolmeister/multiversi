@@ -63,13 +63,7 @@ RulesSet.prototype.setInitialPositions = function(grid, board, players) {
         }
     }
 }
-/*
- * @param {Position} space
- * return {boolean}
- */
-RulesSet.prototype.canJumpSpace = function(space) {
-    return true;
-}
+
 /*
  * @param {grid} grid
  * @param {board} board

@@ -177,8 +177,6 @@ Game.prototype.generateMoveInDirection = function(start, direction) {
         nextValue = this.grid[nextSpace.i][nextSpace.j];
         if (nextValue === startId || nextValue === -2 || nextValue === -3) {
             return undefined;
-        } else if (!this.rules.canJumpSpace(nextSpace)) {
-            return undefined;
         }
 
         scores[nextValue] -= 1;
