@@ -15,10 +15,12 @@ var Room = function(id, board, me, grid) {
     this.socket = this.connect().socket;
     this.isPublic = ko.observable(true);
     this.me = ko.observable(me);
-    this.game=ko.observable(new Game(this.players(), board));
+    this.game = ko.observable(new Game(this.players(), board));
     if(grid){
         this.game().setGrid(grid);
     }
+
+    this.ended = ko.observable(false);
             
     //TODO: move these to lobby class
     this.joinRoom = function(r) {
@@ -162,6 +164,13 @@ Room.prototype.update = function(data) {
             } else {
                 console.error("havent recieved board")
             }
+        }
+
+        if (target === "end") {
+            // this.ended = ko.observable(true);
+            this.ended(true);
+
+            console.log("game ended");
         }
     }
 }

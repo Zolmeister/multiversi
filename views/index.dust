@@ -38,6 +38,11 @@
                     </div>
                 </div>
             </div>
+
+            <div class="endgame" data-bind="visible: ended()">
+                <p>Game Over</p>
+            </div>
+
             <div class="admin-options" data-bind="if: iAmAdmin">
                 <h2>Admin Options</h2>
                 <button onClick='globalConnect().roomAdmin("addBot", "")'>Add bot</button>

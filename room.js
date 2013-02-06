@@ -160,7 +160,7 @@ Room.prototype.add = function(player, callback) {
 Room.prototype.remove = function(player, callback) {
     var index = this.getPlayerIndex(player.id);
     if (index !== -1) {
-        util.log("remvoed player")
+        util.log("removed player")
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
         this.players[index].removed = true;
@@ -213,11 +213,8 @@ Room.prototype.move = function(data, player, callback) {
 
     var boardDiff = this.game.move(data.start, data.end);
     this.mergeScores(this.game.scoreDiff(boardDiff));
-    if (this.game.gameEnded()) {
-        // TODO: Game ends here
-        util.log("game ended");
-    }
 
+    // Next turn
     this.turn = ++this.turn % 3;
     this.update({
         move : data,
@@ -227,7 +224,17 @@ Room.prototype.move = function(data, player, callback) {
         callback();
     }
 
-    this.botMove();
+    if (this.game.gameEnded()) {
+        util.log("game ended");
+
+        this.update({
+            end: true
+        });
+    } else {
+
+        // Next turn
+        this.botMove();
+    }
 }
 /*
  * @param {dict} scores {id: scoreDiff}
