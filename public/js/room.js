@@ -20,6 +20,7 @@ var Room = function(id, board, me, grid) {
         this.game().setGrid(grid);
     }
 
+    this.started = ko.observable(false);
     this.ended = ko.observable(false);
             
     //TODO: move these to lobby class
@@ -40,7 +41,9 @@ var Room = function(id, board, me, grid) {
         var player = self.players()[self.turn()];
         return player ? player.id : -1;
     }, this);
+}
 
+Room.prototype.initRenderer = function() {
     this.input = new Input(this);
     this.renderer = new Render("#mv-canvas");
     this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
@@ -48,10 +51,13 @@ var Room = function(id, board, me, grid) {
 
     this.renderer.setPlayers(this.players(), this.me());
     this.renderer.setBoard(this.game().board);
+    this.renderer.setGrid(this.game().grid, this.game().board);
 }
 
 Room.prototype.selfDestruct = function(){
-    this.renderer.paper.remove();
+    if (this.renderer) {
+        this.renderer.paper.remove();
+    }
 }
 
 Room.prototype.indexToColor = function(index) {
@@ -115,6 +121,13 @@ Room.prototype.update = function(data) {
         console.log(target + ": ");
         console.log(data[target]);
 
+        if (target === "started" && data[target] === true) {
+            if (!this.started()) {
+                this.started(true);
+                this.initRenderer();
+            }
+        }
+        
         if (target === "move") {
             if (this.currentPlayerId() !== this.me()) {
                 this.move(data[target]);
@@ -138,7 +151,9 @@ Room.prototype.update = function(data) {
 
                 if (playerFromId !== player.id) {
                     this.game().replacePlayer(playerFromId, player.id);
-                    this.renderer.replacePlayer(playerFromId, player.id);
+                    if (this.renderer) {
+                        this.renderer.replacePlayer(playerFromId, player.id);
+                    }
                 }
 
                 this.players()[i] = player
@@ -159,7 +174,9 @@ Room.prototype.update = function(data) {
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
-                this.renderer.setGrid(grid, this.game().board);
+                if (this.renderer) {
+                    this.renderer.setGrid(grid, this.game().board);
+                }
 
             } else {
                 console.error("havent recieved board")
@@ -167,7 +184,6 @@ Room.prototype.update = function(data) {
         }
 
         if (target === "end") {
-            // this.ended = ko.observable(true);
             this.ended(true);
 
             console.log("game ended");

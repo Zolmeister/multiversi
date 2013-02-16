@@ -56,7 +56,7 @@ Room.prototype.currentPlayerId = function() {
  * @return {list: {players}}
  * {players} = {id, score, bot, removed}
  */
-Room.prototype.publicPlayerList = function() {//send only select information to clients
+Room.prototype.publicPlayerList = function() { //send only select information to clients
     var playerList = [];
     for (var i in this.players) {
         var p = this.players[i];
@@ -84,7 +84,7 @@ Room.prototype.update = function(data) {
 Room.prototype.noBotPlayerCount = function() {
     var cnt = 0;
     for (var i = 0; i < this.players.length; i++) {
-        if (!this.players[i].removed && !this.players[i].bot) {//check if player has been removed from game
+        if (!this.players[i].removed && !this.players[i].bot) { //check if player has been removed from game
             cnt++;
         }
     }
@@ -94,7 +94,7 @@ Room.prototype.noBotPlayerCount = function() {
 Room.prototype.playerCount = function() {
     var cnt = 0;
     for (var i = 0; i < this.players.length; i++) {
-        if (!this.players[i].removed) {//check if player has been removed from game
+        if (!this.players[i].removed) { //check if player has been removed from game
             cnt++;
         }
     }
@@ -131,6 +131,7 @@ Room.prototype.add = function(player, callback) {
         this.players[slot] = player;
         this.setScores();
 
+        
         player.socket.emit("gameState", {
             room : this.id,
             me : player.id,
@@ -140,9 +141,15 @@ Room.prototype.add = function(player, callback) {
             players : this.publicPlayerList(),
             grid : this.game.grid
         })
+        if (this.playerCount() === 3) {
+            this.sendAll("gameState", {
+                started : true
+            });
+        }
         this.sendAll("gameState", {
             players : this.publicPlayerList()
         }, [player]);
+
 
         if (callback) {
             callback(this);
@@ -181,7 +188,7 @@ Room.prototype.remove = function(player, callback) {
  * @param {Object} data
  * @param {List} {Player} exclude *optional
  */
-Room.prototype.sendAll = function(name, data, exclude) {//send to all players
+Room.prototype.sendAll = function(name, data, exclude) { //send to all players
     exclude = exclude || [];
     for (var i in this.players) {
         if (!this.players[i].bot && !this.players[i].removed && exclude.indexOf(this.players[i]) === -1) {
@@ -298,8 +305,7 @@ Room.prototype.adminStart = function() {
 //only call this with 3 players in players list
 Room.prototype.newGame = function() {
     this.started = true;
-    //this.game.newGame();
-    this.setScores(this.game.getScores());
+    this.setScores();
     this.turn = 0;
     this.update({
         turn : this.turn,

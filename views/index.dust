@@ -22,8 +22,18 @@
 {/js}
 {<body}
     <div data-bind="visible: $root" id="roomView">
-        <div id="mv-canvas"></div>
+
+
+
         <div data-bind="if: $root">
+            
+            <div data-bind="visible: !started()">
+                Waiting room. Don't have 3 players yet.
+            </div>
+            <div data-bind="visible: started()">
+                <div id="mv-canvas"></div>
+            </div>
+            
             <h1>Players</h1>
             <div class="players" data-bind="foreach: players()">
                 <div class="player" data-bind="style: {backgroundColor: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}">

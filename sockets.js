@@ -154,7 +154,7 @@ module.exports = function(socket) {
                     room.ban(targetPlayer);
                 }
             } else if (action === "start") {
-                room.adrminStart();
+                room.adminStart();
             } else if (action === "addBot") {
                 room.addBot();
                 calcOpenGames();
