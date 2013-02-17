@@ -86,10 +86,10 @@ module.exports = function(socket) {
 
     function createGame(data) {
         //data: {isPrivate: boolean, bots: boolean, gametype: gametype}
-        var gametype = data.gametype || "classic";
+        var gametype = data.gametype ? String(data.gametype) : "classic";
         var newRoom = new Room(data.gametype);
-        var isPrivate = data.isPrivate || false;
-        var bots = data.bots || false;
+        var isPrivate = data.isPrivate ? Boolean(data.isPrivate) : false;
+        var bots = data.bots ? Boolean(data.bots) : false;
         addPlayer(newRoom, player, function(targetRoom) {
             if (isPrivate) {
                 newRoom.setAdmin(player);
@@ -148,9 +148,9 @@ module.exports = function(socket) {
     socket.on("roomAdmin", function(data) {
         //data: {action: kick|ban|start|addBot, target: playerId}
         //TODO: bans by IP, instead of bans by player Id
-        //TODO: data validation
         var action = data.action;
         var targetPlayer = room.getPlayer(data.target);
+        //TODO: remove DEBUG flag for this
         if (player.isAdmin || settings.DEBUG) {
             if (action === "kick") {
                 if (targetPlayer) {
@@ -173,8 +173,12 @@ module.exports = function(socket) {
 
     socket.on("move", function(data) {
         //data: {start: {i: , j: }, end: {i: , j: }}
-        if (!player.removed && room) {
-            room.move(data, player);
+        if (!player.removed && room && data.start && data.end) {
+            var start = data.start;
+            var end = data.end;
+            if(util.isInt(start.i) && util.isInt(start.j) && util.isInt(end.i) && util.isInt(end.j)){
+                room.move(data, player);
+            }
         }
     })
 }
