@@ -257,11 +257,9 @@ RulesSet.prototype.controlPointCapturable = function(grid, board, controlPoint) 
 
             if (id === -1) {
                 endsEmpty[direction] = true;
-                // continue;
                 break;
             } else if (id === -2 || id === -3) {
                 endsEmpty[direction] = false;
-                // continue;
                 break;
             }
 
@@ -284,7 +282,6 @@ RulesSet.prototype.controlPointCapturable = function(grid, board, controlPoint) 
         
         if (endsEmpty[oppositeDirection]) {
             canBeCaptured = true;
-            // break;
         }
 
         for (var player in playersInDirection[oppositeDirection]) {
@@ -292,7 +289,6 @@ RulesSet.prototype.controlPointCapturable = function(grid, board, controlPoint) 
                 canBeCaptured = true;
                 break;
             }
-            // if (playersInDirectionCount[oppositeDirection] === 1 && player === captorId) {
             if (playersInDirectionCount[oppositeDirection] === 1) {
                 canBeCaptured = false;
                 break;
