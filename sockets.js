@@ -13,7 +13,7 @@ function calcOpenGames() {
         if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
             //private games that have started become public
             openGames.push({
-                roomId : parseInt(i),
+                roomId : Games[i].id,
                 players : Games[i].playerCount()
             });
         }
@@ -42,6 +42,7 @@ module.exports = function(socket) {
         if (!targetRoom || !player) {
             return;
         }
+        console.log("adding player to "+targetRoom.id)
         targetRoom.add(player, function(targetRoom) {
             util.log("player added")
             room = targetRoom;
@@ -52,12 +53,19 @@ module.exports = function(socket) {
             }
         })
     }
-
-    function firstAvailableRoomNumber() {
+    
+    function canJoinRoom(room){
+        if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
+            return true;
+        }
+        return false;
+    }
+    
+    function firstAvailableRoomId() {
         for (var i in Games) {
             var room = Games[i];
-            if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
-                return i;
+            if(canJoinRoom(room)){
+               return i;
             }
         }
         return -1;
@@ -100,26 +108,25 @@ module.exports = function(socket) {
 
 
     socket.on("join", function(data) {
+        console.log("user requested to join "+data.room)
         //data: {room: target room id}
         if (!data) {
             socket.emit("error", "joining room, bad data")
             return;
         }
         //join first available
-        if (!util.isInt(data.room)) {
-            var roomNumber = firstAvailableRoomNumber();
-        } else {
-            var roomNumber = data.room;
+        var reqRoom = Games[data.room]
+        if(!reqRoom || !canJoinRoom(reqRoom)){
+            reqRoom = Games[firstAvailableRoomId()];
         }
-        var targetRoom = Games[roomNumber];
-        if (!targetRoom) {
+        if (!reqRoom) {
             return createGame({
                 isPrivate : false,
                 bots : false,
                 gametype : "pointcontrol"
             });
         }
-        addPlayer(targetRoom, player);
+        addPlayer(reqRoom, player);
     })
 
     socket.on("leaveRoom", function() {

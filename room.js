@@ -170,6 +170,7 @@ Room.prototype.remove = function(player, callback) {
         util.log("removed player")
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
+        this.players[index] = this.players[index].clone()
         this.players[index].removed = true;
         this.players[index].socket.emit("removed");
         //dont actually remove player

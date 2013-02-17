@@ -4,13 +4,17 @@
  * @param {id} id
  * @param {socket} socket
  */
-function Player(id, socket) {
+function Player(id, socket, bot, removed, isAdmin, score) {
     this.id = id;
     this.socket = socket;
-    this.score = 0;
-    this.bot = false;
-    this.removed = true;
-    this.isAdmin = false;
+    this.score = score || 0;
+    this.bot = bot || false;
+    this.removed = removed || true;
+    this.isAdmin = isAdmin || false;
+}
+
+Player.prototype.clone = function(){
+    return new Player(this.id,this.socket, this.bot, this.removed, this.isAdmin, this.score);
 }
 
 //Uses knockout.js, only for client side
