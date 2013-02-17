@@ -44,6 +44,21 @@ var Render = function(canvasId) {
     this.possibleMovesClickHandler = undefined;
 }
 
+function hexagonPathString(radius) {
+    var a = Math.PI / 3;
+    var x = radius;
+    var y = 0;
+    var s = "m" + x + "," + y;
+
+    for (var i = 1; i < 6; i++) {
+        x = radius * Math.cos(a * i);
+        y = radius * Math.sin(a * i);
+        s = s + "L" + x + "," + y;
+    }
+
+    return s + "z";
+}
+
 /*
  * @param {i} i
  * @param {j} j
@@ -102,6 +117,9 @@ Render.prototype.setBoard = function(board) {
 
     // Create space SVG elements
     this.spaces = new Array(board.width);
+
+    var hexPath = hexagonPathString(RENDER.hexShape.radius);
+    console.log(hexPath);
     
     for (var i = 0; i < board.width; i++) {
         this.spaces[i] = new Array(board.height);
@@ -109,11 +127,18 @@ Render.prototype.setBoard = function(board) {
 
             var c = this.hexSpaceCenter(i, j);
             // Every space must have a "fill" or it won't accept onClick events
-            var space = this.paper.circle(c.x, c.y, RENDER.hexShape.apothem).attr({
+            // var space = this.paper.circle(c.x, c.y, RENDER.hexShape.apothem).attr({
+            //     i : i,
+            //     j : j,
+            //     fill : "#fff"
+            // });                  
+            var space = this.paper.path(hexPath).attr({
                 i : i,
                 j : j,
                 fill : "#fff"
             });                  
+
+            space.translate(c.x, c.y);
 
             this.spacesSet.push(space);
             this.spaces[i][j] = space;
