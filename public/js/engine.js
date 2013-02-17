@@ -19,7 +19,7 @@ var directions = {
 function Game(players, board) {
     this.board = board;
     //2d array of points
-    this.rules = new RulesSet();
+    this.rules = new RulesSet(this);
     this.grid = this.rules.newBoard(this.board, players);
 };
 

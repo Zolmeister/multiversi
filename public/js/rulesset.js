@@ -3,9 +3,12 @@
 * @this {RulesSet}
 */
 //function RulesSet(game) {
-function RulesSet() {
+function RulesSet(game) {
     this.movesMade = 0;
     this.totalMoves = 0;
+
+    // Zoli: this is needed to figure out when the game has ended. See RulesSet.controlPointCapturable
+    this.game = game
 };
 
 /*
@@ -65,18 +68,6 @@ RulesSet.prototype.setInitialPositions = function(grid, board, players) {
 }
 
 /*
- * @param {grid} grid
- * @param {board} board
- */
-RulesSet.prototype.gameEnded = function(grid, board) {
-
-    if (this.movesMade >= this.totalMoves) {
-        return true;
-    }
-
-    return false;
-}
-/*
  * @param {Position} space
  * return {boolean}
  */
@@ -84,13 +75,13 @@ RulesSet.prototype.isControlPoint = function(pos, board) {
     if (board.gametype === "pointcontrol") {
         for (var s in board.controlpoints) {
             var point = board.controlpoints[s];
-            var space = {i:point[0], j:point[1]};
-            if (space.i === pos.i && space.j === pos.j) {
+            // var space = {i:point[0], j:point[1]};
+            if (point[0] === pos.i && point[1] === pos.j) {
                 return true;
             }
         }
     }
-    
+
     return false;
 }
 /*
@@ -212,6 +203,107 @@ RulesSet.prototype.getPlayerScore = function(grid, board, playerId) {
 
     return 0;
 }
+
+/*
+ * @param {grid} grid
+ * @param {board} board
+ */
+RulesSet.prototype.gameEnded = function(grid, board) {
+
+    if (this.movesMade >= this.totalMoves) {
+        return true;
+    }
+
+    if (board.gametype === "pointcontrol") {
+        for (var s in board.controlpoints) {
+            var point = board.controlpoints[s];
+
+            if (this.controlPointCapturable(grid, board, {i : point[0], j : point[1]})) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+RulesSet.prototype.controlPointCapturable = function(grid, board, controlPoint) {
+    // Generate data
+    var playersInDirection = {}
+    var playersInDirectionCount = {}
+    var endsEmpty = {}
+    var captorId = grid[controlPoint.i][controlPoint.j] + "";
+
+    if (captorId == -1) {
+        return true;
+    }
+
+    for (var direction = 0; direction < 6; direction++) {
+        playersInDirection[direction] = {};
+        playersInDirectionCount[direction] = 0;
+        
+        var space = controlPoint;
+        while (true) {
+            space = this.game.spaceInDirection(space, direction);
+
+            if (space === undefined) {
+                endsEmpty[direction] = false;
+                break;
+            }
+
+            var id = grid[space.i][space.j];
+
+            if (id === -1) {
+                endsEmpty[direction] = true;
+                continue;
+            } else if (id === -2 || id === -3) {
+                endsEmpty[direction] = false;
+                continue;
+            }
+
+            if (playersInDirection[direction][id] === undefined) {
+                playersInDirection[direction][id] = true;
+                playersInDirectionCount[direction]++;
+            }
+        }
+    }
+
+    // Check whether capturable
+    var canBeCaptured = false;
+    for (var direction = 0; direction < 6; direction++) {
+
+        var oppositeDirection = (direction + 3) % 6;
+
+        if (endsEmpty[oppositeDirection]) {
+            canBeCaptured = true;
+        }
+
+        if (!endsEmpty[direction]) {
+            continue;
+        }
+
+        for (var player in playersInDirection[oppositeDirection]) {
+            if (playersInDirection[direction][player] === undefined) {
+                canBeCaptured = true;
+                break;
+            }
+            if (playersInDirectionCount[oppositeDirection] === 1 && player === captorId) {
+                canBeCaptured = false;
+                break;
+            }
+        }
+        
+        if (canBeCaptured) {
+            break;
+        }
+    }
+
+    return canBeCaptured;
+}
+
+
 if ( typeof module === "undefined")
     module = {}
 
