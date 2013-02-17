@@ -5,7 +5,7 @@ function Lobby() {
     window.history.replaceState("lobby", "lobbly", "/");
 
     //joining an active game
-    if ( typeof dynamicJoin !== "undefined") {
+    if (dynamicJoin) {
         this.joinRoom(dynamicJoin);
     }
 
