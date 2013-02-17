@@ -18,10 +18,10 @@ describe("Utils", function() {
         expect(util.isInt(2.2)).toBe(false);
         expect(util.isInt(1e2)).toBe(true);
     })
-    it("incrementing room Id string", function() {
+    it("obfuscated room Id string", function() {
         var n = util.nextRoomId();
         var n2 = util.nextRoomId();
-        expect(parseInt(n)).toBeLessThan(parseInt(n2));
+        expect(n!=n2).toBe(true);
     })
     it("returns a board", function() {
         var board = util.getBoard("classic");

@@ -12,7 +12,7 @@ function Lobby() {
     this.windowEvent = function(e) {
         var inRoom = self.inRoom();
 
-        if (e.state === "lobby" && isNaN(inRoom)) {
+        if (e.state === "lobby" && !inRoom) {
             console.log("lobby, leaving room");
             self.leaveRoom();
         } else if (e.state === "room") {
@@ -45,7 +45,7 @@ function Lobby() {
 
 Lobby.prototype.setRoom = function(roomId, board, me, grid) {
     if (window.history.state !== "room") {
-        window.history.pushState("room", "room", "/room/" + roomId)
+        window.history.pushState("room", "room", "/" + roomId)
     }
     this.room(new Room(roomId, board, me, grid));
 }
@@ -78,8 +78,9 @@ Lobby.prototype.joinRoom = function(roomId) {
 }
 
 Lobby.prototype.inRoom = function() {
-    var num = parseInt(window.location.href.split("/").pop());
-    if (!isNaN(num) && typeof num === "number") {
-        return num
+    var num = window.location.href.split("/").pop();
+    if (typeof num === "string" && num.length>=3) {
+        return num;
     }
+    return false;
 }
