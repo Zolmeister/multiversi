@@ -272,12 +272,13 @@ RulesSet.prototype.controlPointCapturable = function(grid, board, controlPoint) 
 
     // Check whether capturable
     var canBeCaptured = false;
-    for (var direction = 0; direction < 6; direction++) {
+    for (var direction = 0; direction < 3; direction++) {
 
         var oppositeDirection = (direction + 3) % 6;
 
         if (endsEmpty[oppositeDirection]) {
             canBeCaptured = true;
+            break;
         }
 
         if (!endsEmpty[direction]) {
