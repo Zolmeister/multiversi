@@ -45,8 +45,9 @@ for (var gametype in types) {
                 expect( typeof player.bot).toBe("boolean");
                 expect( typeof player.removed).toBe("boolean");
                 expect( typeof player.isAdmin).toBe("boolean");
+                expect( typeof player.name).toBe("string");
                 //must be sure that we only send non-sensitive information
-                expect(Object.keys(player).length).toBe(5)
+                expect(Object.keys(player).length).toBe(6)
             }
         })
         it("should send update data object to clients", function() {
