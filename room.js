@@ -18,7 +18,11 @@ function Room(gametype) {
     }
     //list of player objects
     this.banned = [];
-    this.board = util.getBoard(gametype);
+    if (settings.DEBUG && settings.BOARD) {
+        this.board = util.getBoardFile(settings.BOARD);
+    } else {
+        this.board = util.getBoard(gametype);
+    }
     this.game = new Game(this.players, this.board);
     this.turn = 0;
     //player index

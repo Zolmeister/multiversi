@@ -1,4 +1,5 @@
 var sys = require('sys');
+var fs = require('fs');
 var Player = require("./public/js/player");
 /*
  * @param {2dArray} grid
@@ -83,15 +84,6 @@ function log(name, object) {
     }
 }
 
-function getBoard(board) {
-    //TODO: move to settings
-    var boards = {
-        "classic" : './resources/boards/original.json',
-        "pointcontrol" : './resources/boards/pointcontrol.json',
-    }
-    return boards[board] ? require(boards[board]) : require(boards["classic"]);
-}
-
 function dummyPlayers() {
     //TODO: maybe this should go in player class?
     var dummies = [];
@@ -107,10 +99,45 @@ function dummyPlayers() {
     return dummies;
 }
 
+var boardPrefix = {
+    "classic" : './resources/boards/classic/',
+    "pointcontrol" : './resources/boards/pointcontrol/'
+}
+var boardFiles = {
+    "classic" : fs.readdirSync('./resources/boards/classic/'),
+    "pointcontrol" : fs.readdirSync('./resources/boards/pointcontrol/')
+};
+var boards = {};
+
+function getBoard(gametype) {
+    if (boardFiles[gametype]) {
+        var filename = boardPrefix[gametype] + boardFiles[gametype][Math.floor(Math.random() * boardFiles[gametype].length)];
+
+        if (boards[filename] === undefined) {
+            boards[filename] = require(filename);
+        }
+
+        return boards[filename];
+    }
+
+    return undefined;
+}
+
+function getBoardFile(filename) {
+    var filename = './resources/boards/' + filename; 
+
+    if (!boards[filename]) {
+        boards[filename] = require(filename); 
+    }
+
+    return boards[filename];
+}
+
 exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
 exports.log = log;
-exports.getBoard = getBoard;
 exports.dummyPlayers = dummyPlayers;
+exports.getBoard = getBoard;
+exports.getBoardFile = getBoardFile;
