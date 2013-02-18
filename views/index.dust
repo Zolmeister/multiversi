@@ -50,7 +50,11 @@
                     </div>
                 </div>
             </div>
-
+            <div class="chat" id="chat"></div>
+            <form data-bind="submit: globalConnect().sendChat">
+                <input name="chat">
+                <button type="submit">send</button>
+            </form>
             <div class="endgame" data-bind="visible: ended()">
                 <p>Game Over</p>
             </div>

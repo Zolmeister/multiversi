@@ -23,3 +23,10 @@
 	text-align: center;
 	height: 50px;
 }
+
+.chat {
+    width:200px;
+    height:200px;
+    background-color: #CCCCCC;
+    overflow-y: scroll;
+}

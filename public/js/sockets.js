@@ -14,6 +14,12 @@ var Connect = function() {
     this.socket.on("rooms", function(data) {
         self.rooms(data)
     })
+    
+    this.socket.on("chat", function(data){
+        var chat = $("#chat")
+        var msg = $("<span class='msg'>").text(data.user+": "+data.msg)
+        chat.html(chat.html()+msg.html()+"<br>")
+    })
 
     this.join = function join(roomId) {
         console.log("joining: " + roomId)
@@ -35,6 +41,13 @@ var Connect = function() {
             bots : bots,
             gametype : type
         });
+    }
+    
+    this.sendChat = function(form){
+        form = $(form);
+        var msg = form.serializeArray()[0].value;
+        form.find("input").val("");
+        this.socket.emit("chat",msg);
     }
 
     this.roomAdmin = function roomAdmin(action, target) {

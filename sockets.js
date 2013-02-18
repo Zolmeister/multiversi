@@ -181,4 +181,10 @@ module.exports = function(socket) {
             }
         }
     })
+    
+    socket.on("chat", function(msg){
+        if(room){
+            room.sendChat(msg, player.id);
+        }
+    })
 }
