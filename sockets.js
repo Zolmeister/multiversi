@@ -176,7 +176,7 @@ module.exports = function(socket) {
         if (!player.removed && room && data.start && data.end) {
             var start = data.start;
             var end = data.end;
-            if(util.isInt(start.i) && util.isInt(start.j) && util.isInt(end.i) && util.isInt(end.j)){
+            if ((util.isInt(start.i) && util.isInt(start.j) && util.isInt(end.i) && util.isInt(end.j)) || data.start === "pass"){
                 room.move(data, player);
             }
         }

@@ -209,18 +209,21 @@ Room.prototype.move = function(data, player, callback) {
         }
         return;
     }
-    var valid = this.game.validateMove(data.start, data.end, player.id);
-    if (!valid) {
-        var d = data;
-        d.id = player.id;
-        if (callback) {
-            callback("bad move");
-        }
-        return;
-    }
 
-    var boardDiff = this.game.move(data.start, data.end);
-    this.mergeScores(this.game.scoreDiff(boardDiff));
+    if (data.start !== "pass") {
+        var valid = this.game.validateMove(data.start, data.end, player.id);
+        if (!valid) {
+            var d = data;
+            d.id = player.id;
+            if (callback) {
+                callback("bad move");
+            }
+            return;
+        }
+
+        var boardDiff = this.game.move(data.start, data.end);
+        this.mergeScores(this.game.scoreDiff(boardDiff));
+    }
 
     // Next turn
     this.turn = ++this.turn % 3;

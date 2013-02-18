@@ -37,6 +37,16 @@ var Room = function(id, board, me, grid) {
     this.ban = function(target) {
         self.connect().roomAdmin("ban", target.id);
     }
+    this.passMove = function() {
+        this.move({
+            start : "pass",
+            end : "pass"
+        });
+        this.connect().move({
+            start : "pass",
+            end : "pass"
+        });
+    }
     this.currentPlayerId = ko.computed(function() {
         var player = self.players()[self.turn()];
         return player ? player.id : -1;
@@ -97,10 +107,13 @@ Room.prototype.getPlayerIndex = function(id) {
  * {move} = {start: {Position}, end: {Position}}
  */
 Room.prototype.move = function(data) {
-    var boardDiff = this.game().move(data.start, data.end);
-    this.mergeScores(this.game().scoreDiff(boardDiff));
 
-    this.renderer.setMove(boardDiff);
+    if (data.start !== "pass") {
+        var boardDiff = this.game().move(data.start, data.end);
+        this.mergeScores(this.game().scoreDiff(boardDiff));
+
+        this.renderer.setMove(boardDiff);
+    }
 }
 
 Room.prototype.mergeScores = function(scores) {

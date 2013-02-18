@@ -59,6 +59,12 @@ Bot.prototype.nextMove = function(grid) {
             }
         }
     }
+
+    if (bestScore === -1) {
+        bestStart = "pass";
+        bestEnd = "pass";
+    }
+
     return {
         start : bestStart,
         end : bestEnd
