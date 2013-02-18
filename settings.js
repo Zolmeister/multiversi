@@ -1,6 +1,6 @@
 DEBUG = true;
 
-BOARD = "pointcontrol/slanted.json";
+BOARD = "pointcontrol/swiss.json";
 // BOARD = undefined;
 
 exports.DEBUG = DEBUG;
