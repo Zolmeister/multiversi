@@ -1,6 +1,6 @@
 DEBUG = true;
 
-BOARD = 'pointcontrol/pointcontrol.json';
+BOARD = undefined;
 
 exports.DEBUG = DEBUG;
 exports.BOARD = BOARD;

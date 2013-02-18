@@ -80,13 +80,13 @@ Render.prototype.hexSpaceCenter = function(i, j) {
 
 Render.prototype.getDimensions = function(board) {
     var width = (2 * RENDER.hexShape.radius) * board.width + 2;
-    if (board.width % 2 === 0) {
+    // if (board.width % 2 === 0) {
         width += .5 * RENDER.hexShape.radius;
-    }
+    // }
     var height = (2 * RENDER.hexShape.apothem) * board.height + 2;
-    if (board.height % 2 === 0) {
+    // if (board.height % 2 === 0) {
         height += RENDER.hexShape.apothem;
-    }
+    // }
     return {
         width : width,
         height : height
