@@ -76,7 +76,7 @@ Lobby.prototype.leaveRoom = function() {
 }
 
 Lobby.prototype.joinRoom = function(roomId) {
-    globalConnect().join(roomId, this.name);
+    globalConnect().join(roomId);
 }
 
 Lobby.prototype.inRoom = function() {

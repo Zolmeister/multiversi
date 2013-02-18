@@ -48,7 +48,7 @@ Room.prototype.getPlayer = function(id) {
 Room.prototype.sendChat = function(msg, playerId) {
     this.sendAll("chat", {
         msg : msg,
-        user : this.getPlayer(playerId).name//this will be screen name
+        user : this.getPlayer(playerId).name
     });
 }
 
