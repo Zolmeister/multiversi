@@ -187,4 +187,12 @@ module.exports = function(socket) {
             room.sendChat(msg, player.id);
         }
     })
+    
+    socket.on("screenName", function(name){
+        name = name || "Guest"
+        player.name = name
+        if(room){
+            room.updatePlayers();
+        }
+    })
 }

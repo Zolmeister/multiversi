@@ -27,6 +27,10 @@ var Connect = function() {
             room : roomId
         });
     }
+    
+    this.setName = function(name){
+        this.socket.emit("screenName", name);
+    }
 
     this.leaveRoom = function leaveRoom() {
         this.socket.emit("leaveRoom");

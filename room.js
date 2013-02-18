@@ -46,10 +46,9 @@ Room.prototype.getPlayer = function(id) {
 }
 
 Room.prototype.sendChat = function(msg, playerId) {
-    var colors=["red","green","blue"]
     this.sendAll("chat", {
         msg : msg,
-        user : colors[this.getPlayerIndex(playerId)]//this will be screen name
+        user : this.getPlayer(playerId).name//this will be screen name
     });
 }
 
@@ -79,7 +78,8 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
             score : p.score,
             bot : p.bot,
             removed : p.removed,
-            isAdmin : p.isAdmin
+            isAdmin : p.isAdmin,
+            name : p.name
         }
         playerList.push(player);
     }
@@ -92,7 +92,11 @@ Room.prototype.publicPlayerList = function() {//send only select information to 
 Room.prototype.update = function(data) {
     this.sendAll("gameState", data);
 }
-
+Room.prototype.updatePlayers = function(){
+    this.update({
+        players : this.publicPlayerList()
+    })
+}
 Room.prototype.noBotPlayerCount = function() {
     var cnt = 0;
     for (var i = 0; i < this.players.length; i++) {
