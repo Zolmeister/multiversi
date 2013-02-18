@@ -123,10 +123,21 @@ function getBoard(gametype) {
     return undefined;
 }
 
+function getBoardFile(filename) {
+    var filename = './resources/boards/' + filename; 
+
+    if (!boards[filename]) {
+        boards[filename] = require(filename); 
+    }
+
+    return boards[filename];
+}
+
 exports.deepCopy = deepCopy;
 exports.newBotId = newBotId;
 exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
 exports.log = log;
-exports.getBoard = getBoard;
 exports.dummyPlayers = dummyPlayers;
+exports.getBoard = getBoard;
+exports.getBoardFile = getBoardFile;
