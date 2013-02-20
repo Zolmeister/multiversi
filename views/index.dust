@@ -25,9 +25,9 @@
     <div class="rooms"  id="lobbyView">
         <div data-bind="visible: !room()">
             
-            <button data-bind="click: joinRoom">Join Game</button>
+            <button data-bind="click: joinRoom">Join a Game</button>
             <!-- <button data-bind="click: createRoom">Create Room</button> -->
-            <button data-bind="click: createRoomPrivate">Invite Friends</button>
+            <button data-bind="click: createRoomPrivate">Play with friends</button>
             <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
         
         </div>
