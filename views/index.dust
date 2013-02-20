@@ -23,11 +23,12 @@
 {<body}
     
     <div class="rooms"  id="lobbyView">
-        <div data-bind="visible: !room()">
+    	<img src="images/logo.png">
+        <div class="buttons" data-bind="visible: !room()">
             
-            <button data-bind="click: joinRoom">Join a Game</button>
+            <button class="button-join" data-bind="click: joinRoom">Join a Game</button>
             <!-- <button data-bind="click: createRoom">Create Room</button> -->
-            <button data-bind="click: createRoomPrivate">Play with friends</button>
+            <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button>
             <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
         
         </div>

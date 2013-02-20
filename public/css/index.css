@@ -1,5 +1,49 @@
+@import url(http://fonts.googleapis.com/css?family=Archivo+Black);
+
+
+
+body {
+	font-family: 'Archivo Black', sans-serif;
+	color: #fff;
+}
+
+h1 {
+	display: none;
+}
+
+.logo {
+	width: 500px;
+	padding-left: 50%;
+	margin-left: -250px;
+}
+
+.buttons {
+	margin: -228px 0 0 294px;
+}
+
+button {
+	font-family: 'Archivo Black', sans-serif;
+	background: url(/images/hexabump.png);
+	border: none;
+	color: #fff;
+	width: 192px;
+	height: 223px;
+}
+
+.button-join {
+	background: url(/images/button_purple.png);
+	margin-right: 4px;
+}
+
+.button-friends {
+	background: url(/images/button_red.png);
+}
+
+
+
 .rooms{
-	padding: 20px;
+	padding: 0;
+	margin: auto;
 }
 .room{
 	border-style: solid;
@@ -11,11 +55,9 @@
 .room:hover{
 	background-color: #BBFFBB;
 }
-
 .players{
 	height: 70px;
 }
-
 .player{
 	float: left;
 	margin-right: 20px;
@@ -23,11 +65,9 @@
 	text-align: center;
 	height: 50px;
 }
-
 #chatBox {
     float: right;
 }
-
 .chat {
     width:200px;
     height:200px;
