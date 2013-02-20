@@ -55,7 +55,7 @@ var Room = function(id, board, me, grid) {
 
 Room.prototype.initRenderer = function() {
     this.input = new Input(this);
-    this.renderer = new Render("#mv-canvas");
+    this.renderer = new Render("#mvBoard");
     this.renderer.playerSpacesClickHandler = this.input.playerOnClick;
     this.renderer.possibleMovesClickHandler = this.input.possibleMovesOnClick;
 

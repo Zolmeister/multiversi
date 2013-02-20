@@ -41,7 +41,7 @@ function Lobby() {
         }
     })
     globalConnect().socket.on("removed", function() {
-        this.leaveRoom();
+        self.leaveRoom();
     });
 }
 

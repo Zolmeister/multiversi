@@ -24,6 +24,10 @@
 	height: 50px;
 }
 
+#chatBox {
+    float: right;
+}
+
 .chat {
     width:200px;
     height:200px;
