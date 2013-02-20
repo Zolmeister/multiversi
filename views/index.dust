@@ -74,19 +74,19 @@
 
                 <div class="players">
                     <div class="player" id="player1" data-bind="with: players()[0]">
-                        Player 1 <br />
+                        <span data-bind="text: name"></span><br>
                         Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.currentPlayerId()==id">Turn</span>
+                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                     </div>
                     <div class="player" id="player2" data-bind="with: players()[1]">
-                        Player 2 <br />
+                        <span data-bind="text: name"></span><br>
                         Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.currentPlayerId()==id">Turn</span>
+                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                     </div>
                     <div class="player" id="player3" data-bind="with: players()[2]">
-                        Player 3 <br />
+                        <span data-bind="text: name"></span><br>
                         Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.currentPlayerId()==id">Turn</span>
+                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                     </div>
                 </div>
                 
@@ -94,6 +94,7 @@
                 <div class="endgame" data-bind="visible: ended()">
                     Game Over
                 </div>
+
 
                 <div>
                     <div class="admin-options" data-bind="if: iAmAdmin">
