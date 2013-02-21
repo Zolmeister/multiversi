@@ -135,8 +135,10 @@
     <div id="screenNameOverlay">
         <div>
             Enter a screen name
-            <input name="screenName" id="screenNameInput" onKeyPress="onScreenNameInputKeyPress()">
-            <button onClick="applyScreenName()">Apply</button>
+            <form data-bind="submit: applyScreenName">
+                <input name="screenName" id="screenNameInput">
+                <button type="submit">Apply</button>
+            </form>
         </div>
     </div>
 {/body}

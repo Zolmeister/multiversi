@@ -7,22 +7,23 @@ $(function() {
     lobby = new Lobby();
 
     ko.applyBindings(lobby, $("#homePageView")[0]);
+    $("#screenNameOverlay").hide();
 });
 
 function clickJoinRoom() {
     lobby.joinRoom();
     
-    //if (lobby.name === "" || lobby.name === "Guest") {
-    //    openScreenNameOverlay();
-    //}
+    if (lobby.name === "" || lobby.name === "Guest") {
+       openScreenNameOverlay();
+    }
 }
 
 function clickInviteFriends() {
     lobby.createRoomPrivate(lobby);
     
-   //if (lobby.name === "" || lobby.name === "Guest") {
-       // openScreenNameOverlay();
-   //}
+   if (lobby.name === "" || lobby.name === "Guest") {
+       openScreenNameOverlay();
+   }
 }
 
 
@@ -42,8 +43,13 @@ function onScreenNameInputKeyPress(e) {
     }
 }
 
-function applyScreenName() {
-    globalConnect().setName($("#screenNameInput").val())
+function applyScreenName(form) {
+    form = $(form);
+    var name = form.serializeArray()[0].value;
+    // form.find("input").val("");
+    
+    globalConnect().setName(name);
+    // globalConnect().setName($("#screenNameInput").val())
     $("#screenNameOverlay").hide()
 }
 
