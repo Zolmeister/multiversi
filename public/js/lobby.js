@@ -2,8 +2,8 @@ function Lobby() {
     var self = this;
     this.room = ko.observable(undefined);
     var dynamicJoin = this.inRoom();
-    this.name = localStorage.name || "Guest"
-    globalConnect().setName(this.name)
+    this.name = localStorage.name || "Guest";
+    globalConnect().setName(this.name);
     window.history.replaceState("lobby", "lobbly", "/");
 
     //joining an active game

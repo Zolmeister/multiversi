@@ -22,14 +22,18 @@
 {/js}
 {<body}
     
-    <div class="rooms"  id="lobbyView">
+    <div id="homePageView">
         <div data-bind="visible: !room()">
     	<img src="images/logo.png">
             
             <div class="homeButtons">
-                <button class="button-join" data-bind="click: joinRoom">Join a Game</button>
+                <!--<button class="button-join" data-bind="click: joinRoom">Join a Game</button>-->
+                <button class="button-join" data-bind="click: clickJoinRoom">Join a Game</button>
+                <!-- <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button> -->
+                <button class="button-friends" data-bind="click: clickInviteFriends">Play with friends</button>
+                
+                
                 <!-- <button data-bind="click: createRoom">Create Room</button> -->
-                <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button>
                 <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
             </div>
         
@@ -39,12 +43,13 @@
     <div id="roomView">
         <div data-bind="visible: $root">
             <div data-bind="if: $root">
+
                 
                 <div id="chatBox">
                     <div class="chat" id="chat"></div>
                     <form data-bind="submit: globalConnect().sendChat">
                         <input name="chat">
-                        <button type="submit">send</button>
+                        <button type="submit">Send</button>
                     </form>
                 </div>
                 
@@ -124,6 +129,14 @@
                     <button onClick="lobby.leaveRoom()">Leave Room</button>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <div id="screenNameOverlay">
+        <div>
+            Enter a screen name
+            <input name="screenName" id="screenNameInput" onKeyPress="onScreenNameInputKeyPress()">
+            <button onClick="applyScreenName()">Apply</button>
         </div>
     </div>
 {/body}
