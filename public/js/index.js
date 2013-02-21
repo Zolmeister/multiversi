@@ -4,7 +4,6 @@ var viewTransitions = {
     roomToHomePage : 2
 }
 var viewTransition = 0;
-var currentView = undefined;
 
 $(function() {
     if (DEBUG) {
@@ -22,13 +21,25 @@ $(function() {
 
     // Position views depending on whether jumping straight into game or not
     if (dynamicJoin === false) {
-        currentView = "#homePageView";
-        $("#roomView").css("top", "100%");
-        $(currentView).show();
+        // Start on Home Page
+        $("#roomView").css({
+            // CSS properties here
+            top : "100%"
+        });
+        $("#homePageView").css({
+            // CSS properties here
+        });
+        $("#homePageView").show();
     } else {
-        currentView = "#roomView";
-        $(currentView).css("top", "0px");
-        $(currentView).show();
+        // Start in Wating Room
+        $("#roomView").css({
+            // CSS properties here
+            top : "0px"
+        });
+        $("#homePageView").css({
+            // CSS properties here
+        });
+        $("#roomView").show();
     }
 });
 
@@ -71,13 +82,24 @@ function leaveRoomAnimationCallback() {
 
 function animateTransition() {
     if (viewTransition === viewTransitions.homePageToRoom) {
-        currentView = "#roomView";
-        $(currentView).show();
-        $("#roomView").animate({top: 0}, {complete : joinRoomAnimationCallback});
+        $("#roomView").show();
+        $("#roomView").animate({
+            // Animation properties here
+            top: 0
+        }, {duration : 400, complete : joinRoomAnimationCallback});
+        $("#homePageView").animate({
+            // Animation properties here
+        }, {duration : 400});
+
     } else if (viewTransition === viewTransitions.roomToHomePage) {
-        currentView = "#homePageView";
-        $(currentView).show();
-        $("#roomView").animate({top: "100%"}, {complete : leaveRoomAnimationCallback});
+        $("#homePageView").show();
+        $("#roomView").animate({
+            // Animation properties here
+            top: "100%"
+        }, {duration : 400, complete : leaveRoomAnimationCallback});
+        $("#homePageView").animate({
+            // Animation properties here
+        }, {duration : 400});
     }
 }
 
