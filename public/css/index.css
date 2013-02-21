@@ -16,7 +16,7 @@ h1 {
 	margin-left: -250px;
 }
 
-.homeButtons {
+.homeButtons, .leave-room {
 	margin: -228px 0 0 294px;
 }
 
@@ -29,7 +29,7 @@ h1 {
 	background: url(/images/button_red.png);
 }
 
-.homeButtons button {
+.homeButtons button, .leave-room {
 	font-family: 'Avenir Next', sans-serif;
 	font-weight: bold;
 	text-transform: capitalize !important;
@@ -53,6 +53,10 @@ h1 {
     position: absolute;
 }
 
+.leave-room {
+	background: url(/images/button_purple.png);
+	margin-right: 4px;
+}
 
 
 
