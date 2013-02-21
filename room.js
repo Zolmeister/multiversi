@@ -182,17 +182,20 @@ Room.prototype.remove = function(player, callback) {
     var index = this.getPlayerIndex(player.id);
     if (index !== -1) {
         util.log("removed player")
+        console.log(this.players)
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
+        this.players[index].socket.emit("removed");
         this.players[index] = this.players[index].clone()
         this.players[index].removed = true;
-        this.players[index].socket.emit("removed");
         //dont actually remove player
         this.update({
             turn : this.turn,
             isPublic : this.isPublic,
             players : this.publicPlayerList()
         })
+        console.log(this.game.grid)
+        console.log(this.players)
         if (callback) {
             callback();
         }
@@ -267,7 +270,6 @@ Room.prototype.move = function(data, player, callback) {
 Room.prototype.mergeScores = function(scoreDiff) {
     var scoreDiff = scoreDiff
     for (var s in scoreDiff) {
-        s = parseInt(s);
         if (this.getPlayer(s)) {
             this.getPlayer(s).score += scoreDiff[s];
         }
@@ -279,7 +281,6 @@ Room.prototype.mergeScores = function(scoreDiff) {
 Room.prototype.setScores = function() {
     var scores = this.game.getScores();
     for (var s in scores) {
-        s = parseInt(s);
         if (this.getPlayer(s)) {
             this.getPlayer(s).score = scores[s];
         }
