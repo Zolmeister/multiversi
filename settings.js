@@ -1,4 +1,4 @@
-DEBUG = true;
+DEBUG = !(process.env.NODE_ENV==='production');
 
 // BOARD = "pointcontrol/swiss.json";
 BOARD = undefined;

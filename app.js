@@ -10,9 +10,7 @@ var express = require('express')
 var app = express();
 var server = http.createServer(app);
 io = require('socket.io').listen(server);
-io.configure('development', function() {
-    io.set('log level', 1);
-});
+io.set('log level', 1);
 
 app.engine('dust', cons.dust);
 
@@ -37,13 +35,53 @@ app.configure(function() {
 
 app.configure('development', function() {
     app.use(express.errorHandler());
+    launch()
 });
 
-app.get('/', routes.index);
-app.get('/:id', routes.index);
+app.configure('production', function() {
+    console.log("compresing files")
 
-io.sockets.on('connection', socketConnect);
+    //TODO: use promises/make less pyramidy
+    var compressor = require('node-minify');
+    //compress javascript using google closure compiler
+    var files = ['settings', 'utils', 'sockets', 'rulesset', 'engine', 'player', 'render', 'input', 'room', 'lobby', 'index'];
+    new compressor.minify({
+        type : 'gcc',
+        fileIn : files.map(function(f) {
+            return 'public/js/' + f + '.js'
+        }),
+        fileOut : 'public/js/multiversi.js',
+        callback : function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                // compress CSS using Sqwish
+                new compressor.minify({
+                    type : 'sqwish',
+                    fileIn : ['public/css/base.css', 'public/css/index.css'],
+                    fileOut : 'public/css/multiversi.css',
+                    callback : function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("done compressing")
+                            launch()
+                        }
+                    }
+                });
+            }
+        }
+    });
 
-server.listen(app.get('port'), function() {
-    console.log("Express server listening on port " + app.get('port'));
 });
+function launch() {
+    app.get('/', routes.index);
+    app.get('/:id', routes.index);
+
+    io.sockets.on('connection', socketConnect);
+
+    server.listen(app.get('port'), function() {
+        console.log("Express server listening on port " + app.get('port'));
+    });
+
+}

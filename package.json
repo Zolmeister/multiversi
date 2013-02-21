@@ -11,7 +11,8 @@
         "dustjs-linkedin": "*",
         "jasmine-node": "*",
         "socket.io": "*",
-	"socket.io-client":"*"
+	"socket.io-client":"*",
+	"node-minify": "*"
     },
     "devDependencies": {},
     "optionalDependencies": {},
