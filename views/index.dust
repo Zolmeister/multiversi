@@ -23,7 +23,7 @@
 {<body}
     
     <div id="homePageView">
-        <div data-bind="visible: !room() || viewTransition!=0">
+        <div>
     	<img src="images/logo.png">
             
             <div class="homeButtons">
