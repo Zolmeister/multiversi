@@ -47,6 +47,7 @@ h1 {
     width: 682px;
     height: 564px;
     padding-left: 50%;
+    overflow: hidden;
 }
 
 #roomView {

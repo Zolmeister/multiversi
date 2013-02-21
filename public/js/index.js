@@ -24,7 +24,7 @@ $(function() {
         // Start on Home Page
         $("#roomView").css({
             // CSS properties here
-            opacity: 0,
+            opacity: 1,
             top : "100%"
         });
         $("#homePageView").css({
