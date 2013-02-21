@@ -16,17 +16,8 @@ h1 {
 	margin-left: -250px;
 }
 
-.buttons {
+.homeButtons {
 	margin: -228px 0 0 294px;
-}
-
-button {
-	font-family: 'Archivo Black', sans-serif;
-	/* background: url(/images/hexabump.png); */
-	border: none;
-	color: #fff;
-	width: 192px;
-	height: 223px;
 }
 
 .button-join {
@@ -38,6 +29,15 @@ button {
 	background: url(/images/button_red.png);
 }
 
+button {
+	font-family: 'Archivo Black', sans-serif;
+	background: url(/images/hexabump.png);
+    background-color: #444;
+	border: none;
+	color: #fff;
+	width: 192px;
+	height: 223px;
+}
 
 
 .rooms{

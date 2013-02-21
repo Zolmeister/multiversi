@@ -26,7 +26,7 @@
         <div data-bind="visible: !room()">
     	<img src="images/logo.png">
             
-            <div class="buttons">
+            <div class="homeButtons">
                 <button class="button-join" data-bind="click: joinRoom">Join a Game</button>
                 <!-- <button data-bind="click: createRoom">Create Room</button> -->
                 <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button>
@@ -116,7 +116,7 @@
 
                 <div>
                     <div class="admin-options" data-bind="if: iAmAdmin">
-                        <!-- <button onClick='globalConnect().roomAdmin("addBot", "")'>Add bot</button> -->
+                        <button onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
                         <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                     </div>
                     
