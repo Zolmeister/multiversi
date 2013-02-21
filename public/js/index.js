@@ -19,28 +19,26 @@ $(function() {
     
     ko.applyBindings(lobby, $("#homePageView")[0]);
 
+    this.windowEvent = function(e) {
+        if (e.state === "lobby") {
+            setStartCSSHomePage();
+            $("#homePageView").show();
+        } else if (e.state === "room") {
+            setStartCSSRoom();
+            $("#roomView").show();
+        }
+    }
+    
+    window.addEventListener('popstate', this.windowEvent);
+
     // Position views depending on whether jumping straight into game or not
     if (dynamicJoin === false) {
         // Start on Home Page
-        $("#roomView").css({
-            // CSS properties here
-            opacity: 1,
-            top : "100%"
-        });
-        $("#homePageView").css({
-            opacity: 1,
-        });
+        setStartCSSHomePage();
         $("#homePageView").show();
     } else {
-        // Start in Wating Room
-        $("#roomView").css({
-            // CSS properties here
-            opacity: 1,
-            top : "0px"
-        });
-        $("#homePageView").css({
-            opacity: 0,
-        });
+        // Start in Waiting Room
+        setStartCSSRoom();
         $("#roomView").show();
     }
 });
@@ -51,6 +49,29 @@ function inRoom() {
         return num;
     }
     return false;
+}
+
+function setStartCSSHomePage() {
+    // Start on Home Page
+    $("#roomView").css({
+        // CSS properties here
+        opacity: 1,
+        top : "100%"
+    });
+    $("#homePageView").css({
+        opacity: 1,
+    });
+}
+
+function setStartCSSRoom() {
+    $("#roomView").css({
+        // CSS properties here
+        opacity: 1,
+        top : "0px"
+    });
+    $("#homePageView").css({
+        opacity: 0,
+    });
 }
 
 function clickJoinRoom() {
