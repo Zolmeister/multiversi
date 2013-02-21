@@ -41,11 +41,16 @@ h1 {
 }
 
 #homePageView {
+    position: absolute;
     padding-top: 25%;
     margin: -282px 0 0 -341px;
     width: 682px;
     height: 564px;
     padding-left: 50%;
+}
+
+#roomView {
+    position: absolute;
 }
 
 
@@ -88,7 +93,7 @@ h1 {
 }
 
 #screenNameOverlay {
-    /* visibility: hidden; */
+    display: none;
     position: fixed;
     left: 0;
     top: 0;
