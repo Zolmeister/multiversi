@@ -123,15 +123,12 @@ Render.prototype.setBoard = function(board) {
 
             var c = this.hexSpaceCenter(i, j);
             // Every space must have a "fill" or it won't accept onClick events
-            // var space = this.paper.circle(c.x, c.y, RENDER.hexShape.apothem).attr({
-            //     i : i,
-            //     j : j,
-            //     fill : "#fff"
-            // });                  
             var space = this.paper.path(hexPath).attr({
-                i : i,
-                j : j,
-                fill : "#fff"
+                "i" : i,
+                "j" : j,
+                "fill" : RENDER.fillColor,
+                "stroke-width" : RENDER.stroke,
+                "stroke" : RENDER.strokeColor
             });                  
 
             space.translate(c.x, c.y);
@@ -141,8 +138,8 @@ Render.prototype.setBoard = function(board) {
 
             if (DEBUG) {
                 var txt = this.paper.text(c.x, c.y, i + " " + j).attr({
-                    i : i,
-                    j : j
+                    "i" : i,
+                    "j" : j
                 });
                 this.debugNumbers.push(txt);
             }
@@ -153,16 +150,19 @@ Render.prototype.setBoard = function(board) {
     for (var s in board.nonrendered) {
         var space = board.nonrendered[s];
         this.spaces[space[0]][space[1]].attr({
-            stroke: "#fff",
-            fill: "",
-            opacity: 0
+            "stroke": "#fff",
+            // This is so click events don't register
+            "fill": "",
+            "opacity": 0
         });
     }
     
     for (var s in board.nonjumpable) {
         var space = board.nonjumpable[s];
         this.spaces[space[0]][space[1]].attr({
-            fill: "#444"
+            "fill" : RENDER.nonJumpableColor,
+            "stroke-width" : RENDER.nonJumpableStroke,
+            "stroke" : RENDER.nonJumpanleStrokColor
         });
     }
     
@@ -171,8 +171,8 @@ Render.prototype.setBoard = function(board) {
 
         var c = this.hexSpaceCenter(space[0], space[1]);
         var point = this.paper.circle(c.x, c.y, 18).attr({
-            stroke: "",
-            fill: "#FFB00F"
+            "stroke" : "",
+            "fill" : "#FFB00F"
         });
 
         this.controlPointSet.push(point);
@@ -186,7 +186,6 @@ Render.prototype.setBoard = function(board) {
             this.playerSpaces[this.turnOrder[i]].push(this.spaces[space[0]][space[1]]);
         }
     }
-
 
     if (DEBUG) {
         this.debugNumbers.toFront();
@@ -246,7 +245,9 @@ Render.prototype.applyAttributes = function() {
         
         for (var i = 0; i < 3; i++) {
             this.playerSpaces[this.turnOrder[i]].attr({
-                fill : COLORS[i].color
+                "fill" : COLORS[i].color,
+                "stroke-width" : RENDER.stroke,
+                "stroke" : COLORS[i].strokeColor
             });
         }
 
@@ -263,7 +264,9 @@ Render.prototype.applyAttributes = function() {
         var turn = this.turnOrder.lastIndexOf(this.me);
         if (turn >= 0) {
             this.possibleMovesSet.attr({
-                fill : COLORS[turn].moveColor
+                "fill" : COLORS[turn].possibleMoveColor,
+                "stroke-width" : RENDER.strokePossibleMove,
+                "stroke" : COLORS[turn].strokePossibleMoveColor
             });
         }
 
@@ -271,6 +274,14 @@ Render.prototype.applyAttributes = function() {
             this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
             this.possibleMovesSet.click(this.possibleMovesClickHandler);
         }
+    }
+
+    if (this.clickedSpace !== undefined) {
+        this.clickedSpace.attr({
+            "fill" : COLORS[turn].activeColor,
+            "stroke-width" : RENDER.strokeActive,
+            "stroke" : COLORS[turn].strokeActiveColor
+        });
     }
 }
 
@@ -351,6 +362,7 @@ Render.prototype.setMove = function(boardDiff) {
         }
     }
 
+    this.clickedSpace = undefined;
     this.applyAttributes();
 }
 
@@ -360,7 +372,9 @@ Render.prototype.setPossibleMoves = function(possibleMoves) {
     // Clear previous possibleMovesSet
     if (this.possibleMovesSet) {
         this.possibleMovesSet.attr({
-            fill : "#fff"
+            "fill" : RENDER.fillColor,
+            "stroke-width" : RENDER.stroke,
+            "stroke" : RENDER.strokeColor
         });
 
         this.possibleMovesSet.unclick(this.possibleMovesClickHandler);
