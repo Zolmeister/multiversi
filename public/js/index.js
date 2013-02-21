@@ -24,20 +24,22 @@ $(function() {
         // Start on Home Page
         $("#roomView").css({
             // CSS properties here
+            opacity: 0,
             top : "100%"
         });
         $("#homePageView").css({
-            // CSS properties here
+            opacity: 1,
         });
         $("#homePageView").show();
     } else {
         // Start in Wating Room
         $("#roomView").css({
             // CSS properties here
+            opacity: 1,
             top : "0px"
         });
         $("#homePageView").css({
-            // CSS properties here
+            opacity: 0,
         });
         $("#roomView").show();
     }
@@ -88,7 +90,7 @@ function animateTransition() {
             top: 0
         }, {duration : 400, complete : joinRoomAnimationCallback});
         $("#homePageView").animate({
-            // Animation properties here
+            opacity: 0
         }, {duration : 400});
 
     } else if (viewTransition === viewTransitions.roomToHomePage) {
@@ -98,7 +100,7 @@ function animateTransition() {
             top: "100%"
         }, {duration : 400, complete : leaveRoomAnimationCallback});
         $("#homePageView").animate({
-            // Animation properties here
+            opacity: 1,
         }, {duration : 400});
     }
 }
