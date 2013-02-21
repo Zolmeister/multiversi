@@ -189,7 +189,12 @@ module.exports = function(socket) {
     })
     
     socket.on("screenName", function(name){
-        name = name || "Guest"
+        
+        //max user name length is 30 characters
+        name = name.substring(0,30) || "Guest"
+        if(name.length<2){
+            return
+        }
         player.name = name
         if(room){
             room.updatePlayers();

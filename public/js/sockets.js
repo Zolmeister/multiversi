@@ -29,6 +29,7 @@ var Connect = function() {
     }
     
     this.setName = function(name){
+        localStorage.name = name
         this.socket.emit("screenName", name);
     }
 

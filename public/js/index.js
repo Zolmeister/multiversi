@@ -12,25 +12,27 @@ $(function() {
 function clickJoinRoom() {
     lobby.joinRoom();
     
-    if (lobby.name === "" || lobby.name === "Guest") {
-        openScreenNameOverlay();
-    }
+    //if (lobby.name === "" || lobby.name === "Guest") {
+    //    openScreenNameOverlay();
+    //}
 }
 
 function clickInviteFriends() {
     lobby.createRoomPrivate(lobby);
     
-    if (lobby.name === "" || lobby.name === "Guest") {
-        openScreenNameOverlay();
-    }
+   //if (lobby.name === "" || lobby.name === "Guest") {
+       // openScreenNameOverlay();
+   //}
 }
 
 
 function openScreenNameOverlay() {
-    var overlay = document.getElementById("screenNameOverlay");
-    overlay.style.visibility = "visible";
+    $("#screenNameOverlay").show();
 }
 
+//TODO: Brad
+//instead of this, make it a form input and handle submission with jQuery/zepto
+//see chat input for example
 function onScreenNameInputKeyPress(e) {
     if (!e) e = window.event;
     var keyCode = e.keyCode || e.which;
@@ -41,21 +43,7 @@ function onScreenNameInputKeyPress(e) {
 }
 
 function applyScreenName() {
-
-    var screenNameInput = document.getElementById("screenNameInput");
-    if (screenNameInput) {
-        var name = screenNameInput.value;
-
-        if (name === "" || name === "Guest") {
-            // Yell at user
-        } else {
-            localStorage.name = name;
-            lobby.name = name;
-            globalConnect().setName(name);
-            
-            var overlay = document.getElementById("screenNameOverlay");
-            overlay.style.visibility = "hidden";
-        }
-    }
+    globalConnect().setName($("#screenNameInput").val())
+    $("#screenNameOverlay").hide()
 }
 
