@@ -54,8 +54,8 @@ module.exports = function(socket) {
         })
     }
     
-    function canJoinRoom(room){
-        if (room.isPublic && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
+    function canJoinRoom(room, joinDirect){
+        if ((room.isPublic || joinDirect) && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
             return true;
         }
         return false;
@@ -64,7 +64,7 @@ module.exports = function(socket) {
     function firstAvailableRoomId() {
         for (var i in Games) {
             var room = Games[i];
-            if(canJoinRoom(room)){
+            if(canJoinRoom(room, false)){
                return i;
             }
         }
@@ -116,7 +116,7 @@ module.exports = function(socket) {
         }
         //join first available
         var reqRoom = Games[data.room]
-        if(!reqRoom || !canJoinRoom(reqRoom)){
+        if(!reqRoom || !canJoinRoom(reqRoom, true)){
             reqRoom = Games[firstAvailableRoomId()];
         }
         if (!reqRoom) {
