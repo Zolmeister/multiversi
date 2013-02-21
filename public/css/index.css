@@ -30,18 +30,37 @@ h1 {
 }
 
 .homeButtons button {
-	font-family: 'Archivo Black', sans-serif;
-	/* background: url(/images/hexabump.png); */
-    /* background-color: #444; */
+	font-family: 'Avenir Next', sans-serif;
+	font-weight: bold;
+	text-transform: capitalize !important;
+	font-size: 2em;
 	border: none;
 	color: #fff;
 	width: 192px;
 	height: 223px;
 }
 
-.homePageView{
-	padding: 0;
-	margin: auto;
+#homePageView {
+    padding-top: 25%;
+    margin: -282px 0 0 -341px;
+    width: 682px;
+    height: 564px;
+    padding-left: 50%;
+}
+
+
+
+
+
+.room{
+	border-style: solid;
+	border-width: 1px;
+	width: 150px;
+	border-radius: 3px;
+	margin: 5px;
+}
+.room:hover{
+	background-color: #BBFFBB;
 }
 
 .players{
@@ -58,6 +77,7 @@ h1 {
 
 #chatBox {
     float: right;
+    display: none;
 }
 
 .chat {

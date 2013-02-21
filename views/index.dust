@@ -152,11 +152,9 @@
                     </div>
                     
                     <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
-                    <button onClick="lobby.leaveRoom()">Leave Room</button>
+                    <button class="leave-room" onClick="lobby.leaveRoom()">Leave Room</button>
                 </div>
             </div>
         </div>
     </div>
-    
 {/body}
-
