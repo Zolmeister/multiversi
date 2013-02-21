@@ -4,7 +4,6 @@
 
 body {
 	font-family: 'Archivo Black', sans-serif;
-	color: #fff;
 }
 
 h1 {
@@ -23,7 +22,7 @@ h1 {
 
 button {
 	font-family: 'Archivo Black', sans-serif;
-	background: url(/images/hexabump.png);
+	/* background: url(/images/hexabump.png); */
 	border: none;
 	color: #fff;
 	width: 192px;

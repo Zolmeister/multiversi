@@ -23,13 +23,15 @@
 {<body}
     
     <div class="rooms"  id="lobbyView">
+        <div data-bind="visible: !room()">
     	<img src="images/logo.png">
-        <div class="buttons" data-bind="visible: !room()">
             
-            <button class="button-join" data-bind="click: joinRoom">Join a Game</button>
-            <!-- <button data-bind="click: createRoom">Create Room</button> -->
-            <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button>
-            <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
+            <div class="buttons">
+                <button class="button-join" data-bind="click: joinRoom">Join a Game</button>
+                <!-- <button data-bind="click: createRoom">Create Room</button> -->
+                <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button>
+                <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
+            </div>
         
         </div>
     </div>
@@ -52,7 +54,7 @@
                 </div>
             
                 <div data-bind="visible: started()">
-                    <div id="mvBoard"></div>
+                    <div id="mv-canvas"></div>
                     
                     <button data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
@@ -75,19 +77,34 @@
 
                 <div class="players">
                     <div class="player" id="player1" data-bind="with: players()[0]">
-                        <span data-bind="text: name"></span><br>
-                        Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        <div data-bind="if: !removed()">
+                            <span data-bind="text: name"></span><br>
+                            Score: <span data-bind="text: score"></span><br>
+                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        </div>
+                        <div data-bind="if: removed()">
+                            Waiting
+                        </div>
                     </div>
                     <div class="player" id="player2" data-bind="with: players()[1]">
-                        <span data-bind="text: name"></span><br>
-                        Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        <div data-bind="if: !removed()">
+                            <span data-bind="text: name"></span><br>
+                            Score: <span data-bind="text: score"></span><br>
+                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        </div>
+                        <div data-bind="if: removed()">
+                            Waiting
+                        </div>
                     </div>
                     <div class="player" id="player3" data-bind="with: players()[2]">
-                        <span data-bind="text: name"></span><br>
-                        Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        <div data-bind="if: !removed()">
+                            <span data-bind="text: name"></span><br>
+                            Score: <span data-bind="text: score"></span><br>
+                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                        </div>
+                        <div data-bind="if: removed()">
+                            Waiting
+                        </div>
                     </div>
                 </div>
                 
@@ -110,3 +127,4 @@
         </div>
     </div>
 {/body}
+
