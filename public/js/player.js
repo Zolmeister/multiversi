@@ -15,7 +15,7 @@ function Player(id, socket, bot, removed, isAdmin, score, name) {
 }
 
 Player.prototype.clone = function(){
-    return new Player(this.id,this.socket, this.bot, this.removed, this.isAdmin, this.score, this.name);
+    return new Player(this.id, {emit:function(){}}, this.bot, this.removed, this.isAdmin, this.score, this.name);
 }
 
 //Uses knockout.js, only for client side
