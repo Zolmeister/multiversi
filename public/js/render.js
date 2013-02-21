@@ -394,6 +394,10 @@ Render.prototype.setPossibleMoves = function(possibleMoves) {
 }
 
 Render.prototype.setClickedSpace = function(space) {
-    this.clickedSpace = this.spaces[space.i][space.j];
+    if (space.i === -1 && space.j === -1) {
+        this.clickedSpace = undefined;
+    } else {
+        this.clickedSpace = this.spaces[space.i][space.j];
+    }
 }
 
