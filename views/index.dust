@@ -41,8 +41,19 @@
     </div>
 
     <div id="roomView">
+        
         <div data-bind="visible: $root">
             <div data-bind="if: $root">
+            
+                <div id="screenNameOverlay">
+                    <div>
+                        Enter a screen name
+                        <form data-bind="submit: applyScreenName">
+                            <input name="screenName" id="screenNameInput">
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>
+                </div>
 
                 
                 <div id="chatBox">
@@ -84,8 +95,13 @@
                     <div class="player" id="player1" data-bind="with: players()[0]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -94,8 +110,13 @@
                     <div class="player" id="player2" data-bind="with: players()[1]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -104,8 +125,13 @@
                     <div class="player" id="player3" data-bind="with: players()[2]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -132,14 +158,5 @@
         </div>
     </div>
     
-    <div id="screenNameOverlay">
-        <div>
-            Enter a screen name
-            <form data-bind="submit: applyScreenName">
-                <input name="screenName" id="screenNameInput">
-                <button type="submit">Apply</button>
-            </form>
-        </div>
-    </div>
 {/body}
 
