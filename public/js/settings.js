@@ -23,12 +23,14 @@ RENDER = {
     hexShape : {
         radius : 36,
         apothem : 31,
-        smallRadius : 36,
-        smallApothem : 31
-    },
-    offset : {
-        x : 36 + 1,
-        y : 2 * 31 + 1
+        spacingRadius : 40,
+        spacingApothem : Math.sqrt(3) * (40 / 2)
     }
+};
+
+// This is the offset for each space. These are fickle, don't touch
+RENDER.offset = {
+    x : RENDER.hexShape.spacingRadius + 1,
+    y : 2 * RENDER.hexShape.spacingApothem + 1
 }
 

@@ -66,10 +66,10 @@ function hexagonPathString(radius) {
  */
 Render.prototype.hexSpaceCenter = function(i, j) {
 
-    var x = i * (1.5 * RENDER.hexShape.radius);
-    var y = j * (2 * RENDER.hexShape.apothem);
+    var x = i * (1.5 * RENDER.hexShape.spacingRadius);
+    var y = j * (2 * RENDER.hexShape.spacingApothem);
     if (i % 2 == 1) {
-        y -= RENDER.hexShape.apothem;
+        y -= RENDER.hexShape.spacingApothem;
     }
 
     return {
@@ -79,14 +79,10 @@ Render.prototype.hexSpaceCenter = function(i, j) {
 }
 
 Render.prototype.getDimensions = function(board) {
-    var width = (2 * RENDER.hexShape.radius) * board.width + 2;
-    // if (board.width % 2 === 0) {
-        width += .5 * RENDER.hexShape.radius;
-    // }
-    var height = (2 * RENDER.hexShape.apothem) * board.height + 2;
-    // if (board.height % 2 === 0) {
-        height += RENDER.hexShape.apothem;
-    // }
+    var width = (1.5 * RENDER.hexShape.spacingRadius) * board.width + 2;
+    width += .5 * RENDER.hexShape.spacingRadius;
+    var height = (2 * RENDER.hexShape.spacingApothem) * board.height + 2;
+    height += RENDER.hexShape.spacingApothem;
     return {
         width : width,
         height : height
