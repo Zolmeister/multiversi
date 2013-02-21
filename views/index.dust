@@ -99,7 +99,7 @@
                                 Score: <span data-bind="text: score"></span><br>
                                 <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                             </div>
-                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                                 Score: <span data-bind="text: score"></span><br>
                                 <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                             </div>
-                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                 Score: <span data-bind="text: score"></span><br>
                                 <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
                             </div>
-                            <div data-bind="visible: !$root.started() && $root.currentPlayerId()==id">
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
