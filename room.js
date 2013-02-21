@@ -157,8 +157,11 @@ Room.prototype.add = function(player, callback) {
             grid : this.game.grid
         })
         if (this.playerCount() === 3) {
+            this.started = true;
+            this.isPublic = true;
             this.sendAll("gameState", {
-                started : true
+                started : this.started,
+                isPublic : this.isPublic
             });
         }
         this.sendAll("gameState", {
@@ -194,8 +197,6 @@ Room.prototype.remove = function(player, callback) {
             isPublic : this.isPublic,
             players : this.publicPlayerList()
         })
-        console.log(this.game.grid)
-        console.log(this.players)
         if (callback) {
             callback();
         }

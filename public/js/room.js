@@ -180,6 +180,8 @@ Room.prototype.update = function(data) {
 
         if (target === "isPublic") {
             this.isPublic(data[target]);
+            console.log("SETTING PUBLIC STATUS:")
+            console.log(data[target])
         }
         
         if (target === "grid") {
