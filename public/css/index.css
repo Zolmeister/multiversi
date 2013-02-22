@@ -109,7 +109,7 @@ h1 {
 }
 
 .player {
-	display: inline-block;
+    float: left;
 	width: 33.3%;
 	height: 80%;
 	margin: 0;
