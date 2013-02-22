@@ -8,6 +8,11 @@ body, html {
 
 body, button {
 	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+	text-transform: uppercase;
+}
+
+button:active {
+	background: #000;
 }
 
 h1 {
@@ -65,25 +70,27 @@ h1 {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: red;
+    background: #fff;
     margin: 0;
     padding: 0;
 }
 
 .leave-room {
 	background: url(/images/leave.png);
+	border: none;
 	width: 64px;
 	height: 64px;
 	margin: 50px;
+	text-indent: -9999px;
 }
 
 
 /* Game board and "pass" button */
 .gameboard {
 	float: right;
-	background: green;
 	width: 60%;
-	padding: 20px;
+	height: 60%;
+	margin: 10% 0;
 }
 
 .pass-button {
@@ -92,7 +99,7 @@ h1 {
 	border: none;
 	background: #000;
 	color: #fff;
-	font-size: 2em;
+	font-size: 1.5em;
 	font-weight: bold;
 }
 
@@ -101,7 +108,7 @@ h1 {
 
 .players {
 	height: 300px;
-	background: purple;
+	background: #eee;
 	width: 30%;
 	position: absolute;
 	top: 50%;
@@ -114,7 +121,6 @@ h1 {
 	height: 80%;
 	margin: 0;
 	text-align: center;
-    background-color: #aaa;
 }
 
 #chatBox {

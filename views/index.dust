@@ -24,19 +24,15 @@
     
     <div id="homePageView">
         <div class="container">
-    	<img src="images/logo.png">
-            
+    		<img src="images/logo.png">
             <div class="homeButtons">
                 <!--<button class="button-join" data-bind="click: joinRoom">Join a Game</button>-->
                 <button class="button-join" data-bind="click: clickJoinRoom">Join a Game</button>
                 <!-- <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button> -->
                 <button class="button-friends" data-bind="click: clickInviteFriends">Play with friends</button>
-                
-                
                 <!-- <button data-bind="click: createRoom">Create Room</button> -->
                 <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
             </div>
-        
         </div>
     </div>
 
@@ -59,6 +55,8 @@
 
                 
             	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
+            	
+            	
                 <div id="chatBox">
                     <div class="chat" id="chat"></div>
                     <form data-bind="submit: globalConnect().sendChat">
