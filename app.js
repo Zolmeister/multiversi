@@ -22,57 +22,67 @@ app.configure(function() {
     app.set('view options', {
         layout : false
     });
+    
+    app.disable('x-powered-by');
+    
     //disable layout default
     app.locals({
         layout : false
     });
-    app.use(express.logger('dev'));
+
+    app.configure('development', function() {
+        app.use(express.logger('dev'));
+    });
+
+    app.configure('production', function() {
+        app.use(express.compress());
+    });
+
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
-})
 
-app.configure('development', function() {
-    app.use(express.errorHandler());
-    launch()
-});
-
-app.configure('production', function() {
-    console.log("compresing files")
-
-    //TODO: use promises/make less pyramidy
-    var compressor = require('node-minify');
-    //compress javascript using google closure compiler
-    var files = ['settings', 'utils', 'sockets', 'rulesset', 'engine', 'player', 'render', 'input', 'room', 'lobby', 'index'];
-    new compressor.minify({
-        type : 'gcc',
-        fileIn : files.map(function(f) {
-            return 'public/js/' + f + '.js'
-        }),
-        fileOut : 'public/js/multiversi.js',
-        callback : function(err) {
-            if (err) {
-                console.log(err);
-            } else {
-                // compress CSS using Sqwish
-                new compressor.minify({
-                    type : 'sqwish',
-                    fileIn : ['public/css/base.css', 'public/css/index.css'],
-                    fileOut : 'public/css/multiversi.css',
-                    callback : function(err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("done compressing")
-                            launch()
-                        }
-                    }
-                });
-            }
-        }
+    app.configure('development', function() {
+        app.use(express.errorHandler());
+        launch()
     });
 
+    app.configure('production', function() {
+        console.log("compresing files");
+        //TODO: use promises/make less pyramidy
+        var compressor = require('node-minify');
+        //compress javascript using google closure compiler
+        var files = ['settings', 'utils', 'sockets', 'rulesset', 'engine', 'player', 'render', 'input', 'room', 'lobby', 'index'];
+        new compressor.minify({
+            type : 'gcc',
+            fileIn : files.map(function(f) {
+                return 'public/js/' + f + '.js'
+            }),
+            fileOut : 'public/js/multiversi.js',
+            callback : function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    // compress CSS using Sqwish
+                    new compressor.minify({
+                        type : 'sqwish',
+                        fileIn : ['public/css/base.css', 'public/css/index.css'],
+                        fileOut : 'public/css/multiversi.css',
+                        callback : function(err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("done compressing")
+                                launch()
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+    });
 });
 function launch() {
     app.get('/', routes.index);
