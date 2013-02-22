@@ -67,8 +67,8 @@
                 
                 
                 <div class="waiting-room" data-bind="visible: !started()">
-                    Waiting room. Don't have 3 players yet. <br />
-                    We need some social buttoning at this stage to invite players. <br />
+                	<p>Waiting for all three players...</p>
+                    <div class="social-buttons">HEY SOCIAL THINGZ HERE YALL</div>
                 </div>
             
 
@@ -96,39 +96,42 @@
                     <div class="player" id="player1" data-bind="with: players()[0]">
                         <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
-                            <span data-bind="text: name"></span><br>
+                            <span class="player-name" data-bind="text: name"></span>
                             <div data-bind="visible: $root.started()">
-                                Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
+                                <span class="player-score" data-bind="text: score"></span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button onClick="openScreenNameOverlay()">Change</button>
+                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
                     </div>
                     <div class="player" id="player2" data-bind="with: players()[1]">
                         <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
-                            <span data-bind="text: name"></span><br>
+                            <span class="player-name" data-bind="text: name"></span>
                             <div data-bind="visible: $root.started()">
-                                Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
+                                <span class="player-score" data-bind="text: score"></span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button onClick="openScreenNameOverlay()">Change</button>
+                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
                     </div>
                     <div class="player" id="player3" data-bind="with: players()[2]">
                         <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
-                            <span data-bind="text: name"></span><br>
+                            <span class="player-name" data-bind="text: name"></span>
                             <div data-bind="visible: $root.started()">
-                                Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
+                                <span class="player-score" data-bind="text: score"></span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button onClick="openScreenNameOverlay()">Change</button>
+                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
                     </div>
