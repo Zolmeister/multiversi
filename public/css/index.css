@@ -2,8 +2,8 @@
 
 
 
-body {
-	font-family: 'Archivo Black', sans-serif;
+body, button {
+	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
 }
 
 h1 {
@@ -30,7 +30,6 @@ h1 {
 }
 
 .homeButtons button {
-	font-family: 'Avenir Next', sans-serif;
 	font-weight: bold;
 	text-transform: capitalize !important;
 	font-size: 2em;
