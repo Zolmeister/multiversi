@@ -100,6 +100,7 @@ function joinRoomAnimationCallback() {
 
 function leaveRoomAnimationCallback() {
     lobby.leaveRoom();
+    $("#roomView").hide();
     viewTransition = 0;
 }
 
