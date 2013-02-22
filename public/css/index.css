@@ -8,6 +8,11 @@ body, html {
 
 body, button {
 	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+	text-transform: uppercase;
+}
+
+button:active {
+	background: #000;
 }
 
 h1 {
@@ -59,40 +64,55 @@ h1 {
 }
 
 
+/* Waiting room */
+
+.waiting-room {
+	float: right;
+	width: 40%;
+	height: 60%;
+	margin: 10% 20% 0 0;
+	font-weight: bold;
+	font-size: 2em;
+}
+
+
 /* Gameroom */
 
 #roomView {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: red;
+    background: #fff;
     margin: 0;
     padding: 0;
 }
 
 .leave-room {
 	background: url(/images/leave.png);
+	border: none;
 	width: 64px;
 	height: 64px;
 	margin: 50px;
+	text-indent: -9999px;
 }
 
 
 /* Game board and "pass" button */
 .gameboard {
 	float: right;
-	background: green;
 	width: 60%;
-	padding: 20px;
+	height: 60%;
+	margin: 10% 0;
 }
 
 .pass-button {
-	width: 100%;
+	width: 60%;
 	height: 20%;
+	margin: 0 20%;
 	border: none;
 	background: #000;
 	color: #fff;
-	font-size: 2em;
+	font-size: 1.5em;
 	font-weight: bold;
 }
 
@@ -101,7 +121,6 @@ h1 {
 
 .players {
 	height: 300px;
-	background: purple;
 	width: 30%;
 	position: absolute;
 	top: 50%;
@@ -109,13 +128,44 @@ h1 {
 }
 
 .player {
+	font-size: 1.5em;
+	line-height: 1.5em;
     float: left;
 	width: 33.3%;
 	height: 80%;
 	margin: 0;
 	text-align: center;
-    background-color: #aaa;
 }
+
+.player span {
+	display: block;
+}
+
+.player-name {
+	text-transform: none !important;
+	font-weight: bold;
+}
+
+#player1 .player-name { color: red; }
+#player2 .player-name { color: green; }
+#player3 .player-name { color: purple; }
+
+.change-name {
+	width: 100%;
+	height: 30%;
+	border: none;
+	background: none;
+	text-decoration: underline;
+	font-size: .75em;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
 
 #chatBox {
     float: right;
