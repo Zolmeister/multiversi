@@ -1,6 +1,10 @@
 @import url(http://fonts.googleapis.com/css?family=Archivo+Black);
 
 
+body, html {
+	padding: 0;
+	margin: 0;
+}
 
 body, button {
 	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
@@ -70,28 +74,27 @@ h1 {
 }
 
 
-
-
-.room{
-	border-style: solid;
-	border-width: 1px;
-	width: 150px;
-	border-radius: 3px;
-	margin: 5px;
-}
-.room:hover{
-	background-color: #BBFFBB;
+/* Game board and "pass" button */
+.gameboard {
+	float: right;
+	background: green;
+	width: 40%;
 }
 
-.players{
-	height: 70px;
+
+/* Players box */
+
+.players {
+	height: 300px;
+	background: purple;
+	width: 59%;
+	position: absolute;
 }
-.player{
-	float: left;
-	margin-right: 20px;
-	width: 120px;
+
+.player {
+	display: inline-block;
+	width: 100%;
 	text-align: center;
-	/* height: 50px; */
     background-color: #aaa;
 }
 
