@@ -76,7 +76,6 @@
 
                 <div class="gameboard" data-bind="visible: started()">
                     <div id="mv-canvas"></div>
-                    <button data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
                 
                 
@@ -101,15 +100,13 @@
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
                                 Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">THEIR TURN</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">
-                            Waiting
-                        </div>
+                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
                     <div class="player" id="player2" data-bind="with: players()[1]">
                         <div data-bind="if: !removed()">
@@ -122,9 +119,7 @@
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">
-                            Waiting
-                        </div>
+                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
                     <div class="player" id="player3" data-bind="with: players()[2]">
                         <div data-bind="if: !removed()">
@@ -137,15 +132,14 @@
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">
-                            Waiting
-                        </div>
+                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
+                    <button class="pass-button" data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
                 
                 
                 <div class="endgame" data-bind="visible: ended()">
-                    Game Over
+                    GAME OVER, MOFO
                 </div>
 
 
