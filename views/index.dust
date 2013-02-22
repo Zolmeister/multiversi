@@ -1,13 +1,13 @@
 {>"base.dust"/}
 {<css}
-{?DEBUG}
 <link href="/css/index.css" rel="stylesheet">
-{:else}
-{/DEBUG}
 {/css}
 {<js}
 
-{?DEBUG}
+<!-- Raphael breaks with require.js -->
+<script src="/js/lib/raphael-min.js"></script>
+
+<!-- TODO: use require.js -->
 <script src="/js/settings.js"></script>
 <script src="/js/utils.js"></script>
 <script src="/js/sockets.js"></script>
@@ -19,9 +19,6 @@
 <script src="/js/room.js"></script>
 <script src="/js/lobby.js"></script>
 <script src="/js/index.js"></script>
-{:else}
-<script src="/js/multiversi.js"></script>
-{/DEBUG}
 {/js}
 {<body}
     
