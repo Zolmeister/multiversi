@@ -111,10 +111,14 @@ h1 {
 .player {
 	display: inline-block;
 	width: 33%;
-	height: 80%;
+	height: 65%;
 	margin: 0;
 	text-align: center;
     background-color: #aaa;
+}
+
+.player span {
+	height: 15%;
 }
 
 #chatBox {
