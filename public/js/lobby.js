@@ -4,11 +4,13 @@ function Lobby() {
     var dynamicJoin = this.inRoom();
     this.name = localStorage.name || "Guest";
     globalConnect().setName(this.name);
-    window.history.replaceState("lobby", "lobbly", "/");
 
     //joining an active game
     if (dynamicJoin) {
         this.joinRoom(dynamicJoin);
+        window.history.replaceState("room", "room", "/" + dynamicJoin);
+    } else {
+        window.history.replaceState("lobby", "lobby", "/");
     }
 
     this.windowEvent = function(e) {

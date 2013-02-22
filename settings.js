@@ -1,6 +1,6 @@
 DEBUG = !(process.env.NODE_ENV==='production');
 
-// BOARD = "pointcontrol/swiss.json";
+// BOARD = "pointcontrol/slanted.json";
 BOARD = undefined;
 
 exports.DEBUG = DEBUG;

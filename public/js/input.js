@@ -46,6 +46,7 @@ Input.prototype.defaultPlayerOnClick = function(space) {
         }
     }
 
+    this.room.renderer.setClickedSpace(this.clickedSpace);
     this.room.renderer.setPossibleMoves(this.possibleMoves);
 }
 

@@ -26,7 +26,7 @@
 {<body}
     
     <div id="homePageView">
-        <div data-bind="visible: !room()">
+        <div>
     	<img src="images/logo.png">
             
             <div class="homeButtons">
@@ -44,8 +44,19 @@
     </div>
 
     <div id="roomView">
-        <div data-bind="visible: $root">
+        
+        <div data-bind="visible: $root || viewTransition!=0">
             <div data-bind="if: $root">
+            
+                <div id="screenNameOverlay">
+                    <div>
+                        Enter a screen name
+                        <form data-bind="submit: applyScreenName">
+                            <input name="screenName" id="screenNameInput">
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>
+                </div>
 
                 
                 <div id="chatBox">
@@ -87,8 +98,13 @@
                     <div class="player" id="player1" data-bind="with: players()[0]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -97,8 +113,13 @@
                     <div class="player" id="player2" data-bind="with: players()[1]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -107,8 +128,13 @@
                     <div class="player" id="player3" data-bind="with: players()[2]">
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
-                            Score: <span data-bind="text: score"></span><br>
-                            <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            <div data-bind="visible: $root.started()">
+                                Score: <span data-bind="text: score"></span><br>
+                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                            </div>
+                            <div data-bind="visible: !$root.started() && $root.me()==id">
+                                <button onClick="openScreenNameOverlay()">Change</button>
+                            </div>
                         </div>
                         <div data-bind="if: removed()">
                             Waiting
@@ -129,18 +155,10 @@
                     </div>
                     
                     <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
-                    <button onClick="lobby.leaveRoom()">Leave Room</button>
+                    <button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div id="screenNameOverlay">
-        <div>
-            Enter a screen name
-            <input name="screenName" id="screenNameInput" onKeyPress="onScreenNameInputKeyPress()">
-            <button onClick="applyScreenName()">Apply</button>
-        </div>
-    </div>
-{/body}
 
+{/body}

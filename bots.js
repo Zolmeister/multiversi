@@ -16,6 +16,7 @@ var Bot = function(board) {
     this.bot = true;
     this.removed = false;
     this.isAdmin = false;
+    this.name = "Bot";
 }
 /*
  * @param {grid} grid
