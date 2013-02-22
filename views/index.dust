@@ -26,7 +26,7 @@
 {<body}
     
     <div id="homePageView">
-        <div>
+        <div class="container">
     	<img src="images/logo.png">
             
             <div class="homeButtons">
@@ -48,17 +48,20 @@
         <div data-bind="visible: $root || viewTransition!=0">
             <div data-bind="if: $root">
             
+            
                 <div id="screenNameOverlay">
                     <div>
-                        Enter a screen name
+                       
                         <form data-bind="submit: applyScreenName">
-                            <input name="screenName" id="screenNameInput">
+                        	<label for="screenName" style="display: none;">Screen name:</label>
+                            <input name="screenName" id="screenNameInput" placeholder="Enter a screen name">
                             <button type="submit">Apply</button>
                         </form>
                     </div>
                 </div>
 
                 
+            	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
                 <div id="chatBox">
                     <div class="chat" id="chat"></div>
                     <form data-bind="submit: globalConnect().sendChat">
@@ -67,14 +70,15 @@
                     </form>
                 </div>
                 
-                <div data-bind="visible: !started()">
+                
+                <div class="waiting-room" data-bind="visible: !started()">
                     Waiting room. Don't have 3 players yet. <br />
                     We need some social buttoning at this stage to invite players. <br />
                 </div>
             
-                <div data-bind="visible: started()">
+
+                <div class="gameboard" data-bind="visible: started()">
                     <div id="mv-canvas"></div>
-                    
                     <button data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
                 
@@ -153,11 +157,13 @@
                         <button onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
                         <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                     </div>
-                    
                     <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
-                    <button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
                 </div>
+                
+                
             </div>
+            
+            
         </div>
     </div>
 

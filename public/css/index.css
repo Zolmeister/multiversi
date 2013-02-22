@@ -16,10 +16,6 @@ h1 {
 	margin-left: -250px;
 }
 
-.homeButtons, .leave-room {
-	margin: -228px 0 0 294px;
-}
-
 .button-join {
 	background: url(/images/button_purple.png);
 	margin-right: 4px;
@@ -29,7 +25,11 @@ h1 {
 	background: url(/images/button_red.png);
 }
 
-.homeButtons button, .leave-room {
+.homeButtons {
+	margin: -228px 0 0 294px;
+}
+
+.homeButtons button {
 	font-family: 'Avenir Next', sans-serif;
 	font-weight: bold;
 	text-transform: capitalize !important;
@@ -42,21 +42,35 @@ h1 {
 
 #homePageView {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.container {
     padding-top: 25%;
     margin: -282px 0 0 -341px;
     width: 682px;
     height: 564px;
     padding-left: 50%;
-    overflow: hidden;
+
 }
 
 #roomView {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    background: red;
 }
 
 .leave-room {
-	background: url(/images/button_purple.png);
-	margin-right: 4px;
+	background: url(/images/leave.png);
+	width: 64px;
+	height: 64px;
+}
+
+.gameboard {
+	float: right;
 }
 
 
