@@ -100,7 +100,7 @@
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
                                 Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">THEIR TURN</span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
@@ -113,7 +113,7 @@
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
                                 Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
@@ -126,7 +126,7 @@
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
                                 Score: <span data-bind="text: score"></span><br>
-                                <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">Turn</span>
+                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">THEIR TURN</span>
                             </div>
                             <div data-bind="visible: !$root.started() && $root.me()==id">
                                 <button onClick="openScreenNameOverlay()">Change</button>
