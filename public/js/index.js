@@ -23,9 +23,11 @@ $(function() {
         if (e.state === "lobby") {
             setStartCSSHomePage();
             $("#homePageView").show();
+            $("#roomView").hide();
         } else if (e.state === "room") {
             setStartCSSRoom();
             $("#roomView").show();
+            $("#homePageView").hide();
         }
     }
     
