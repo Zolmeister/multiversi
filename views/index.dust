@@ -96,6 +96,7 @@
 
                 <div class="players">
                     <div class="player" id="player1" data-bind="with: players()[0]">
+                        <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
@@ -106,9 +107,9 @@
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
                     <div class="player" id="player2" data-bind="with: players()[1]">
+                        <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
@@ -119,9 +120,9 @@
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
                     <div class="player" id="player3" data-bind="with: players()[2]">
+                        <div data-bind="if: removed()">Waiting...</div>
                         <div data-bind="if: !removed()">
                             <span data-bind="text: name"></span><br>
                             <div data-bind="visible: $root.started()">
@@ -132,7 +133,6 @@
                                 <button onClick="openScreenNameOverlay()">Change</button>
                             </div>
                         </div>
-                        <div data-bind="if: removed()">Waiting...</div>
                     </div>
                     <button class="pass-button" data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
@@ -145,7 +145,7 @@
 
                 <div>
                     <div class="admin-options" data-bind="if: iAmAdmin">
-                        <button onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
+                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
                         <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                     </div>
                     <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
