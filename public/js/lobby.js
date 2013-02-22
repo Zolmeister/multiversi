@@ -8,7 +8,6 @@ function Lobby() {
     //joining an active game
     if (dynamicJoin) {
         this.joinRoom(dynamicJoin);
-        window.history.replaceState("room", "room", "/" + dynamicJoin);
     } else {
         window.history.replaceState("lobby", "lobby", "/");
     }
