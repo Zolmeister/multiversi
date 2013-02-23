@@ -216,7 +216,6 @@ Room.prototype.update = function(data) {
             this.started(false);
             this.selfDestruct();
             this.game = ko.observable(new Game(this.players(), data[target]));
-            this.resetScores();
         }
     }
 }

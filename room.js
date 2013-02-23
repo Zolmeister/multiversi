@@ -326,17 +326,6 @@ Room.prototype.adminStart = function() {
         });
     }
 }
-//only call this with 3 players in players list
-// Room.prototype.newGame = function() {
-//     this.started = true;
-//     this.setScores();
-//     this.turn = 0;
-//     this.update({
-//         turn : this.turn,
-//         players : this.publicPlayerList(),
-//         grid : this.grid
-//     })
-// }
 
 Room.prototype.newGame = function(self) {
     if (settings.DEBUG && settings.BOARD) {
@@ -350,8 +339,8 @@ Room.prototype.newGame = function(self) {
         if (self.players[i].bot) {
             self.players[i].engine = new Game(util.dummyPlayers(), self.board);
         }
-        self.players[i].score = 0;
     }
+    self.setScores();
 
     self.turn = 0;
     
@@ -361,14 +350,8 @@ Room.prototype.newGame = function(self) {
     self.sendAll("gameState", {
         newGameBoard : self.game.board,
         turn : self.turn,
-        players : self.publicPlayerList()
-    });
-
-    self.sendAll("gameState", {
-        grid : self.game.grid
-    });
-    
-    self.sendAll("gameState", {
+        players : self.publicPlayerList(),
+        grid : self.game.grid,
         started : self.started,
         isPublic : self.isPublic
     });
