@@ -55,7 +55,7 @@ app.configure(function() {
         //compress javascript using google closure compiler
         var files = ['settings', 'utils', 'sockets', 'rulesset', 'engine', 'player', 'render', 'input', 'room', 'lobby', 'index'];
         new compressor.minify({
-            type : 'gcc',
+            type : 'yui-js',
             fileIn : files.map(function(f) {
                 return 'public/js/' + f + '.js'
             }),
