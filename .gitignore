@@ -4,3 +4,5 @@ npm-debug.log
 .project
 *.swp
 *~
+public/js/multiversi.js
+public/css/multiversi.css
