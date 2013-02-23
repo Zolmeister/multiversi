@@ -144,7 +144,8 @@
                 
                 <div class="endgame" data-bind="visible: ended()">
                     GAME OVER, MOFO.<br />
-                    Starting a new game soon. Excuse the language.
+                    Starting a new game soon. Excuse the language.<br />
+                    <span data-bind="text: nextGameTimer()"></span>
                 </div>
 
 

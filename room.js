@@ -32,6 +32,8 @@ var Room = function(gametype) {
     this.started = false;
     this.ended = false;
     //for new rooms, change on hit 3 players
+    
+    this.newGameTimeoutId = undefined;
 }
 
 /*
@@ -157,7 +159,8 @@ Room.prototype.add = function(player, callback) {
             turn : this.turn,
             players : this.publicPlayerList(),
             grid : this.game.grid,
-            ended : this.ended
+            ended : this.ended,
+            timer : this.newGameTimeoutId !== undefined ? util.getTimeLeft(this.newGameTimeoutId) : false
         });
         if (this.playerCount() === 3 || this.started) {
             this.started = true;
@@ -256,13 +259,14 @@ Room.prototype.move = function(data, player, callback) {
         this.started = false;
         this.ended = true;
 
-        this.update({
-            end : this.ended
-        });
-
         // start new game in 10 seconds
         var self = this;
-        setTimeout(function() { self.newGame(self); }, 10000);
+        this.newGameTimeoutId = setTimeout(function() { self.newGame(self); }, 15000);
+        
+        this.update({
+            end : this.ended,
+            timer : this.newGameTimeoutId !== undefined ? util.getTimeLeft(this.newGameTimeoutId) : false
+        });
     } else {
 
         // Next turn
