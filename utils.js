@@ -99,6 +99,10 @@ function dummyPlayers() {
     return dummies;
 }
 
+function getTimeLeft(timeout) {
+    return Math.ceil((timeout._idleStart.getTime() + timeout._idleTimeout - Date.now()) / 1000);
+}
+
 var boardPrefix = {
     "classic" : './resources/boards/classic/',
     "pointcontrol" : './resources/boards/pointcontrol/'
@@ -139,5 +143,6 @@ exports.isInt = isInt;
 exports.nextRoomId = nextRoomId;
 exports.log = log;
 exports.dummyPlayers = dummyPlayers;
+exports.getTimeLeft = getTimeLeft;
 exports.getBoard = getBoard;
 exports.getBoardFile = getBoardFile;

@@ -51,6 +51,16 @@ var Room = function(id, board, me, grid) {
         var player = self.players()[self.turn()];
         return player ? player.id : -1;
     }, this);
+
+    this.nextGameTimer = ko.observable(0);
+    this.nextGameStartTime = undefined;
+    this.nextGameTimerInterval = undefined;
+
+    this.nextGameTimerTick = function() {
+        if (self.nextGameStartTime) {
+            self.nextGameTimer(Math.round(Math.ceil(self.nextGameStartTime - Date.now()) / 1000));
+        }
+    }
 }
 
 Room.prototype.initRenderer = function() {
@@ -145,6 +155,10 @@ Room.prototype.update = function(data) {
                 this.started(true);
                 this.initRenderer();
             }
+
+            if (this.nextGameTimerInterval) {
+                window.clearInterval(this.nextGameTimerInterval);
+            }
         }
         
         if (target === "move") {
@@ -208,7 +222,6 @@ Room.prototype.update = function(data) {
             this.ended(true);
 
             console.log("game ended");
-            // Start timer
         }
 
         if (target === "newGameBoard") {
@@ -216,7 +229,16 @@ Room.prototype.update = function(data) {
             this.started(false);
             this.selfDestruct();
             this.game = ko.observable(new Game(this.players(), data[target]));
-            this.resetScores();
+        }
+
+        if (target === "timer") {
+            if (data[target] === false) {
+                this.nextGameStartTime = undefined;
+            } else {
+                this.nextGameStartTime = Date.now() + 1000 * data[target];
+                this.nextGameTimerInterval = window.setInterval(this.nextGameTimerTick, 1000);
+                this.nextGameTimerTick();
+            }
         }
     }
 }
