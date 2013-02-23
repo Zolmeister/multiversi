@@ -29,10 +29,10 @@
     		<img src="images/logo.png">
             <div class="home-buttons">
                 <div class="home-button button-friends" data-bind="click: clickInviteFriends">
-                    <div class="hex">Play with friends</div>
+                    <span>Play with friends</span>
                 </div>
                 <div class="home-button button-join" data-bind="click: clickJoinRoom">
-                    <div class="hex">Join a Game</div>
+                    <span>Join a Game</span>
                 </div>
             </div>
         </div>
