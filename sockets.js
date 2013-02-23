@@ -20,6 +20,7 @@ module.exports = function(socket) {
         if (!targetRoom || !player) {
             return;
         }
+        leaveRoom();
         console.log("adding player to "+targetRoom.id)
         targetRoom.add(player, function(targetRoom) {
             util.log("player added")
