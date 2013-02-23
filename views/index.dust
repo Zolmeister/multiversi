@@ -39,7 +39,7 @@
     
         <div id="roomView">
             
-            <div data-bind="visible: $root || viewTransition!=0">
+            <div data-bind="visible: $root">
                 <div data-bind="if: $root">
                 
                     <div id="screenNameOverlay">
@@ -71,8 +71,11 @@
                     	<br>
                     	<span>or invite on:</span>
                         <div class="social-buttons">
+                        <!-- twitter -->
                             <a data-bind="attr: { 'data-url': shareUrl }" href="https://twitter.com/share" class="twitter-share-button" data-url="http://multiversi.es" data-text="Join me for a game of Multiversi at" data-count="none">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        <!-- facebook -->
+                        <button data-bind="click: facebookSend">Facebook</button>
                         </div>
                     </div>
     
