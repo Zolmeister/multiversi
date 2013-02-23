@@ -4,17 +4,12 @@
  */
 var Connect = function() {
     var self = this;
-    this.rooms = ko.observableArray([]);
     this.socket = io.connect();
 
     this.socket.on("error", function(data) {
         console.error(data);
     })
 
-    this.socket.on("rooms", function(data) {
-        self.rooms(data)
-    })
-    
     this.socket.on("chat", function(data){
         var chat = $("#chat")
         var msg = $("<span class='msg'>").text(data.user+": "+data.msg)

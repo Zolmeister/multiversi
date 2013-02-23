@@ -4,26 +4,6 @@ var Room = require("./room");
 var util = require("./utils");
 var settings = require("./settings");
 var Player = require("./public/js/player");
-var playersNotInGames = [];
-var openGames = [];
-
-function calcOpenGames() {
-    openGames = [];
-    for (var i in Games) {
-        if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
-            //private games that have started become public
-            openGames.push({
-                roomId : Games[i].id,
-                players : Games[i].playerCount()
-            });
-        }
-    }
-    for (var i in playersNotInGames) {
-        playersNotInGames[i].socket.emit("rooms", openGames);
-    }
-    util.log("open games", openGames)
-    //util.log("sent to", playersNotInGames)
-}
 
 function removeRoom(room) {
     delete Games[room.id];
@@ -35,8 +15,6 @@ module.exports = function(socket) {
     var id = socket.id;
     var player = new Player(id, socket);
     var room;
-    playersNotInGames.push(player);
-    socket.emit("rooms", openGames);
 
     function addPlayer(targetRoom, player, callback) {
         if (!targetRoom || !player) {
@@ -46,8 +24,6 @@ module.exports = function(socket) {
         targetRoom.add(player, function(targetRoom) {
             util.log("player added")
             room = targetRoom;
-            playersNotInGames.splice(playersNotInGames.indexOf(player), 1);
-            calcOpenGames();
             if (callback) {
                 callback(targetRoom);
             }
@@ -78,7 +54,6 @@ module.exports = function(socket) {
             if (room.noBotPlayerCount() === 0) {
                 removeRoom(room);
             }
-            calcOpenGames();
             room = undefined;
             player.isAdmin = false;
         }
@@ -102,7 +77,6 @@ module.exports = function(socket) {
                 }
             }
             Games[newRoom.id] = newRoom;
-            calcOpenGames();
         });
     }
 
@@ -130,16 +104,10 @@ module.exports = function(socket) {
     })
 
     socket.on("leaveRoom", function() {
-        playersNotInGames.push(player);
         leaveRoom();
     })
 
     socket.on("disconnect", function() {
-        //to prevent memory leaks
-        var index = playersNotInGames.indexOf(player);
-        if (index !== -1) {
-            playersNotInGames.splice(index, 1);
-        }
         leaveRoom();
     })
 
@@ -155,7 +123,6 @@ module.exports = function(socket) {
                 room.adminStart();
             } else if (action === "addBot") {
                 room.addBot();
-                calcOpenGames();
             } else {
                 socket.emit("error", "bad call");
             }

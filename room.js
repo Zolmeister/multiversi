@@ -144,7 +144,6 @@ Room.prototype.add = function(player, callback) {
         }
         player.removed = false;
         //replace open space with new player
-        console.log("previous: " + openId + ", new: " + player.id);
         this.game.replacePlayer(openId, player.id);
 
         this.players[slot] = player;
@@ -185,7 +184,6 @@ Room.prototype.remove = function(player, callback) {
     var index = this.getPlayerIndex(player.id);
     if (index !== -1) {
         util.log("removed player")
-        console.log(this.players)
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
         this.players[index].socket.emit("removed");
