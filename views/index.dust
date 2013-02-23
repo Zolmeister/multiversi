@@ -66,7 +66,14 @@
                     
                     <div class="waiting-room" data-bind="visible: !started()">
                     	<p>Waiting for all three players...</p>
-                        <div class="social-buttons">HEY SOCIAL THINGZ HERE YALL</div>
+                    	<span>Share this link: </span>
+                    	<div data-bind="text: shareUrl"></div>
+                    	<br>
+                    	<span>or invite on:</span>
+                        <div class="social-buttons">
+                            <a data-bind="attr: { 'data-url': shareUrl }" href="https://twitter.com/share" class="twitter-share-button" data-url="http://multiversi.es" data-text="Join me for a game of Multiversi at" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        </div>
                     </div>
     
                     <div class="gameboard" data-bind="visible: started()">
