@@ -76,7 +76,7 @@
                         <div class="player">
                             <div data-bind="if: removed()">Waiting...</div>
                             <div data-bind="if: !removed()">
-                                <span style="display:inline" data-bind="visible: $root.currentPlayerId()==id">*</span>
+                                <span class="turn-indicator" data-bind="if: ($root.started() && $root.currentPlayerId()==id)">&#11042;</span>
                                 <span class="player-name" data-bind="text: name, style: {color: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}"></span>
                                 <div data-bind="visible: $root.started()">
                                     <span class="player-score" data-bind="text: score"></span>

@@ -120,7 +120,8 @@ button {
 .players{
     float:right;
     height:240px;
-    margin-top:130px;
+    margin-top: 200px;
+    margin-left: 20px;
 }
 .player {
     font-size: 1em;
@@ -144,6 +145,11 @@ button {
 .player-name {
     text-transform: none !important;
     font-weight: bold;
+}
+
+.turn-indicator {
+    position: absolute;
+    margin-left: -20px;
 }
 
 #player1 .player-name { color: red; }
