@@ -44,7 +44,6 @@
                 
                     <div id="screenNameOverlay">
                         <div>
-                           
                             <form data-bind="submit: applyScreenName">
                             	<label for="screenName" style="display: none;">Screen name:</label>
                                 <input name="screenName" id="screenNameInput" placeholder="Enter a screen name">
@@ -55,15 +54,6 @@
                     
                 	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
                 	
-                    <div id="chatBox">
-                        <div class="chat" id="chat"></div>
-                        <form data-bind="submit: globalConnect().sendChat">
-                            <input name="chat">
-                            <button type="submit">Send</button>
-                        </form>
-                    </div>
-                    
-                    
                     <div class="waiting-room" data-bind="visible: !started()">
                     	<p>Waiting for all three players...</p>
                     	<span>Share this link: </span>
@@ -97,6 +87,15 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div id="chatBox" data-bind="visible: started()">
+                        <div class="chat" id="chat"></div>
+                        <form data-bind="submit: globalConnect().sendChat">
+                            <input name="chat">
+                            <button type="submit">Send</button>
+                        </form>
+                    </div>
+                    
                     <div class="pass-button" data-bind="visible: started, click: $root.passMove">Pass Turn</div>
                 
                     <div class="endgame" data-bind="visible: ended()">
@@ -104,7 +103,6 @@
                         Starting a new game soon. Excuse the language.<br />
                         <span data-bind="text: nextGameTimer()"></span>
                     </div>
-                    
                     <div class="admin-options" data-bind="if: iAmAdmin">
                         <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
                         <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
