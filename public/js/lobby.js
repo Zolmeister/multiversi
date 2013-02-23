@@ -30,6 +30,7 @@ function Lobby() {
 
     globalConnect().socket.on('gameState', function(data) {
         if (!self.room()) {
+            console.log("joining room: "+data.room);
             if (data.room && data.board && data.me) {
                 self.setRoom(data.room, data.board, data.me, data.grid);
                 self.room().update(data);

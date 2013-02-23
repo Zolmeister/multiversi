@@ -22,7 +22,7 @@ var Connect = function() {
     })
 
     this.join = function join(roomId) {
-        console.log("joining: " + roomId)
+        console.log("request to join: " + roomId)
         this.socket.emit("join", {
             room : roomId
         });

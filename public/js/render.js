@@ -115,7 +115,6 @@ Render.prototype.setBoard = function(board) {
     this.spaces = new Array(board.width);
 
     var hexPath = hexagonPathString(RENDER.hexShape.radius);
-    console.log(hexPath);
     
     for (var i = 0; i < board.width; i++) {
         this.spaces[i] = new Array(board.height);

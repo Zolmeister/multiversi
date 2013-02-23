@@ -1,7 +1,6 @@
 $(function() {
 
     var windowEvent = function(e) {
-        console.log(e)
         if (e.state === "room") {
             $("#roomView").stop().animate({
                 top : "0%"
