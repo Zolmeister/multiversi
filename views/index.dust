@@ -4,9 +4,6 @@
 {/css}
 {<js}
 
-<!-- Raphael breaks with require.js -->
-<script src="/js/lib/raphael-min.js"></script>
-
 <!-- TODO: use require.js -->
 <script src="/js/settings.js"></script>
 <script src="/js/utils.js"></script>
