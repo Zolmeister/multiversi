@@ -28,12 +28,6 @@ var Room = function(id, board, me, grid) {
         var me = self.getPlayer(self.me());
         return me ? me.isAdmin() : false;
     }, this)
-    this.kick = function(target) {
-        self.connect().roomAdmin("kick", target.id);
-    }
-    this.ban = function(target) {
-        self.connect().roomAdmin("ban", target.id);
-    }
     this.passMove = function() {
         this.move({
             start : "pass",

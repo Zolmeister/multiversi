@@ -55,7 +55,7 @@ module.exports = function(socket) {
     }
     
     function canJoinRoom(room, joinDirect){
-        if ((room.isPublic || joinDirect) && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
+        if ((room.isPublic || joinDirect) && room.playerCount() < 3) {
             return true;
         }
         return false;
@@ -146,21 +146,12 @@ module.exports = function(socket) {
     socket.on("createGame", createGame);
 
     socket.on("roomAdmin", function(data) {
-        //data: {action: kick|ban|start|addBot, target: playerId}
-        //TODO: bans by IP, instead of bans by player Id
+        //data: {action: start|addBot, target: playerId}
         var action = data.action;
         var targetPlayer = room.getPlayer(data.target);
         //TODO: remove DEBUG flag for this
         if (player.isAdmin || settings.DEBUG) {
-            if (action === "kick") {
-                if (targetPlayer) {
-                    room.kick(targetPlayer);
-                }
-            } else if (action === "ban") {
-                if (targetPlayer) {
-                    room.ban(targetPlayer);
-                }
-            } else if (action === "start") {
+            if (action === "start") {
                 room.adminStart();
             } else if (action === "addBot") {
                 room.addBot();
