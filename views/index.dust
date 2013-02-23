@@ -72,15 +72,14 @@
                     <div class="gameboard" data-bind="visible: started()">
                         <div id="mv-canvas"></div>
                     </div>
-                    
-                    <div class="players" data-bind="foreach: players()">
-                        <div class="player" data-bind="style: {backgroundColor: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}">
+                    <div class="players" data-bind="foreach: players(), css: { waiting: !started() }">
+                        <div class="player">
                             <div data-bind="if: removed()">Waiting...</div>
                             <div data-bind="if: !removed()">
-                                <span class="player-name" data-bind="text: name"></span>
+                                <span style="display:inline" data-bind="visible: $root.currentPlayerId()==id">*</span>
+                                <span class="player-name" data-bind="text: name, style: {color: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}"></span>
                                 <div data-bind="visible: $root.started()">
                                     <span class="player-score" data-bind="text: score"></span>
-                                    <span data-bind="visible: $root.currentPlayerId()==id">Turn</span>
                                 </div>
                                 <div data-bind="visible: !$root.started() && $root.me()==id">
                                     <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
@@ -88,7 +87,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="pass-button" data-bind="visible: started, click: $root.passMove">Pass Turn</div>
                 
                     <div class="endgame" data-bind="visible: ended()">
