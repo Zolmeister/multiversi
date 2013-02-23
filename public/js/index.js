@@ -21,7 +21,7 @@ $(function() {
             $("#roomView").stop().animate({
                 top: "0%"
             }, 1000)
-            //$("#homePageView").stop().fadeOut();
+            $("#homePageView").stop().fadeOut();
         }
         else if(e.state === "lobby"){
             //setStartCSSHomePage();
@@ -30,7 +30,7 @@ $(function() {
             }, 1000, function(){
                 lobby.leaveRoom()
             })
-            //$("#homePageView").stop().fadeIn();
+            $("#homePageView").stop().fadeIn();
             //$("#roomView").stop().fadeOut();
         }
     }
@@ -49,8 +49,11 @@ $(function() {
     
     globalConnect = ko.observable(new Connect());
     lobby = new Lobby();
-    if(!lobby.dynamicJoin){
-        //$("#homePageView").stop().fadeIn();
+    if(lobby.dynamicJoin){
+        $("#homePageView").hide();
+        $("#roomView").stop().css({
+                top: "0%"
+        })
     }
     ko.applyBindings(lobby, $("#homePageView")[0]);
 
