@@ -2,148 +2,134 @@
 
 
 body, html {
-	padding: 0;
-	margin: 0;
-}
-
-body, button {
-	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
-	text-transform: uppercase;
-}
-
-button:active {
-	background: #000;
-}
-
-h1 {
-	display: none;
-}
-
-.logo {
-	width: 500px;
-	padding-left: 50%;
-	margin-left: -250px;
-}
-
-.button-join {
-	background: url(/images/button_purple.png);
-	margin-right: 4px;
-}
-
-.button-friends {
-	background: url(/images/button_red.png);
-}
-
-.homeButtons {
-	margin: -228px 0 0 294px;
-}
-
-.homeButtons button {
-	font-weight: bold;
-	font-size: 2em;
-	border: none;
-	color: #fff;
-	width: 192px;
-	height: 223px;
-}
-
-#homePageView {
-    position: absolute;
-    width: 100%;
+    padding: 0;
+    margin: 0;
     height: 100%;
     overflow: hidden;
 }
 
-.container {
-    padding-top: 25%;
-    margin: -282px 0 0 -341px;
-    width: 682px;
-    height: 564px;
-    padding-left: 50%;
+body, button {
+    font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+}
+.center{
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+    height: 100%;
+}
+
+.home-buttons {
+    float: right;
+    margin-top: -176px;
+    margin-left: -20px;
+}
+
+.home-button {
+    width: 194px;
+    height: 194px;
+    float: right;
+    margin-left: 0px;
 
 }
 
+.hex:before {
+    content: "";
+    width: 0;
+    height: 0;
+    left: 0px;
+    border-bottom: 55px solid #6C6;
+    border-left: 92px solid transparent;
+    border-right: 92px solid transparent;
+    position: absolute;
+    top: -55px;
+}
+
+.hex {
+    margin-top: 30px;
+    width: 184px;
+    height: 110px;
+    background-color: #6C6;
+    position: relative;
+    font-size: 22px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.hex:after {
+    content: "";
+    width: 0;
+    left: 0px;
+    position: absolute;
+    bottom: -55px;
+    border-top: 55px solid #6C6;
+    border-left: 92px solid transparent;
+    border-right: 92px solid transparent;
+}
 
 /* Waiting room */
 
 .waiting-room {
-	float: right;
-	width: 40%;
-	height: 60%;
-	margin: 10% 20% 0 0;
-	font-weight: bold;
-	font-size: 2em;
+    font-weight: bold;
+    font-size: 2em;
 }
 
 
 /* Gameroom */
 
 #roomView {
-    position: absolute;
     width: 100%;
     height: 100%;
     background: #fff;
     margin: 0;
     padding: 0;
+    margin-bottom: 120px;
 }
 
-.leave-room {
-	background: url(/images/leave.png);
-	border: none;
-	width: 64px;
-	height: 64px;
-	margin: 50px;
-	text-indent: -9999px;
+button {
+    margin-top: 40px;
+    border: none;
+
 }
 
 
 /* Game board and "pass" button */
-.gameboard {
-	float: right;
-	width: 60%;
-	height: 60%;
-	margin: 10% 0;
-}
 
 .pass-button {
-	width: 60%;
-	height: 20%;
-	margin: 0 20%;
-	border: none;
-	background: #000;
-	color: #fff;
-	font-size: 1.5em;
-	font-weight: bold;
+    text-align:center;
+    width: 200px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 
 /* Players box */
-
-.players {
-	height: 300px;
-	width: 30%;
-	position: absolute;
-	top: 50%;
-	margin: -150px 0 0 50px;
+.players{
+    display:block;
+    height:100px;
+    margin-bottom:60px;
 }
-
 .player {
-	font-size: 1.5em;
-	line-height: 1.5em;
+    font-size: 1em;
     float: left;
-	width: 33.3%;
-	height: 80%;
-	margin: 0;
-	text-align: center;
+    width: 33.3%;
+    height: 100%;
+    text-align: center;
 }
 
 .player span {
-	display: block;
+    display: block;
 }
 
 .player-name {
-	text-transform: none !important;
-	font-weight: bold;
+    text-transform: none !important;
+    font-weight: bold;
 }
 
 #player1 .player-name { color: red; }
@@ -151,21 +137,14 @@ h1 {
 #player3 .player-name { color: purple; }
 
 .change-name {
-	width: 100%;
-	height: 30%;
-	border: none;
-	background: none;
-	text-decoration: underline;
-	font-size: .75em;
-	font-weight: bold;
+    width: 100%;
+    height: 30%;
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-size: .75em;
+    font-weight: bold;
 }
-
-
-
-
-
-
-
 
 #chatBox {
     float: right;

@@ -24,143 +24,138 @@
 {/DEBUG}
 {/js}
 {<body}
-    
-    <div id="homePageView">
-        <div class="container">
+    <div class="center">
+        <div id="homePageView">
     		<img src="images/logo.png">
-            <div class="homeButtons">
-                <!--<button class="button-join" data-bind="click: joinRoom">Join a Game</button>-->
-                <button class="button-join" data-bind="click: clickJoinRoom">Join a Game</button>
-                <!-- <button class="button-friends" data-bind="click: createRoomPrivate">Play with friends</button> -->
-                <button class="button-friends" data-bind="click: clickInviteFriends">Play with friends</button>
-                <!-- <button data-bind="click: createRoom">Create Room</button> -->
-                <!-- <button data-bind="click: createRoomBots">Play with bots</button> -->
+            <div class="home-buttons">
+                <div class="home-button button-friends" data-bind="click: clickInviteFriends">
+                    <div class="hex">Play with friends</div>
+                </div>
+                <div class="home-button button-join" data-bind="click: clickJoinRoom">
+                    <div class="hex">Join a Game</div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="roomView">
-        
-        <div data-bind="visible: $root || viewTransition!=0">
-            <div data-bind="if: $root">
+    
+        <div id="roomView">
             
-            
-                <div id="screenNameOverlay">
-                    <div>
-                       
-                        <form data-bind="submit: applyScreenName">
-                        	<label for="screenName" style="display: none;">Screen name:</label>
-                            <input name="screenName" id="screenNameInput" placeholder="Enter a screen name">
-                            <button type="submit">Apply</button>
+            <div data-bind="visible: $root || viewTransition!=0">
+                <div data-bind="if: $root">
+                
+                
+                    <div id="screenNameOverlay">
+                        <div>
+                           
+                            <form data-bind="submit: applyScreenName">
+                            	<label for="screenName" style="display: none;">Screen name:</label>
+                                <input name="screenName" id="screenNameInput" placeholder="Enter a screen name">
+                                <button type="submit">Apply</button>
+                            </form>
+                        </div>
+                    </div>
+    
+                    
+                	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
+                	
+                	
+                    <div id="chatBox">
+                        <div class="chat" id="chat"></div>
+                        <form data-bind="submit: globalConnect().sendChat">
+                            <input name="chat">
+                            <button type="submit">Send</button>
                         </form>
                     </div>
-                </div>
-
-                
-            	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
-            	
-            	
-                <div id="chatBox">
-                    <div class="chat" id="chat"></div>
-                    <form data-bind="submit: globalConnect().sendChat">
-                        <input name="chat">
-                        <button type="submit">Send</button>
-                    </form>
-                </div>
-                
-                
-                <div class="waiting-room" data-bind="visible: !started()">
-                	<p>Waiting for all three players...</p>
-                    <div class="social-buttons">HEY SOCIAL THINGZ HERE YALL</div>
-                </div>
-            
-
-                <div class="gameboard" data-bind="visible: started()">
-                    <div id="mv-canvas"></div>
-                </div>
-                
-                
-                <!-- This method is cool and all, but I don't like it. There's an alternative below. I'm keeping this around in case we decide to switch
-                     back later. - Brad
-                <div class="players" data-bind="foreach: players()">
-                    <div class="player" data-bind="style: {backgroundColor: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}">
-                        Score: <span data-bind="text: score"></span><br>
-                        <span data-bind="if: removed()"> (waiting)</span>
-                        <span data-bind="if: id===$parent.me()">YOU</span>
-                        <div data-bind="if: $root.iAmAdmin() && id!==$parent.me() && !removed()">
-                            <button data-bind="click: $root.kick">kick</button>
-                            <button data-bind="visible: !bot(), click: $root.ban">ban</button>
-                        </div>
+                    
+                    
+                    <div class="waiting-room" data-bind="visible: !started()">
+                    	<p>Waiting for all three players...</p>
+                        <div class="social-buttons">HEY SOCIAL THINGZ HERE YALL</div>
                     </div>
-                </div>
-                -->
-
-                <div class="players">
-                    <div class="player" id="player1" data-bind="with: players()[0]">
-                        <div data-bind="if: removed()">Waiting...</div>
-                        <div data-bind="if: !removed()">
-                            <span class="player-name" data-bind="text: name"></span>
-                            <div data-bind="visible: $root.started()">
-                                <span class="player-score" data-bind="text: score"></span>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
-                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
-                            </div>
-                            <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                
+    
+                    <div class="gameboard" data-bind="visible: started()">
+                        <div id="mv-canvas"></div>
+                    </div>
+                    
+                    
+                    <div class="players" data-bind="foreach: players()">
+                        <div class="player" data-bind="style: {backgroundColor: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}">
+                            <div data-bind="if: removed()">Waiting...</div>
+                            <div data-bind="if: !removed()">
+                                <span class="player-name" data-bind="text: name"></span>
+                                <div data-bind="visible: $root.started()">
+                                    <span class="player-score" data-bind="text: score"></span>
+                                    <span data-bind="visible: $root.currentPlayerId()==id">Turn</span>
+                                </div>
+                                <div data-bind="visible: !$root.started() && $root.me()==id">
+                                    <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="player" id="player2" data-bind="with: players()[1]">
-                        <div data-bind="if: removed()">Waiting...</div>
-                        <div data-bind="if: !removed()">
-                            <span class="player-name" data-bind="text: name"></span>
-                            <div data-bind="visible: $root.started()">
-                                <span class="player-score" data-bind="text: score"></span>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
-                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
+<!--    
+                    <div class="players">
+                        <div class="player" id="player1" data-bind="with: players()[0]">
+                            
+                            <div data-bind="if: !removed()">
+                                <span class="player-name" data-bind="text: name"></span>
+                                <div data-bind="visible: $root.started()">
+                                    <span class="player-score" data-bind="text: score"></span>
+                                    <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                    <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
+                                </div>
+                                <div data-bind="visible: !$root.started() && $root.me()==id">
+                                    <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                </div>
                             </div>
-                            <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                        </div>
+                        <div class="player" id="player2" data-bind="with: players()[1]">
+                            <div data-bind="if: removed()">Waiting...</div>
+                            <div data-bind="if: !removed()">
+                                <span class="player-name" data-bind="text: name"></span>
+                                <div data-bind="visible: $root.started()">
+                                    <span class="player-score" data-bind="text: score"></span>
+                                    <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                    <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
+                                </div>
+                                <div data-bind="visible: !$root.started() && $root.me()==id">
+                                    <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="player" id="player3" data-bind="with: players()[2]">
+                            <div data-bind="if: removed()">Waiting...</div>
+                            <div data-bind="if: !removed()">
+                                <span class="player-name" data-bind="text: name"></span>
+                                <div data-bind="visible: $root.started()">
+                                    <span class="player-score" data-bind="text: score"></span>
+                                    <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
+                                    <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
+                                </div>
+                                <div data-bind="visible: !$root.started() && $root.me()==id">
+                                    <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="player" id="player3" data-bind="with: players()[2]">
-                        <div data-bind="if: removed()">Waiting...</div>
-                        <div data-bind="if: !removed()">
-                            <span class="player-name" data-bind="text: name"></span>
-                            <div data-bind="visible: $root.started()">
-                                <span class="player-score" data-bind="text: score"></span>
-                                <span data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'visible' : 'hidden'}">&#11042;</span>
-                                <span style="margin-top: -35px;" data-bind="style: { visibility: $root.started() && $root.currentPlayerId()==id ? 'hidden' : 'visible'}">&#11041;</span>
-                            </div>
-                            <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
-                            </div>
+                    -->
+                    <div class="pass-button" data-bind="visible: started, click: $root.passMove">Pass Turn</div>
+                    
+                    <div class="endgame" data-bind="visible: ended()">
+                        GAME OVER, MOFO.<br />
+                        Starting a new game soon. Excuse the language.
+                    </div>
+    
+    
+                    <div>
+                        <div class="admin-options" data-bind="if: iAmAdmin">
+                            <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
+                            <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                         </div>
+                        <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
                     </div>
-                    <button class="pass-button" data-bind="click: $root.passMove">Pass Turn</button>
                 </div>
-                
-                
-                <div class="endgame" data-bind="visible: ended()">
-                    GAME OVER, MOFO.<br />
-                    Starting a new game soon. Excuse the language.
-                </div>
-
-
-                <div>
-                    <div class="admin-options" data-bind="if: iAmAdmin">
-                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
-                        <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
-                    </div>
-                    <!-- <button data-bind="click: lobby.leaveRoom">Leave Room</button> -->
-                </div>
-                
-                
             </div>
-            
-            
         </div>
     </div>
-
 {/body}
