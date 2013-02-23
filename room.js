@@ -7,7 +7,8 @@ var Player = require("./public/js/player");
  * @constructor
  * @this {Room}
  */
-function Room(gametype) {
+var Room = function(gametype) {
+    var self = this;
     this.id = util.nextRoomId();
     //TODO: replace with uuid?
     this.openIds = [];
@@ -29,6 +30,7 @@ function Room(gametype) {
     this.isPublic = true;
     //for private games, change to false
     this.started = false;
+    this.ended = false;
     //for new rooms, change on hit 3 players
 }
 
@@ -154,9 +156,10 @@ Room.prototype.add = function(player, callback) {
             isPublic : this.isPublic,
             turn : this.turn,
             players : this.publicPlayerList(),
-            grid : this.game.grid
-        })
-        if (this.playerCount() === 3) {
+            grid : this.game.grid,
+            ended : this.ended
+        });
+        if (this.playerCount() === 3 || this.started) {
             this.started = true;
             this.isPublic = true;
             this.sendAll("gameState", {
@@ -170,11 +173,6 @@ Room.prototype.add = function(player, callback) {
 
         if (callback) {
             callback(this);
-        }
-
-        if (this.isPublic && !this.started) {
-            //have enough people, public game, and havent started yet
-            this.newGame();
         }
     }
 }
@@ -255,10 +253,16 @@ Room.prototype.move = function(data, player, callback) {
 
     if (this.game.gameEnded()) {
         util.log("game ended");
+        this.started = false;
+        this.ended = true;
 
         this.update({
-            end : true
+            end : this.ended
         });
+
+        // start new game in 10 seconds
+        var self = this;
+        setTimeout(function() { self.newGame(self); }, 10000);
     } else {
 
         // Next turn
@@ -323,15 +327,51 @@ Room.prototype.adminStart = function() {
     }
 }
 //only call this with 3 players in players list
-Room.prototype.newGame = function() {
-    this.started = true;
-    this.setScores();
-    this.turn = 0;
-    this.update({
-        turn : this.turn,
-        players : this.publicPlayerList(),
-        grid : this.grid
-    })
+// Room.prototype.newGame = function() {
+//     this.started = true;
+//     this.setScores();
+//     this.turn = 0;
+//     this.update({
+//         turn : this.turn,
+//         players : this.publicPlayerList(),
+//         grid : this.grid
+//     })
+// }
+
+Room.prototype.newGame = function(self) {
+    if (settings.DEBUG && settings.BOARD) {
+        self.board = util.getBoardFile(settings.BOARD);
+    } else {
+        self.board = util.getBoard("pointcontrol");
+    }
+    self.game = new Game(self.players, self.board);
+
+    for (var i in self.players) {
+        if (self.players[i].bot) {
+            self.players[i].engine = new Game(util.dummyPlayers(), self.board);
+        }
+        self.players[i].score = 0;
+    }
+
+    self.turn = 0;
+    
+    self.started = true;
+    self.isPublic = true;
+
+    self.sendAll("gameState", {
+        newGameBoard : self.game.board,
+        turn : self.turn,
+        players : self.publicPlayerList()
+    });
+
+    self.sendAll("gameState", {
+        grid : self.game.grid
+    });
+    
+    self.sendAll("gameState", {
+        started : self.started,
+        isPublic : self.isPublic
+    });
 }
 
 Room.prototype.setAdmin = function(player) {

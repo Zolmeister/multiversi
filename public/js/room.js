@@ -116,12 +116,18 @@ Room.prototype.move = function(data) {
     }
 }
 
-Room.prototype.mergeScores = function(scores) {
-    var scoreDiff = scores
+Room.prototype.mergeScores = function(scoreDiff) {
     for (var s in scoreDiff) {
         if (this.getPlayer(s)) {
             this.getPlayer(s).score(this.getPlayer(s).score() + scoreDiff[s]);
         }
+    }
+    this.players.valueHasMutated();
+}
+
+Room.prototype.resetScores = function() {
+    for (var i in this.players()) {
+        this.players()[i].score(0);
     }
     this.players.valueHasMutated();
 }
@@ -184,7 +190,7 @@ Room.prototype.update = function(data) {
             console.log(data[target])
         }
         
-        if (target === "grid") {
+        if (target === "grid" && !this.ended()) {
             console.log("update grid state");
             var grid = data[target];
             if (this.game()) { //if have recieved board
@@ -194,7 +200,7 @@ Room.prototype.update = function(data) {
                 }
 
             } else {
-                console.error("havent recieved board")
+                console.error("haven't recieved board")
             }
         }
 
@@ -202,6 +208,15 @@ Room.prototype.update = function(data) {
             this.ended(true);
 
             console.log("game ended");
+            // Start timer
+        }
+
+        if (target === "newGameBoard") {
+            this.ended(false);
+            this.started(false);
+            this.selfDestruct();
+            this.game = ko.observable(new Game(this.players(), data[target]));
+            this.resetScores();
         }
     }
 }
