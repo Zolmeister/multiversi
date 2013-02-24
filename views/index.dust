@@ -52,42 +52,52 @@
                 </div>
                 
             	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
-
-                <div class="sidebar">
-                    <div class="admin-options" data-bind="if: iAmAdmin">
-                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
-                        <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
-                    </div>
+				
+                <div class="admin-options" data-bind="if: iAmAdmin">
+                    <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
+                    <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
+                </div>
                     
-                    
-                    <div class="players">
-                        <div data-bind="foreach: players(), css: { waiting: !started() }">
-                            <div class="player">
-                                <div data-bind="if: removed()">Waiting...</div>
-                                <div data-bind="if: !removed()">
-                                    <span class="player-name" data-bind="text: name"></span>
-                                    <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">
-                                        ✎
-                                    </span>
-                                    <div data-bind="visible: $root.started()">
-                                        <span class="player-score" data-bind="text: score"></span>
-                                        
-                                        <span data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
-                                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
-                                    </div>
-                                </div>
+                <div class="players">
+					
+                    <div data-bind="foreach: players(), css: { waiting: !started() }">
+                        <div class="player">
+                            <div data-bind="if: removed()">Waiting...</div>
+                            <div data-bind="if: !removed()">
+                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
+                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
+                                <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">✎</span>
+                                <span class="player-name" data-bind="text: name"></span>
+                                <span class="player-score" data-bind="text: score"></span>
                             </div>
                         </div>
-                        <div class="pass-button" data-bind="visible: $root.started(), click: $root.passMove">Pass Turn</div>
                     </div>
-                    
-                    <div id="chatBox">
-                        <div class="chat" id="chat"></div>
-                        <form data-bind="submit: globalConnect().sendChat">
-                            <input name="chat">
-                            <button type="submit">Send</button>
-                        </form>
-                    </div>
+					
+                    <div style="
+						background: #fff;
+						margin: 0; padding: 1.5em 0 0;
+					"><div class="pass-button" data-bind="visible: $root.started(), click: $root.passMove">Pass Turn</div></div>
+					
+					<div style="
+					background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+					background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+					background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+					background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+					background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C */
+					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+					height: 20px;
+					width: 100%;
+					"></div>
+					
+                </div>
+				
+                <div id="chatBox">
+                    <div class="chat-text" id="chat"></div>
+                    <form class="chat-form" data-bind="submit: globalConnect().sendChat">
+                        <input name="chat">
+                        <button type="submit">Send</button>
+                    </form>
                 </div>
                 
                 <div class="main-content">
@@ -115,6 +125,7 @@
                     Starting a new game soon. Excuse the language.<br />
                     <span data-bind="text: nextGameTimer()"></span>
                 </div>
+				
             </div>
         </div>
     </div>

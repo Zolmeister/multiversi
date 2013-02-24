@@ -1,6 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Archivo+Black);
 
-
+/* Globals */
 body, html {
     padding: 0;
     margin: 0;
@@ -10,6 +10,8 @@ body, html {
 body, button {
     font-family: 'Avenir Next', 'Archivo Black', sans-serif;
     text-transform: uppercase;
+	font-size: 16px;
+	border: none;
 }
 
 /* HomePage View */
@@ -17,7 +19,7 @@ body, button {
     width: 800px;
 	height: 600px;
     position: relative;
-    left: 50%;
+    left: 53%;
 	top: 50%;
     margin: -300px 0 0 -400px;
 }
@@ -53,7 +55,7 @@ body, button {
 }
 
 .button-friends {
-    margin-left: 3px;
+    margin-left: 4px;
     background: url(/images/button-red.png);
 }
 
@@ -71,32 +73,24 @@ body, button {
     height: 100%;
 }
 
-button {
-    margin-top: 40px;
-    border: none;
-}
-
 .leave-room {
     display: block;
-    /* position: absolute; */
-    /* When the button overlaps the board, clicks won't be received unless the button
-     * has higher z-index. */
+	width: 50px;
+	height: 50px;
+	top: 10px;
+	left: 10px;
+	background: url(/images/leave-room.png);
+	/* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
+	text-indent: -1000%;
+    /* When the button overlaps the board, clicks won't be received unless the button has higher z-index. */
     z-index: 2;
 }
 
 .main-content {
     background-color: yellow;
-    float: left;
+    float: right;
     width: 56%;
-    left: 20%;
-
     height: 100%;
-}
-
-.sidebar {
-    background-color: blue;
-    width: 44%;
-    float: left;
 }
 
 
@@ -114,10 +108,8 @@ button {
 }
 
 /* Game board */
-.gameboard{
+.gameboard {
     width: 90%;
-    margin-left: 5%;
-    
     background-color: orange;
 }
 
@@ -127,39 +119,37 @@ button {
 /* Makes SVG scale properly. */
 svg {
     width: 100%;
-    height: 70%;
+    height: 100%;
 }
 
 
-/* Side bar  */
 /* Players box */
-.players{
-    height: 240px;
-    /* margin-top: 200px; */
-    /* margin-left: 20px; */
-    width: 66%;
-
-    background-color: purple;
+.players {
+	float: left;
+    width: 32%;
+	margin: 10% 4% 0;
+	height: 50%;
+	position: relative;
+	z-index: 3;
+	background-color: purple;
 }
 
 .player {
     font-size: 1.5em;
-    line-height: 1.5em;
+    line-height: 2em;
     text-align: center;
-    background-color: gray;
+	background: #fff;
 }
 
 .pass-button {
     text-align: center;
     width: 100%;
-    height: 20%;
+	padding: .5em 0;
     border: none;
     background: #000;
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-    float: right;
-    margin-top: 80px;
 }
 
 .waiting {
@@ -169,50 +159,71 @@ svg {
     /* margin-top: 60px; */
 }
 
-.waiting .player{
-    /* float: left; */
-    /* width: 33.3%; */
-    /* height: 25%; */
+.player-turn {
+    float: left;
 }
-
 .player-name {
     text-transform: none !important;
     font-weight: bold;
 }
-
-.turn-indicator {
-    position: absolute;
-    margin-left: -20px;
+.player-score {
+	float: right;
 }
 
 .change-name {
-    position: absolute;
-    margin-left: 6px;
-    cursor: pointer;
-}
-
-#chatBox {
-    width: 170px;
-    margin-right: -40px;
-    height: 250px;
-    font-size: 12px;
-
-    background-color: green;
-}
-
-.chat {
     width: 100%;
-    height: 90%;
-    background-color: #CCCCCC;
-    overflow: auto;
+    height: 30%;
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-size: .75em;
+    font-weight: bold;
+}
+
+/* Chat */
+#chatBox {
+    width: 32%;
+	height: 30%;
+	max-height: 30%;
+	margin: 0 0 4% 4%;
+	text-transform: none;
+	background-color: green;
+	bottom: 0;
+	float: left;
+	position: absolute;
+	z-index: 1;
+}
+
+.chat-text {
+	display: block;
+	height: 100%;
+    width: 100%;
+	margin: 0; padding: 0;
+    overflow: scroll;	
+}
+
+.chat-form {
+	display: block;
+	min-height: 50px;
+	margin: 0;
 }
 
 #chatBox input {
-    width: 100px;
+	font-size: 1em;
+	margin: 0;
+	padding: .25em 0;
+    width: 80%;
+	border: 1px solid black;
+	border-width: 0 0 2px 0;
+	background: red;
 }
 
 #chatBox button {
-    margin-top: 4px;
+	width: 20%;
+	padding: .25em 0;
+	margin: 0;
+	background: #000;
+	color: #fff;
 }
 
 #screenNameOverlay {
