@@ -53,26 +53,6 @@
                 
             	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
                 
-                <div class="main-content">
-                    <div class="waiting-room" data-bind="visible: !started()">
-                        <p>Waiting for all three players...</p>
-                        <span>Share this link: </span>
-                        <div class="share-url" data-bind="text: shareUrl"></div>
-                        <br>
-                        <span>or invite on:</span>
-                        <div class="social-buttons">
-                        <!-- twitter -->
-                        <button data-bind="click: twitterSend">Tweet</button>
-                        <!-- facebook -->
-                        <button data-bind="click: facebookSend">Facebook</button>
-                        </div>
-                    </div>
-
-                    <div class="gameboard" data-bind="visible: started()">
-                        <div id="mv-canvas"></div>
-                    </div>
-                </div>
-            	
 
                 <div class="sidebar">
                     <div class="admin-options" data-bind="if: iAmAdmin">
@@ -109,6 +89,26 @@
                             <input name="chat">
                             <button type="submit">Send</button>
                         </form>
+                    </div>
+                </div>
+                
+                <div class="main-content">
+                    <div class="waiting-room" data-bind="visible: !started()">
+                        <p>Waiting for all three players...</p>
+                        <span>Share this link: </span>
+                        <div class="share-url" data-bind="text: shareUrl"></div>
+                        <br>
+                        <span>or invite on:</span>
+                        <div class="social-buttons">
+                        <!-- twitter -->
+                        <button data-bind="click: twitterSend">Tweet</button>
+                        <!-- facebook -->
+                        <button data-bind="click: facebookSend">Facebook</button>
+                        </div>
+                    </div>
+
+                    <div class="gameboard" data-bind="visible: started()">
+                        <div id="mv-canvas"></div>
                     </div>
                 </div>
             
