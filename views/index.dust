@@ -109,9 +109,9 @@
                         <span>or invite on:</span>
                         <div class="social-buttons">
                         <!-- twitter -->
-                        <button data-bind="click: twitterSend">Tweet</button>
+                        <button class="twitter-share" data-bind="click: twitterSend">Tweet</button>
                         <!-- facebook -->
-                        <button data-bind="click: facebookSend">Facebook</button>
+                        <button class="fb-share" data-bind="click: facebookSend">Facebook</button>
                         </div>
                     </div>
 

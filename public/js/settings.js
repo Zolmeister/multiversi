@@ -4,7 +4,7 @@ GAMETYPE = "pointcontrol";
 
 COLORS = [{
     name : "red",
-    color : "#caa",
+    color : "FF0017",
     activeColor : "#d66",
     possibleMoveColor : "#edd",
     strokeColor : "#000",
@@ -36,14 +36,14 @@ RENDER = {
 
     // Space stroke widths
     stroke : "1px",
-    strokeActive : "2px",
-    strokePossibleMove : "2px",
+    strokeActive : "0px",
+    strokePossibleMove : "0px",
 
     // For uncaptured spaces
     strokeColor : "#000",
     fillColor : "#fff",
 
-    nonJumpableStroke : "1px",
+    nonJumpableStroke : "3px",
     nonJumpableColor : "#444",
     nonJumpableStrokeColor : "#000",
 };

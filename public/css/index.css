@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Archivo+Black);
+@import url(http://fonts.googleapis.com/css?family=Karla:400,700);
 
 /* Globals */
 body, html {
@@ -8,7 +8,7 @@ body, html {
 }
 
 body, button, input {
-    font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+    font-family: 'Karla', 'Avenir Next', Futura, Helvetica, Arial, sans-serif;
     text-transform: uppercase;
 	font-size: 16px;
 	border: none;
@@ -110,6 +110,31 @@ body, button, input {
 	background: #eee;
 	font-weight: bold;
     text-transform: none;
+}
+
+.twitter-share, .fb-share {
+	width: 48px;
+	height: 48px;
+	text-indent: -9999px;
+	margin: 2em 2em 0 0;
+}
+
+.twitter-share { background: url(/images/twitter-share.png); }
+.fb-share { background: url(/images/fb-share.png); }
+
+.admin-options {
+	float: left;
+	width: 32%;
+	margin: 2em 4% 0;
+	position: absolute;
+}
+
+.admin-options button {
+	font-weight: bold;
+	background: #000;
+	color: #fff;
+	width: 50%;
+	padding: 1em 0;
 }
 
 /* Game board */
