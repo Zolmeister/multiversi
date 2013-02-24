@@ -4,26 +4,6 @@ var Room = require("./room");
 var util = require("./utils");
 var settings = require("./settings");
 var Player = require("./public/js/player");
-var playersNotInGames = [];
-var openGames = [];
-
-function calcOpenGames() {
-    openGames = [];
-    for (var i in Games) {
-        if (Games[i].openIds.length >= 1 && Games[i].isPublic) {
-            //private games that have started become public
-            openGames.push({
-                roomId : Games[i].id,
-                players : Games[i].playerCount()
-            });
-        }
-    }
-    for (var i in playersNotInGames) {
-        playersNotInGames[i].socket.emit("rooms", openGames);
-    }
-    util.log("open games", openGames)
-    //util.log("sent to", playersNotInGames)
-}
 
 function removeRoom(room) {
     delete Games[room.id];
@@ -35,19 +15,16 @@ module.exports = function(socket) {
     var id = socket.id;
     var player = new Player(id, socket);
     var room;
-    playersNotInGames.push(player);
-    socket.emit("rooms", openGames);
 
     function addPlayer(targetRoom, player, callback) {
         if (!targetRoom || !player) {
             return;
         }
+        leaveRoom();
         console.log("adding player to "+targetRoom.id)
         targetRoom.add(player, function(targetRoom) {
             util.log("player added")
             room = targetRoom;
-            playersNotInGames.splice(playersNotInGames.indexOf(player), 1);
-            calcOpenGames();
             if (callback) {
                 callback(targetRoom);
             }
@@ -55,7 +32,7 @@ module.exports = function(socket) {
     }
     
     function canJoinRoom(room, joinDirect){
-        if ((room.isPublic || joinDirect) && room.playerCount() < 3 && room.banned.indexOf(player) === -1) {
+        if ((room.isPublic || joinDirect) && room.playerCount() < 3) {
             return true;
         }
         return false;
@@ -78,7 +55,6 @@ module.exports = function(socket) {
             if (room.noBotPlayerCount() === 0) {
                 removeRoom(room);
             }
-            calcOpenGames();
             room = undefined;
             player.isAdmin = false;
         }
@@ -102,7 +78,6 @@ module.exports = function(socket) {
                 }
             }
             Games[newRoom.id] = newRoom;
-            calcOpenGames();
         });
     }
 
@@ -130,41 +105,25 @@ module.exports = function(socket) {
     })
 
     socket.on("leaveRoom", function() {
-        playersNotInGames.push(player);
         leaveRoom();
     })
 
     socket.on("disconnect", function() {
-        //to prevent memory leaks
-        var index = playersNotInGames.indexOf(player);
-        if (index !== -1) {
-            playersNotInGames.splice(index, 1);
-        }
         leaveRoom();
     })
 
     socket.on("createGame", createGame);
 
     socket.on("roomAdmin", function(data) {
-        //data: {action: kick|ban|start|addBot, target: playerId}
-        //TODO: bans by IP, instead of bans by player Id
+        //data: {action: start|addBot, target: playerId}
         var action = data.action;
         var targetPlayer = room.getPlayer(data.target);
         //TODO: remove DEBUG flag for this
         if (player.isAdmin || settings.DEBUG) {
-            if (action === "kick") {
-                if (targetPlayer) {
-                    room.kick(targetPlayer);
-                }
-            } else if (action === "ban") {
-                if (targetPlayer) {
-                    room.ban(targetPlayer);
-                }
-            } else if (action === "start") {
+            if (action === "start") {
                 room.adminStart();
             } else if (action === "addBot") {
                 room.addBot();
-                calcOpenGames();
             } else {
                 socket.emit("error", "bad call");
             }

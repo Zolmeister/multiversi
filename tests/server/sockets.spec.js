@@ -9,14 +9,10 @@ socketOptions = {
 describe("sockets", function() {
     //TODO: test multiple players
     var socket;
-    var rooms = [];
     beforeEach(function(done) {
         socket = io.connect(socketURL, socketOptions);
         socket.on("connect", function() {
-            socket.on("rooms", function(data) {
-                rooms = data;
-                done();
-            })
+            done();
         })
     })
     afterEach(function(){
@@ -49,14 +45,8 @@ describe("sockets", function() {
     })
     it("should join a game", function(done) {
         socket.emit("join", {
-            room : rooms[0].roomId
+            room : undefined
         });
-        socket.on("gameState", function(){
-            done();
-        })
-    })
-    it("should join the first available game or create a new game", function(done) {
-        socket.emit("join", {});
         socket.on("gameState", function(){
             done();
         })

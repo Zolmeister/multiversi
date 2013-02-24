@@ -18,7 +18,6 @@ var Room = function(gametype) {
         this.openIds.push(this.players[player].id);
     }
     //list of player objects
-    this.banned = [];
     if (settings.DEBUG && settings.BOARD) {
         this.board = util.getBoardFile(settings.BOARD);
     } else {
@@ -126,7 +125,7 @@ Room.prototype.playerCount = function() {
  * @param {callback} callback
  */
 Room.prototype.add = function(player, callback) {
-    if (this.openIds.length >= 1 && this.banned.indexOf(player) === -1) {
+    if (this.openIds.length >= 1) {
         //detect if player is trying to join more than once
         if (this.getPlayer(player.id) && !this.getPlayer(player.id).removed) {
             return;
@@ -145,7 +144,6 @@ Room.prototype.add = function(player, callback) {
         }
         player.removed = false;
         //replace open space with new player
-        console.log("previous: " + openId + ", new: " + player.id);
         this.game.replacePlayer(openId, player.id);
 
         this.players[slot] = player;
@@ -186,7 +184,6 @@ Room.prototype.remove = function(player, callback) {
     var index = this.getPlayerIndex(player.id);
     if (index !== -1) {
         util.log("removed player")
-        console.log(this.players)
         this.openIds.push(this.players[index].id);
         //this.players[index] = this.removedPlayer();
         this.players[index].socket.emit("removed");
@@ -310,15 +307,6 @@ Room.prototype.botMove = function() {
         var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
         this.move(move, curPlayer);
     }
-}
-
-Room.prototype.kick = function(target) {
-    this.remove(target);
-}
-
-Room.prototype.ban = function(target) {
-    this.banned.push(target);
-    this.kick(target);
 }
 
 Room.prototype.adminStart = function() {

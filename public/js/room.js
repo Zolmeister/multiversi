@@ -8,7 +8,7 @@
  */
 var Room = function(id, board, me, grid) {
     var self = this;
-    
+    this.shareUrl = window.location.host+"/"+id
     this.players = ko.observableArray(this.dummyPlayers());
     this.turn = ko.observable(-1);
     this.connect = globalConnect;
@@ -24,19 +24,10 @@ var Room = function(id, board, me, grid) {
     this.ended = ko.observable(false);
             
     //TODO: move these to lobby class
-    this.joinRoom = function(r) {
-        self.connect().join(r.roomId);
-    }
     this.iAmAdmin = ko.computed(function() {
         var me = self.getPlayer(self.me());
         return me ? me.isAdmin() : false;
     }, this)
-    this.kick = function(target) {
-        self.connect().roomAdmin("kick", target.id);
-    }
-    this.ban = function(target) {
-        self.connect().roomAdmin("ban", target.id);
-    }
     this.passMove = function() {
         this.move({
             start : "pass",
@@ -147,9 +138,6 @@ Room.prototype.resetScores = function() {
  */
 Room.prototype.update = function(data) {
     for (var target in data) {
-        console.log(target + ": ");
-        console.log(data[target]);
-
         if (target === "started" && data[target] === true) {
             if (!this.started()) {
                 this.started(true);
@@ -159,6 +147,11 @@ Room.prototype.update = function(data) {
                     this.renderer.setGrid(this.nextGrid, this.game().board);
                     this.nextGrid = undefined;
                 }
+            }
+
+            if (this.nextGrid) {
+                this.renderer.setGrid(this.nextGrid, this.game().board);
+                this.nextGrid = undefined;
             }
 
             if (this.nextGameTimerInterval) {
@@ -185,8 +178,6 @@ Room.prototype.update = function(data) {
                     playerFromId = this.players()[i]().id;
                 }
                 
-                console.log("Replace player: " + playerFromId + " to " + player.id);
-
                 if (playerFromId !== player.id) {
                     this.game().replacePlayer(playerFromId, player.id);
                     if (this.renderer) {
@@ -205,12 +196,9 @@ Room.prototype.update = function(data) {
 
         if (target === "isPublic") {
             this.isPublic(data[target]);
-            console.log("SETTING PUBLIC STATUS:")
-            console.log(data[target])
         }
         
         if (target === "grid" && !this.ended()) {
-            console.log("update grid state");
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
@@ -229,7 +217,6 @@ Room.prototype.update = function(data) {
 
         if (target === "end") {
             this.ended(true);
-
             console.log("game ended");
         }
 

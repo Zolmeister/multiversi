@@ -103,7 +103,8 @@ Render.prototype.setBoard = function(board) {
     this.lastBoard = board;
 
     var dim = this.getDimensions(board);
-    this.paper.setSize(dim.width, dim.height);
+    // this.paper.setSize(dim.width, dim.height);
+    this.paper.setViewBox(0, 0, dim.width, dim.height, true);
     
     this.spacesSet = this.paper.set();
     this.controlPointSet = this.paper.set();
@@ -115,7 +116,6 @@ Render.prototype.setBoard = function(board) {
     this.spaces = new Array(board.width);
 
     var hexPath = hexagonPathString(RENDER.hexShape.radius);
-    console.log(hexPath);
     
     for (var i = 0; i < board.width; i++) {
         this.spaces[i] = new Array(board.height);

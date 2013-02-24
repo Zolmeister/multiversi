@@ -1,15 +1,12 @@
 function Lobby() {
     var self = this;
     this.room = ko.observable(undefined);
-    var dynamicJoin = this.inRoom();
+    this.dynamicJoin = this.inRoom();
     this.name = localStorage.name || "Guest";
     globalConnect().setName(this.name);
-
-    //joining an active game
-    if (dynamicJoin) {
-        this.joinRoom(dynamicJoin);
-    } else {
-        window.history.replaceState("lobby", "lobby", "/");
+    window.history.replaceState("lobby", "lobby", "/");
+    if (this.dynamicJoin) {
+        this.joinRoom(this.dynamicJoin);
     }
 
     this.windowEvent = function(e) {
@@ -17,7 +14,7 @@ function Lobby() {
 
         if (e.state === "lobby" && !inRoom) {
             console.log("lobby, leaving room");
-            self.leaveRoom();
+            //self.leaveRoom();
         } else if (e.state === "room") {
             self.joinRoom(inRoom);
         }
@@ -33,6 +30,7 @@ function Lobby() {
 
     globalConnect().socket.on('gameState', function(data) {
         if (!self.room()) {
+            console.log("joining room: "+data.room);
             if (data.room && data.board && data.me) {
                 self.setRoom(data.room, data.board, data.me, data.grid);
                 self.room().update(data);
@@ -48,6 +46,11 @@ function Lobby() {
 
 Lobby.prototype.setRoom = function(roomId, board, me, grid) {
     if (window.history.state !== "room") {
+        $.event.trigger({
+            type: "pushstate",
+            message: {state:"room"},
+            time: new Date()
+        });
         window.history.pushState("room", "room", "/" + roomId)
     }
     this.room(new Room(roomId, board, me, grid));

@@ -2,181 +2,222 @@
 
 
 body, html {
-	padding: 0;
-	margin: 0;
+    padding: 0;
+    margin: 0;
+    height: 100%;
 }
 
 body, button {
-	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
-	text-transform: uppercase;
-}
-
-button:active {
-	background: #000;
-}
-
-h1 {
-	display: none;
-}
-
-.logo {
-	width: 500px;
-	padding-left: 50%;
-	margin-left: -250px;
-}
-
-.button-join {
-	background: url(/images/button_purple.png);
-	margin-right: 4px;
-}
-
-.button-friends {
-	background: url(/images/button_red.png);
-}
-
-.homeButtons {
-	margin: -228px 0 0 294px;
-}
-
-.homeButtons button {
-	font-weight: bold;
-	font-size: 2em;
-	border: none;
-	color: #fff;
-	width: 192px;
-	height: 223px;
+    font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+    text-transform: uppercase;
 }
 
 #homePageView {
-    position: absolute;
-    width: 100%;
+    width: 800px;
+    position:relative;
+    left:50%;
+    margin-left: -400px;
+    padding-top: 30px;
+}
+
+#roomView {
+    position:absolute;
+    left: 50%;
+    top: 100%;
+    width: 800px;
+    background: #fff;
+    padding: 0;
+    margin-left: -400px;
     height: 100%;
-    overflow: hidden;
+}
+.home-buttons {
+    float: left;
+    margin-top: -224px;
+    margin-left: 300px;
+    text-align: center;
 }
 
-.container {
-    padding-top: 25%;
-    margin: -282px 0 0 -341px;
-    width: 682px;
-    height: 564px;
-    padding-left: 50%;
-
+.home-button {
+    float: right;
+    font-weight: bold;
+    font-size: 2em;
+    border: none;
+    color: #fff;
+    width: 192px;
+    height: 223px;
 }
 
+.home-button span {
+    width: inherit;
+    height: inherit;
+    line-height: 1.2em;
+    position: relative;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.button-join {
+    background: url(/images/button_purple.png);
+    margin-top: 50px;
+}
+
+.button-friends {
+    margin-left:4px;
+    background: url(/images/button_red.png);
+}
+
+.hex:before {
+    content: "";
+    width: 0;
+    height: 0;
+    left: 0px;
+    border-bottom: 55px solid #6C6;
+    border-left: 92px solid transparent;
+    border-right: 92px solid transparent;
+    position: absolute;
+    top: -55px;
+}
+
+.hex {
+    margin-top: 30px;
+    width: 184px;
+    height: 110px;
+    background-color: #6C6;
+    position: relative;
+    font-size: 22px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.hex:after {
+    content: "";
+    width: 0;
+    left: 0px;
+    position: absolute;
+    bottom: -55px;
+    border-top: 55px solid #6C6;
+    border-left: 92px solid transparent;
+    border-right: 92px solid transparent;
+}
 
 /* Waiting room */
 
 .waiting-room {
-	float: right;
-	width: 40%;
-	height: 60%;
-	margin: 10% 20% 0 0;
-	font-weight: bold;
-	font-size: 2em;
+    font-weight: bold;
+    font-size: 2em;
+    float: right;
+    width: 500px;
 }
 
 
 /* Gameroom */
 
-#roomView {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    margin: 0;
-    padding: 0;
+button {
+    margin-top: 40px;
+    border: none;
 }
 
 .leave-room {
-	background: url(/images/leave.png);
-	border: none;
-	width: 64px;
-	height: 64px;
-	margin: 50px;
-	text-indent: -9999px;
+    display: block;
 }
 
-
 /* Game board and "pass" button */
-.gameboard {
-	float: right;
-	width: 60%;
-	height: 60%;
-	margin: 10% 0;
+.gameboard{
+    float: right;
+}
+
+#mv-canvas {
+    background-color: red;
+}
+
+/* Don't change this. This is what makes the board SVG scale properly. */
+svg {
+    width: 100%;
+    height: 100%;
 }
 
 .pass-button {
-	width: 60%;
-	height: 20%;
-	margin: 0 20%;
-	border: none;
-	background: #000;
-	color: #fff;
-	font-size: 1.5em;
-	font-weight: bold;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    float:right;
+    margin-top: 80px;
 }
 
 
 /* Players box */
-
-.players {
-	height: 300px;
-	width: 30%;
-	position: absolute;
-	top: 50%;
-	margin: -150px 0 0 50px;
+.players{
+    float:left;
+    height:240px;
+    margin-top: 200px;
+    margin-left: 20px;
 }
-
 .player {
-	font-size: 1.5em;
-	line-height: 1.5em;
-    float: left;
-	width: 33.3%;
-	height: 80%;
-	margin: 0;
-	text-align: center;
+    font-size: 1em;
+    height: 33.3%;
+    text-align: center;
 }
 
-.player span {
-	display: block;
+.waiting {
+    float: none;
+    height: 100px;
+    margin-bottom: 60px;
+    margin-top: 60px;
+}
+
+.waiting .player{
+    float: left;
+    width: 33.3%;
+    height: 100%;
 }
 
 .player-name {
-	text-transform: none !important;
-	font-weight: bold;
+    text-transform: none !important;
+    font-weight: bold;
 }
 
-#player1 .player-name { color: red; }
-#player2 .player-name { color: green; }
-#player3 .player-name { color: purple; }
+.turn-indicator {
+    position: absolute;
+    margin-left: -20px;
+}
 
 .change-name {
-	width: 100%;
-	height: 30%;
-	border: none;
-	background: none;
-	text-decoration: underline;
-	font-size: .75em;
-	font-weight: bold;
+    width: 100%;
+    height: 30%;
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-size: .75em;
+    font-weight: bold;
 }
 
-
-
-
-
-
-
-
 #chatBox {
-    float: right;
-    display: none;
+    /* float: left; */
+    width: 170px;
+    margin-right: -40px;
+    height: 200px;
+    font-size: 12px;
 }
 
 .chat {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     background-color: #CCCCCC;
-    overflow-y: scroll;
+    overflow: auto;
+}
+
+#chatBox input {
+    width: 100px;
+}
+
+#chatBox button {
+    margin-top: 4px;
 }
 
 #screenNameOverlay {
