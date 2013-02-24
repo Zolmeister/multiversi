@@ -5,27 +5,27 @@ GAMETYPE = "pointcontrol";
 COLORS = [{
     name : "red",
     color : "#FF0017",
-    activeColor : "#d66",
-    possibleMoveColor : "#edd",
+    activeColor : "#E21800",
+    possibleMoveColor : "#FFB3BA",
     strokeColor : "#000",
-    strokeActiveColor : "#000",
-    strokePossibleMoveColor : "#000"
+    strokeActiveColor : "#eee",
+    strokePossibleMoveColor : "#FF0017"
 }, {
     name : "green",
     color : "#6DCF00",
-    activeColor : "#6d6",
-    possibleMoveColor : "#ded",
+    activeColor : "#44BC00",
+    possibleMoveColor : "#C2FF9F",
     strokeColor : "#000",
     strokeActiveColor : "#000",
-    strokePossibleMoveColor : "#000"
+    strokePossibleMoveColor : "#6DCF00"
 }, {
     name : "blue",
     color : "#8F00FF",
-    activeColor : "#66d",
-    possibleMoveColor : "#dde",
+    activeColor : "#7800E2",
+    possibleMoveColor : "#E5C2FF",
     strokeColor : "#000",
-    strokeActiveColor : "#000",
-    strokePossibleMoveColor : "#000"
+    strokeActiveColor : "#eee",
+    strokePossibleMoveColor : "#8F00FF"
 }];
 
 RENDER = {
@@ -36,8 +36,8 @@ RENDER = {
 
     // Space stroke widths
     stroke : "0",
-    strokeActive : "3",
-    strokePossibleMove : "1",
+    strokeActive : "0",
+    strokePossibleMove : "2",
 
     // For uncaptured spaces
     strokeColor : "#000",
@@ -45,7 +45,7 @@ RENDER = {
 
     nonJumpableStroke : "3px",
     nonJumpableColor : "#444",
-    nonJumpableStrokeColor : "#000",
+    nonJumpableStrokeColor : "#eee",
 };
 
 RENDER.hexShape.apothem = Math.round(Math.sqrt(3) * (RENDER.hexShape.radius / 2));

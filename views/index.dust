@@ -99,7 +99,7 @@
                 <div id="chatBox">
                     <div class="chat-text" id="chat"></div>
                     <form class="chat-form" data-bind="submit: globalConnect().sendChat">
-                        <input name="chat">
+                        <input name="chat" placeholder="CHAT">
                         <button type="submit">Send</button>
                     </form>
                 </div>
