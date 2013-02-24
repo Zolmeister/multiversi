@@ -91,6 +91,10 @@
 					"></div>
 					
                 </div>
+                
+                <div class="endgame" data-bind="visible: ended()">
+                    New game in <span data-bind="text: nextGameTimer()"></span> seconds.
+                </div>
 				
                 <div id="chatBox">
                     <div class="chat-text" id="chat"></div>
@@ -119,13 +123,6 @@
                         <div id="mv-canvas"></div>
                     </div>
                 </div>
-            
-                <div class="endgame" data-bind="visible: ended()">
-                    GAME OVER, MOFO.<br />
-                    Starting a new game soon. Excuse the language.<br />
-                    <span data-bind="text: nextGameTimer()"></span>
-                </div>
-				
             </div>
         </div>
     </div>
