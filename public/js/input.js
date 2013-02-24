@@ -29,6 +29,10 @@ var Input = function(room) {
 
 Input.prototype.defaultPlayerOnClick = function(space) {
 
+    if (this.room.ended()) {
+        return;
+    }
+
     if (this.room.currentPlayerId() !== this.room.me()) {
         console.log("not your turn")
         return;
