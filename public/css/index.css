@@ -20,13 +20,13 @@ body, button, input {
 	height: 600px;
     position: relative;
     left: 53%;
-	top: 50%;
+	top: 45%;
     margin: -300px 0 0 -400px;
 }
 
 .home-buttons {
     float: left;
-    margin-top: -229px;
+    margin-top: -228px;
     margin-left: 294px;
     text-align: center;
 }
