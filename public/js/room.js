@@ -9,7 +9,7 @@
 var Room = function(id, board, me, grid) {
     var self = this;
     this.id = id;
-    this.shareUrl = window.location.host+"/"+id;
+    this.shareUrl = window.location.origin+"/"+id;
     this.players = ko.observableArray(this.dummyPlayers());
     this.turn = ko.observable(-1);
     this.connect = globalConnect;

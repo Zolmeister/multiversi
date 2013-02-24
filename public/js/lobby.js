@@ -47,8 +47,6 @@ function Lobby() {
 }
 
 Lobby.prototype.setRoom = function(roomId, board, me, grid) {
-    console.log("SET ROOM: "+roomId)
-    console.log(window.history)
     if (window.history.state === "room") {
         this.leaveRoom();
         $.event.trigger({
@@ -70,7 +68,7 @@ Lobby.prototype.setRoom = function(roomId, board, me, grid) {
     }
     
 }
-//TODO: move to lobby class
+
 Lobby.prototype.createRoom = function(self, e, isPrivate, bots, type) {
     globalConnect().createGame(isPrivate, bots, type);
 }

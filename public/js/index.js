@@ -85,7 +85,26 @@ function applyScreenName(form) {
 function facebookSend() {
     FB.ui({
         method : 'send',
-        name : 'Join me in a game of Multiversi',
-        link : lobby.room().shareUrl,
+        name : 'Multiversi',
+        description: 'Join me in a game of Multiversi: '+lobby.room().shareUrl,
+        link : lobby.room().shareUrl
     });
 }
+
+function twitterSend(){
+    var width  = 575,
+        height = 400,
+        left   = (window.innerWidth  - width)  / 2,
+        top    = (window.innerHeight - height) / 2,
+        url    = "https://twitter.com/share?text=Join me in a game of Multiversi&url="+lobby.room().shareUrl,
+        opts   = 'status=1' +
+                 ',width='  + width  +
+                 ',height=' + height +
+                 ',top='    + top    +
+                 ',left='   + left;
+
+    window.open(url, 'twitte', opts);
+
+    return false;
+}
+

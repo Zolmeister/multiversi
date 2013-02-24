@@ -99,7 +99,7 @@ button {
     background-color: red;
 }
 
-/* Don't change this. This is what makes the board SVG scale properly. */
+/* Makes SVG scale properly. */
 svg {
     width: 100%;
     height: 100%;
