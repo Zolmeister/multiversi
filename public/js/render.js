@@ -171,12 +171,17 @@ Render.prototype.setBoard = function(board) {
 
         var c = this.hexSpaceCenter(space[0], space[1]);
         var point = this.paper.circle(c.x, c.y, 18).attr({
+            "i": space[0],
+            "j": space[1],
             "stroke" : "",
             "fill" : "#FFB00F"
         });
 
         this.controlPointSet.push(point);
     }
+
+    this.controlPointSet.click(this.playerSpacesClickHandler);
+    this.controlPointSet.click(this.possibleMovesClickHandler);
     
     // Set starting position colors
     for (var i = 0; i < 3; i++) {
