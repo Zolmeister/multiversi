@@ -48,6 +48,8 @@ Input.prototype.defaultPlayerOnClick = function(space) {
             this.clickedSpace.j = space.j;
             this.possibleMoves = this.room.game().generateMoves(space);
         }
+    } else {
+        return;
     }
 
     this.room.renderer.setClickedSpace(this.clickedSpace);
