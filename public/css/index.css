@@ -189,6 +189,7 @@ svg {
 
 .player-turn {
     float: left;
+	margin: auto 2em auto auto;
 }
 .player-name {
     text-transform: none !important;

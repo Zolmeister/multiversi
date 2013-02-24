@@ -4,7 +4,7 @@ GAMETYPE = "pointcontrol";
 
 COLORS = [{
     name : "red",
-    color : "FF0017",
+    color : "#FF0017",
     activeColor : "#d66",
     possibleMoveColor : "#edd",
     strokeColor : "#000",
