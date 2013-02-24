@@ -66,41 +66,6 @@ body, button {
     background: url(/images/button_red.png);
 }
 
-.hex:before {
-    content: "";
-    width: 0;
-    height: 0;
-    left: 0px;
-    border-bottom: 55px solid #6C6;
-    border-left: 92px solid transparent;
-    border-right: 92px solid transparent;
-    position: absolute;
-    top: -55px;
-}
-
-.hex {
-    margin-top: 30px;
-    width: 184px;
-    height: 110px;
-    background-color: #6C6;
-    position: relative;
-    font-size: 22px;
-    text-align: center;
-    vertical-align: middle;
-    display: table-cell;
-}
-
-.hex:after {
-    content: "";
-    width: 0;
-    left: 0px;
-    position: absolute;
-    bottom: -55px;
-    border-top: 55px solid #6C6;
-    border-left: 92px solid transparent;
-    border-right: 92px solid transparent;
-}
-
 /* Waiting room */
 
 .waiting-room {
@@ -110,6 +75,9 @@ body, button {
     width: 500px;
 }
 
+.share-url {
+    text-transform: none;
+}
 
 /* Gameroom */
 

@@ -56,7 +56,7 @@
                 <div class="waiting-room" data-bind="visible: !started()">
                 	<p>Waiting for all three players...</p>
                 	<span>Share this link: </span>
-                	<div data-bind="text: shareUrl"></div>
+                	<div class="share-url" data-bind="text: shareUrl"></div>
                 	<br>
                 	<span>or invite on:</span>
                     <div class="social-buttons">

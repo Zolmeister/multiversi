@@ -33,7 +33,9 @@ function Lobby() {
             console.log("joining room: "+data.room);
             if (data.room && data.board && data.me) {
                 self.setRoom(data.room, data.board, data.me, data.grid);
-                self.room().update(data);
+                if(self.room()){
+                    self.room().update(data);
+                }
             }
         } else {
             self.room().update(data);
@@ -45,15 +47,28 @@ function Lobby() {
 }
 
 Lobby.prototype.setRoom = function(roomId, board, me, grid) {
-    if (window.history.state !== "room") {
+    console.log("SET ROOM: "+roomId)
+    console.log(window.history)
+    if (window.history.state === "room") {
+        this.leaveRoom();
         $.event.trigger({
             type: "pushstate",
             message: {state:"room"},
             time: new Date()
         });
-        window.history.pushState("room", "room", "/" + roomId)
+        window.history.replaceState("room", "room", "/" + roomId);
+        this.room(new Room(roomId, board, me, grid));
     }
-    this.room(new Room(roomId, board, me, grid));
+    if (window.history.state === "lobby") {
+        $.event.trigger({
+            type: "pushstate",
+            message: {state:"room"},
+            time: new Date()
+        });
+        window.history.pushState("room", "room", "/" + roomId);
+        this.room(new Room(roomId, board, me, grid));
+    }
+    
 }
 //TODO: move to lobby class
 Lobby.prototype.createRoom = function(self, e, isPrivate, bots, type) {
