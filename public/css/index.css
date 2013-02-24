@@ -15,12 +15,12 @@ body, button {
 /* HomePage View */
 #homePageView {
     width: 800px;
-    position:relative;
+	height: 600px;
+    position: relative;
     left: 50%;
-    margin-left: -400px;
-    padding-top: 30px;
+	top: 50%;
+    margin: -300px 0 0 -400px;
 }
-
 
 .home-buttons {
     float: left;
@@ -49,12 +49,12 @@ body, button {
 }
 
 .button-join {
-    background: url(/images/button_purple.png);
+    background: url(/images/button-purple.png);
 }
 
 .button-friends {
     margin-left: 3px;
-    background: url(/images/button_red.png);
+    background: url(/images/button-red.png);
 }
 
 
