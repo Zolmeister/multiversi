@@ -12,28 +12,20 @@ body, button {
     text-transform: uppercase;
 }
 
+/* HomePage View */
 #homePageView {
     width: 800px;
     position:relative;
-    left:50%;
+    left: 50%;
     margin-left: -400px;
     padding-top: 30px;
 }
 
-#roomView {
-    position:absolute;
-    left: 50%;
-    top: 100%;
-    width: 800px;
-    background: #fff;
-    padding: 0;
-    margin-left: -400px;
-    height: 100%;
-}
+
 .home-buttons {
     float: left;
-    margin-top: -224px;
-    margin-left: 300px;
+    margin-top: -229px;
+    margin-left: 294px;
     text-align: center;
 }
 
@@ -58,28 +50,26 @@ body, button {
 
 .button-join {
     background: url(/images/button_purple.png);
-    margin-top: 50px;
 }
 
 .button-friends {
-    margin-left:4px;
+    margin-left: 3px;
     background: url(/images/button_red.png);
 }
 
-/* Waiting room */
 
-.waiting-room {
-    font-weight: bold;
-    font-size: 2em;
-    float: right;
-    width: 500px;
+/* Room View */
+#roomView {
+    position:absolute;
+    /* left: 50%; */
+    top: 100%;
+    /* width: 800px; */
+    width: 100%;
+    background: #fff;
+    padding: 0;
+    /* margin-left: -400px; */
+    height: 100%;
 }
-
-.share-url {
-    text-transform: none;
-}
-
-/* Gameroom */
 
 button {
     margin-top: 40px;
@@ -88,61 +78,101 @@ button {
 
 .leave-room {
     display: block;
+    /* position: absolute; */
+    /* When the button overlaps the board, clicks won't be received unless the button
+     * has higher z-index. */
+    z-index: 2;
 }
 
-/* Game board and "pass" button */
-.gameboard{
+.main-content {
+    background-color: yellow;
+    float: left;
+    width: 56%;
+    left: 20%;
+
+    height: 100%;
+}
+
+.sidebar {
+    background-color: blue;
+    width: 44%;
+    float: left;
+}
+
+
+/* Main content */
+/* Waiting room */
+.waiting-room {
+    font-weight: bold;
+    font-size: 2em;
     float: right;
+    /* width: 500px; */
+}
+
+.share-url {
+    text-transform: none;
+}
+
+/* Game board */
+.gameboard{
+    width: 90%;
+    margin-left: 5%;
+    
+    background-color: orange;
 }
 
 #mv-canvas {
-    background-color: red;
 }
 
 /* Makes SVG scale properly. */
 svg {
     width: 100%;
-    height: 100%;
+    height: 70%;
+}
+
+
+/* Side bar  */
+/* Players box */
+.players{
+    height: 240px;
+    /* margin-top: 200px; */
+    /* margin-left: 20px; */
+    width: 66%;
+
+    background-color: purple;
+}
+
+.player {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    background-color: gray;
 }
 
 .pass-button {
     text-align: center;
-    width: 200px;
-    height: 40px;
+    width: 100%;
+    height: 20%;
     border: none;
     background: #000;
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-    float:right;
+    float: right;
     margin-top: 80px;
-}
-
-
-/* Players box */
-.players{
-    float:left;
-    height:240px;
-    margin-top: 200px;
-    margin-left: 20px;
-}
-.player {
-    font-size: 1em;
-    height: 33.3%;
-    text-align: center;
 }
 
 .waiting {
     float: none;
-    height: 100px;
-    margin-bottom: 60px;
-    margin-top: 60px;
+    /* height: 100px; */
+    /* margin-bottom: 60px; */
+    /* margin-top: 60px; */
 }
 
 .waiting .player{
-    float: left;
-    width: 33.3%;
-    height: 100%;
+    /* float: left; */
+    /* width: 33.3%; */
+    /* height: 25%; */
 }
 
 .player-name {
@@ -166,16 +196,17 @@ svg {
 }
 
 #chatBox {
-    /* float: left; */
     width: 170px;
     margin-right: -40px;
-    height: 200px;
+    height: 250px;
     font-size: 12px;
+
+    background-color: green;
 }
 
 .chat {
     width: 100%;
-    height: 100%;
+    height: 90%;
     background-color: #CCCCCC;
     overflow: auto;
 }

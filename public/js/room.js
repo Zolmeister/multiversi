@@ -64,6 +64,11 @@ Room.prototype.initRenderer = function() {
     this.renderer.setPlayers(this.players(), this.me());
     this.renderer.setBoard(this.game().board);
     this.renderer.setGrid(this.game().grid, this.game().board);
+
+    // This allows the board to scale properly
+    var svg = $("#mv-canvas svg")[0];
+    svg.removeAttribute("width");
+    svg.removeAttribute("height");
 }
 
 Room.prototype.selfDestruct = function(){

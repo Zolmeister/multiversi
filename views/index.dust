@@ -52,60 +52,69 @@
                 </div>
                 
             	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
-            	
-                <div class="waiting-room" data-bind="visible: !started()">
-                	<p>Waiting for all three players...</p>
-                	<span>Share this link: </span>
-                	<div class="share-url" data-bind="text: shareUrl"></div>
-                	<br>
-                	<span>or invite on:</span>
-                    <div class="social-buttons">
-                    <!-- twitter -->
-                    <button data-bind="click: twitterSend">Tweet</button>
-                    <!-- facebook -->
-                    <button data-bind="click: facebookSend">Facebook</button>
+
+                <div class="sidebar">
+                    <div class="admin-options" data-bind="if: iAmAdmin">
+                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
+                        <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                     </div>
-                </div>
+                    
+                    
+                    <div class="players">
+                        <div data-bind="foreach: players(), css: { waiting: !started() }">
+                            <div class="player">
 
-                <div class="gameboard" data-bind="visible: started()">
-                    <div id="mv-canvas"></div>
-                </div>
-
-                <div class="players" data-bind="foreach: players(), css: { waiting: !started() }">
-                    <div class="player">
-                        <div data-bind="if: removed()">Waiting...</div>
-                        <div data-bind="if: !removed()">
-                            <span class="turn-indicator" data-bind="if: ($root.started() && $root.currentPlayerId()!=id)">&#11041;</span>
-                            <span class="turn-indicator" data-bind="if: ($root.started() && $root.currentPlayerId()==id)">&#11042;</span>
-                            <span class="player-name" data-bind="text: name, style: {color: $parent.currentPlayerId()==id ? $parent.indexToColor($index()).activeColor : $parent.indexToColor($index()).color}"></span>
-                            <div data-bind="visible: $root.started()">
-                                <span class="player-score" data-bind="text: score"></span>
-                            </div>
-                            <div data-bind="visible: !$root.started() && $root.me()==id">
-                                <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                <div data-bind="if: removed()">Waiting...</div>
+                                <div data-bind="if: !removed()">
+                                    <span class="player-name" data-bind="text: name"></span>
+                                    <div data-bind="visible: $root.started()">
+                                        <span class="player-score" data-bind="text: score"></span>
+                                        
+                                        <span data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
+                                        <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
+                                    </div>
+                                    <div data-bind="visible: !$root.started() && $root.me()==id">
+                                        <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="pass-button" data-bind="visible: $root.started(), click: $root.passMove">Pass Turn</div>
+                    </div>
+                    
+                    <div id="chatBox">
+                        <div class="chat" id="chat"></div>
+                        <form data-bind="submit: globalConnect().sendChat">
+                            <input name="chat">
+                            <button type="submit">Send</button>
+                        </form>
                     </div>
                 </div>
                 
-                <div id="chatBox" data-bind="visible: started()">
-                    <div class="chat" id="chat"></div>
-                    <form data-bind="submit: globalConnect().sendChat">
-                        <input name="chat">
-                        <button type="submit">Send</button>
-                    </form>
+                <div class="main-content">
+                    <div class="waiting-room" data-bind="visible: !started()">
+                        <p>Waiting for all three players...</p>
+                        <span>Share this link: </span>
+                        <div class="share-url" data-bind="text: shareUrl"></div>
+                        <br>
+                        <span>or invite on:</span>
+                        <div class="social-buttons">
+                        <!-- twitter -->
+                        <button data-bind="click: twitterSend">Tweet</button>
+                        <!-- facebook -->
+                        <button data-bind="click: facebookSend">Facebook</button>
+                        </div>
+                    </div>
+
+                    <div class="gameboard" data-bind="visible: started()">
+                        <div id="mv-canvas"></div>
+                    </div>
                 </div>
-                
-                <div class="pass-button" data-bind="visible: started, click: $root.passMove">Pass Turn</div>
             
                 <div class="endgame" data-bind="visible: ended()">
                     GAME OVER, MOFO.<br />
                     Starting a new game soon. Excuse the language.<br />
                     <span data-bind="text: nextGameTimer()"></span>
-                </div>
-                <div class="admin-options" data-bind="if: iAmAdmin">
-                    <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
-                    <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
                 </div>
             </div>
         </div>
