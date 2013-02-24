@@ -181,7 +181,7 @@ svg {
     height: 32px;
 	float: left;
 	text-indent: -9999px;
-	margin: -3em auto auto;
+	margin: 0;
 	background: url(/images/edit.png);
 }
 
@@ -192,7 +192,6 @@ svg {
 	max-height: 30%;
 	margin: 0 0 4% 4%;
 	text-transform: none;
-	background-color: green;
 	bottom: 0;
 	float: left;
 	position: absolute;
@@ -248,6 +247,7 @@ svg {
 }
 
 #screenNameOverlay input {
+	text-transform: none;
 	width: 500px;
 	font-size: 2em;
 	padding: .5em;
