@@ -12,7 +12,7 @@ COLORS = [{
     strokePossibleMoveColor : "#000"
 }, {
     name : "green",
-    color : "#aca",
+    color : "#6DCF00",
     activeColor : "#6d6",
     possibleMoveColor : "#ded",
     strokeColor : "#000",
@@ -20,7 +20,7 @@ COLORS = [{
     strokePossibleMoveColor : "#000"
 }, {
     name : "blue",
-    color : "#aac",
+    color : "#8F00FF",
     activeColor : "#66d",
     possibleMoveColor : "#dde",
     strokeColor : "#000",
@@ -35,8 +35,8 @@ RENDER = {
     },
 
     // Space stroke widths
-    stroke : "1px",
-    strokeActive : "0px",
+    stroke : "0px",
+    strokeActive : "3px",
     strokePossibleMove : "0px",
 
     // For uncaptured spaces
