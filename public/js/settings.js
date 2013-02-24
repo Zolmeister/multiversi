@@ -35,13 +35,13 @@ RENDER = {
     },
 
     // Space stroke widths
-    stroke : "0px",
-    strokeActive : "3px",
-    strokePossibleMove : "0px",
+    stroke : "0",
+    strokeActive : "3",
+    strokePossibleMove : "1",
 
     // For uncaptured spaces
     strokeColor : "#000",
-    fillColor : "#fff",
+    fillColor : "#D4D4D4",
 
     nonJumpableStroke : "3px",
     nonJumpableColor : "#444",
