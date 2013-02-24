@@ -52,7 +52,6 @@
                 </div>
                 
             	<button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
-                
 
                 <div class="sidebar">
                     <div class="admin-options" data-bind="if: iAmAdmin">

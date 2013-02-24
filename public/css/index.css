@@ -97,8 +97,6 @@ button {
     background-color: blue;
     width: 44%;
     float: left;
-
-    height: 80%;
 }
 
 
@@ -118,7 +116,6 @@ button {
 /* Game board */
 .gameboard{
     width: 90%;
-    /* height: 70%; */
     margin-left: 5%;
     
     background-color: orange;
@@ -138,8 +135,8 @@ svg {
 /* Players box */
 .players{
     height: 240px;
-    margin-top: 200px;
-    margin-left: 20px;
+    /* margin-top: 200px; */
+    /* margin-left: 20px; */
     width: 66%;
 
     background-color: purple;
@@ -148,11 +145,7 @@ svg {
 .player {
     font-size: 1.5em;
     line-height: 1.5em;
-    height: 80%;
-    float: left;
-    width: 33.3%;
     text-align: center;
-
     background-color: gray;
 }
 
@@ -167,20 +160,19 @@ svg {
     font-weight: bold;
     float: right;
     margin-top: 80px;
-    bottom: 0px;
 }
 
 .waiting {
     float: none;
-    height: 100px;
-    margin-bottom: 60px;
-    margin-top: 60px;
+    /* height: 100px; */
+    /* margin-bottom: 60px; */
+    /* margin-top: 60px; */
 }
 
 .waiting .player{
-    float: left;
-    width: 33.3%;
-    height: 100%;
+    /* float: left; */
+    /* width: 33.3%; */
+    /* height: 25%; */
 }
 
 .player-name {
