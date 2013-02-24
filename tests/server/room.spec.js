@@ -13,7 +13,6 @@ for (var gametype in types) {
         it("has default properties", function() {
             expect( typeof room.id).toBe("string");
             expect(room.players instanceof Array).toBe(true);
-            expect(room.banned instanceof Array).toBe(true);
             expect( typeof room.board).toBe("object");
             expect(room.game instanceof Game).toBe(true);
             expect( typeof room.isPublic).toBe("boolean");

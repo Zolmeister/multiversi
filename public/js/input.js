@@ -29,6 +29,10 @@ var Input = function(room) {
 
 Input.prototype.defaultPlayerOnClick = function(space) {
 
+    if (this.room.ended()) {
+        return;
+    }
+
     if (this.room.currentPlayerId() !== this.room.me()) {
         console.log("not your turn")
         return;
@@ -44,6 +48,8 @@ Input.prototype.defaultPlayerOnClick = function(space) {
             this.clickedSpace.j = space.j;
             this.possibleMoves = this.room.game().generateMoves(space);
         }
+    } else {
+        return;
     }
 
     this.room.renderer.setClickedSpace(this.clickedSpace);

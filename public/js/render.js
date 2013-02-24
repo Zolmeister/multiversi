@@ -103,7 +103,8 @@ Render.prototype.setBoard = function(board) {
     this.lastBoard = board;
 
     var dim = this.getDimensions(board);
-    this.paper.setSize(dim.width, dim.height);
+    // this.paper.setSize(dim.width, dim.height);
+    this.paper.setViewBox(0, 0, dim.width, dim.height, true);
     
     this.spacesSet = this.paper.set();
     this.controlPointSet = this.paper.set();
@@ -115,7 +116,6 @@ Render.prototype.setBoard = function(board) {
     this.spaces = new Array(board.width);
 
     var hexPath = hexagonPathString(RENDER.hexShape.radius);
-    console.log(hexPath);
     
     for (var i = 0; i < board.width; i++) {
         this.spaces[i] = new Array(board.height);
@@ -171,12 +171,17 @@ Render.prototype.setBoard = function(board) {
 
         var c = this.hexSpaceCenter(space[0], space[1]);
         var point = this.paper.circle(c.x, c.y, 18).attr({
+            "i": space[0],
+            "j": space[1],
             "stroke" : "",
             "fill" : "#FFB00F"
         });
 
         this.controlPointSet.push(point);
     }
+
+    this.controlPointSet.click(this.playerSpacesClickHandler);
+    this.controlPointSet.click(this.possibleMovesClickHandler);
     
     // Set starting position colors
     for (var i = 0; i < 3; i++) {

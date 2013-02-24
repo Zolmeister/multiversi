@@ -8,7 +8,8 @@
  */
 var Room = function(id, board, me, grid) {
     var self = this;
-    
+    this.id = id;
+    this.shareUrl = "http://"+window.location.host+"/"+id;
     this.players = ko.observableArray(this.dummyPlayers());
     this.turn = ko.observable(-1);
     this.connect = globalConnect;
@@ -24,19 +25,10 @@ var Room = function(id, board, me, grid) {
     this.ended = ko.observable(false);
             
     //TODO: move these to lobby class
-    this.joinRoom = function(r) {
-        self.connect().join(r.roomId);
-    }
     this.iAmAdmin = ko.computed(function() {
         var me = self.getPlayer(self.me());
         return me ? me.isAdmin() : false;
     }, this)
-    this.kick = function(target) {
-        self.connect().roomAdmin("kick", target.id);
-    }
-    this.ban = function(target) {
-        self.connect().roomAdmin("ban", target.id);
-    }
     this.passMove = function() {
         this.move({
             start : "pass",
@@ -51,6 +43,16 @@ var Room = function(id, board, me, grid) {
         var player = self.players()[self.turn()];
         return player ? player.id : -1;
     }, this);
+
+    this.nextGameTimer = ko.observable(0);
+    this.nextGameStartTime = undefined;
+    this.nextGameTimerInterval = undefined;
+
+    this.nextGameTimerTick = function() {
+        if (self.nextGameStartTime) {
+            self.nextGameTimer(Math.round(Math.ceil(self.nextGameStartTime - Date.now()) / 1000));
+        }
+    }
 }
 
 Room.prototype.initRenderer = function() {
@@ -62,6 +64,11 @@ Room.prototype.initRenderer = function() {
     this.renderer.setPlayers(this.players(), this.me());
     this.renderer.setBoard(this.game().board);
     this.renderer.setGrid(this.game().grid, this.game().board);
+
+    // This allows the board to scale properly
+    var svg = $("#mv-canvas svg")[0];
+    svg.removeAttribute("width");
+    svg.removeAttribute("height");
 }
 
 Room.prototype.selfDestruct = function(){
@@ -116,12 +123,18 @@ Room.prototype.move = function(data) {
     }
 }
 
-Room.prototype.mergeScores = function(scores) {
-    var scoreDiff = scores
+Room.prototype.mergeScores = function(scoreDiff) {
     for (var s in scoreDiff) {
         if (this.getPlayer(s)) {
             this.getPlayer(s).score(this.getPlayer(s).score() + scoreDiff[s]);
         }
+    }
+    this.players.valueHasMutated();
+}
+
+Room.prototype.resetScores = function() {
+    for (var i in this.players()) {
+        this.players()[i].score(0);
     }
     this.players.valueHasMutated();
 }
@@ -131,13 +144,24 @@ Room.prototype.mergeScores = function(scores) {
  */
 Room.prototype.update = function(data) {
     for (var target in data) {
-        console.log(target + ": ");
-        console.log(data[target]);
-
         if (target === "started" && data[target] === true) {
             if (!this.started()) {
                 this.started(true);
                 this.initRenderer();
+
+                if (this.nextGrid) {
+                    this.renderer.setGrid(this.nextGrid, this.game().board);
+                    this.nextGrid = undefined;
+                }
+            }
+
+            if (this.nextGrid) {
+                this.renderer.setGrid(this.nextGrid, this.game().board);
+                this.nextGrid = undefined;
+            }
+
+            if (this.nextGameTimerInterval) {
+                window.clearInterval(this.nextGameTimerInterval);
             }
         }
         
@@ -160,8 +184,6 @@ Room.prototype.update = function(data) {
                     playerFromId = this.players()[i]().id;
                 }
                 
-                console.log("Replace player: " + playerFromId + " to " + player.id);
-
                 if (playerFromId !== player.id) {
                     this.game().replacePlayer(playerFromId, player.id);
                     if (this.renderer) {
@@ -180,28 +202,45 @@ Room.prototype.update = function(data) {
 
         if (target === "isPublic") {
             this.isPublic(data[target]);
-            console.log("SETTING PUBLIC STATUS:")
-            console.log(data[target])
         }
         
-        if (target === "grid") {
-            console.log("update grid state");
+        if (target === "grid" && !this.ended()) {
             var grid = data[target];
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
                 if (this.renderer) {
-                    this.renderer.setGrid(grid, this.game().board);
+                    if (this.started()) {
+                        this.renderer.setGrid(grid, this.game().board);
+                    } else {
+                        this.nextGrid = grid;
+                    }
                 }
 
             } else {
-                console.error("havent recieved board")
+                console.error("haven't recieved board")
             }
         }
 
         if (target === "end") {
             this.ended(true);
-
             console.log("game ended");
+        }
+
+        if (target === "newGameBoard") {
+            this.ended(false);
+            this.started(false);
+            this.selfDestruct();
+            this.game = ko.observable(new Game(this.players(), data[target]));
+        }
+
+        if (target === "timer") {
+            if (data[target] === false) {
+                this.nextGameStartTime = undefined;
+            } else {
+                this.nextGameStartTime = Date.now() + 1000 * data[target];
+                this.nextGameTimerInterval = window.setInterval(this.nextGameTimerTick, 1000);
+                this.nextGameTimerTick();
+            }
         }
     }
 }

@@ -1,182 +1,234 @@
 @import url(http://fonts.googleapis.com/css?family=Archivo+Black);
 
-
+/* Globals */
 body, html {
-	padding: 0;
-	margin: 0;
+    padding: 0;
+    margin: 0;
+    height: 100%;
 }
 
-body, button {
-	font-family: 'Avenir Next', 'Archivo Black', sans-serif;
-	text-transform: uppercase;
+body, button, input {
+    font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+	font-size: 16px;
+	border: none;
 }
 
-button:active {
-	background: #000;
+/* HomePage View */
+#homePageView {
+    width: 800px;
+	height: 600px;
+    position: relative;
+    left: 53%;
+	top: 50%;
+    margin: -300px 0 0 -400px;
 }
 
-h1 {
-	display: none;
+.home-buttons {
+    float: left;
+    margin-top: -229px;
+    margin-left: 294px;
+    text-align: center;
 }
 
-.logo {
-	width: 500px;
-	padding-left: 50%;
-	margin-left: -250px;
+.home-button {
+    float: right;
+    font-weight: bold;
+    font-size: 2em;
+    border: none;
+    color: #fff;
+    width: 192px;
+    height: 223px;
+}
+
+.home-button span {
+    width: inherit;
+    height: inherit;
+    line-height: 1.2em;
+    position: relative;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 .button-join {
-	background: url(/images/button_purple.png);
-	margin-right: 4px;
+    background: url(/images/button-purple.png);
 }
 
 .button-friends {
-	background: url(/images/button_red.png);
-}
-
-.homeButtons {
-	margin: -228px 0 0 294px;
-}
-
-.homeButtons button {
-	font-weight: bold;
-	font-size: 2em;
-	border: none;
-	color: #fff;
-	width: 192px;
-	height: 223px;
-}
-
-#homePageView {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.container {
-    padding-top: 25%;
-    margin: -282px 0 0 -341px;
-    width: 682px;
-    height: 564px;
-    padding-left: 50%;
-
+    margin-left: 4px;
+    background: url(/images/button-red.png);
 }
 
 
-/* Waiting room */
-
-.waiting-room {
-	float: right;
-	width: 40%;
-	height: 60%;
-	margin: 10% 20% 0 0;
-	font-weight: bold;
-	font-size: 2em;
-}
-
-
-/* Gameroom */
-
+/* Room View */
 #roomView {
     position: absolute;
+    /* left: 50%; */
+    top: 100%;
+    /* width: 800px; */
     width: 100%;
-    height: 100%;
     background: #fff;
-    margin: 0;
     padding: 0;
+    /* margin-left: -400px; */
+    height: 100%;
 }
 
 .leave-room {
-	background: url(/images/leave.png);
-	border: none;
-	width: 64px;
-	height: 64px;
-	margin: 50px;
-	text-indent: -9999px;
+    display: block;
+	width: 50px;
+	height: 50px;
+	top: 20px;
+	left: 20px;
+	background: url(/images/leave-room.png);
+	/* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
+	text-indent: -1000%;
+    /* When the button overlaps the board, clicks won't be received unless the button has higher z-index. */
+    z-index: 2;
+}
+
+.main-content {
+    float: right;
+    width: 56%;
+	padding: auto 20% auto;
+    height: 100%;
 }
 
 
-/* Game board and "pass" button */
-.gameboard {
-	float: right;
-	width: 60%;
-	height: 60%;
-	margin: 10% 0;
+/* Main content */
+/* Waiting room */
+.waiting-room {
+    font-size: 2em;
+    float: left;
+	height: 100%;/
+	
+    /* width: 500px; */
 }
 
-.pass-button {
-	width: 60%;
-	height: 20%;
-	margin: 0 20%;
-	border: none;
-	background: #000;
-	color: #fff;
-	font-size: 1.5em;
+.share-url {
+	padding: .5em;
+	margin: .5em .5em .5em -.5em;
+	background: #eee;
 	font-weight: bold;
+    text-transform: none;
+}
+
+/* Game board */
+.gameboard {
+    width: 90%;
+}
+
+#mv-canvas {
+}
+
+/* Makes SVG scale properly. */
+svg {
+    width: 100%;
+    height: 100%;
 }
 
 
 /* Players box */
-
 .players {
-	height: 300px;
-	width: 30%;
-	position: absolute;
-	top: 50%;
-	margin: -150px 0 0 50px;
+	float: left;
+    width: 32%;
+	margin: 10% 4% 0;
+	height: 50%;
+	position: relative;
+	z-index: 3;
 }
 
 .player {
-	font-size: 1.5em;
-	line-height: 1.5em;
+    font-size: 1.5em;
+    line-height: 2em;
+    text-align: center;
+	background: #fff;
+}
+
+.pass-button {
+    text-align: center;
+    width: 100%;
+	padding: .5em 0;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.waiting {
+    float: none;
+    /* height: 100px; */
+    /* margin-bottom: 60px; */
+    /* margin-top: 60px; */
+}
+
+.player-turn {
     float: left;
-	width: 33.3%;
-	height: 80%;
-	margin: 0;
-	text-align: center;
 }
-
-.player span {
-	display: block;
-}
-
 .player-name {
-	text-transform: none !important;
-	font-weight: bold;
+    text-transform: none !important;
+    font-weight: bold;
 }
-
-#player1 .player-name { color: red; }
-#player2 .player-name { color: green; }
-#player3 .player-name { color: purple; }
+.player-score {
+	float: right;
+}
 
 .change-name {
-	width: 100%;
-	height: 30%;
-	border: none;
-	background: none;
-	text-decoration: underline;
-	font-size: .75em;
-	font-weight: bold;
+    width: 32px;
+    height: 32px;
+	float: left;
+	text-indent: -9999px;
+	margin: 0;
+	background: url(/images/edit.png);
 }
 
-
-
-
-
-
-
-
+/* Chat */
 #chatBox {
-    float: right;
-    display: none;
+    width: 32%;
+	height: 30%;
+	max-height: 30%;
+	margin: 0 0 4% 4%;
+	text-transform: none;
+	bottom: 0;
+	float: left;
+	position: absolute;
+	z-index: 1;
 }
 
-.chat {
-    width: 200px;
-    height: 200px;
-    background-color: #CCCCCC;
-    overflow-y: scroll;
+.chat-text {
+	display: block;
+	height: 100%;
+    width: 100%;
+	margin: 0; padding: 0;
+    overflow: scroll;	
+	border: none;
+	box-shadow: none;
+}
+
+.chat-form {
+	display: block;
+	min-height: 50px;
+	margin: 0;
+}
+
+#chatBox input {
+	text-transform: none;
+	font-size: 1em;
+	margin: 0;
+	padding: .25em 0;
+    width: 80%;
+	border: solid black;
+	border-width: 0 0 2px 0;
+}
+
+#chatBox button {
+	width: 20%;
+	padding: .25em 0;
+	margin: 0;
+	background: #000;
+	color: #fff;
+	border: solid black;
+	border-width: 0 0 2px 0;
 }
 
 #screenNameOverlay {
@@ -184,19 +236,30 @@ h1 {
     position: fixed;
     left: 0;
     top: 0;
+	padding: 20% 0 0;
     width: 100%;
     height: 100%;
     text-align: center;
     z-index: 200;
-    background-color: #000;
-    opacity: 0.9;
+    background-color: rgba(255, 255, 255, .9);
 }
 
-#screenNameOverlay div {
-    width:300px;
-    margin: 100px auto;
-    background-color: #fff;
-    border: 1px solid #000;
-    padding: 15px;
-    text-align:center;
+#screenNameOverlay input {
+	text-transform: none;
+	width: 500px;
+	font-size: 2em;
+	padding: .5em;
+	border: solid black;
+	border-width: 0 0 2px 0;
+	background: rgba(255, 255, 255, 0);
+}
+
+#screenNameOverlay button {
+	font-weight: bold;
+	font-size: 2em;
+	padding: .5em;
+	border: solid black;
+	border-width: 0 0 2px 0;
+	background: #000;
+	color: #fff;
 }
