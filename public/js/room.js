@@ -144,6 +144,11 @@ Room.prototype.update = function(data) {
                 this.initRenderer();
             }
 
+            if (this.nextGrid) {
+                this.renderer.setGrid(this.nextGrid, this.game().board);
+                this.nextGrid = undefined;
+            }
+
             if (this.nextGameTimerInterval) {
                 window.clearInterval(this.nextGameTimerInterval);
             }
@@ -193,7 +198,11 @@ Room.prototype.update = function(data) {
             if (this.game()) { //if have recieved board
                 this.game().setGrid(grid);
                 if (this.renderer) {
-                    this.renderer.setGrid(grid, this.game().board);
+                    if (this.started()) {
+                        this.renderer.setGrid(grid, this.game().board);
+                    } else {
+                        this.nextGrid = grid;
+                    }
                 }
 
             } else {
