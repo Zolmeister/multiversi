@@ -87,7 +87,6 @@ body, button, input {
 }
 
 .main-content {
-    background-color: yellow;
     float: right;
     width: 56%;
 	padding: auto 20% auto;
@@ -116,7 +115,6 @@ body, button, input {
 /* Game board */
 .gameboard {
     width: 90%;
-    background-color: orange;
 }
 
 #mv-canvas {
@@ -137,7 +135,6 @@ svg {
 	height: 50%;
 	position: relative;
 	z-index: 3;
-	background-color: purple;
 }
 
 .player {
@@ -204,6 +201,8 @@ svg {
     width: 100%;
 	margin: 0; padding: 0;
     overflow: scroll;	
+	border: none;
+	box-shadow: none;
 }
 
 .chat-form {
@@ -220,7 +219,6 @@ svg {
     width: 80%;
 	border: solid black;
 	border-width: 0 0 2px 0;
-	background: red;
 }
 
 #chatBox button {
