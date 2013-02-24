@@ -75,9 +75,6 @@
                                         <span data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
                                         <span data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
                                     </div>
-                                    <div data-bind="visible: !$root.started() && $root.me()==id">
-                                        <button class="change-name" onClick="openScreenNameOverlay()">Change</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
