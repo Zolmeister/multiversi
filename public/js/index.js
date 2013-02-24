@@ -7,7 +7,7 @@ $(function() {
             $("#roomView").show()
             $("#roomView").stop().animate({
                 top : "0%"
-            }, 1000, function(){
+            }, 500, function(){
                 $("body").css({overflow: "auto"})
             })
             $("#homePageView").stop().fadeOut();
@@ -15,7 +15,7 @@ $(function() {
             $("body").css({overflow: "hidden"})
             $("#roomView").stop().animate({
                 top : "100%"
-            }, 1000, function() {
+            }, 300, function() {
                 lobby.leaveRoom()
                 $("#roomView").hide()
                 $("body").css({overflow: "auto"})
