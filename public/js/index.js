@@ -1,32 +1,30 @@
 $(function() {
-
+    $("#roomView").hide()
     var windowEvent = function(e) {
         if (e.state === "room") {
+            console.log("room state, animating")
+            $("body").css({overflow: "hidden"})
+            $("#roomView").show()
             $("#roomView").stop().animate({
                 top : "0%"
-            }, 1000)
+            }, 1000, function(){
+                $("body").css({overflow: "auto"})
+            })
             $("#homePageView").stop().fadeOut();
         } else if (e.state === "lobby") {
+            $("body").css({overflow: "hidden"})
             $("#roomView").stop().animate({
                 top : "100%"
             }, 1000, function() {
                 lobby.leaveRoom()
+                $("#roomView").hide()
+                $("body").css({overflow: "auto"})
             })
+            
             $("#homePageView").stop().fadeIn();
         }
     }
-    window.history.onpushstate = windowEvent;
 
-    var pushState = window.history.pushState;
-
-    window.history.pushState = function(state) {
-        if ( typeof window.history.onpushstate == "function") {
-            window.history.onpushstate({
-                state : state
-            });
-        }
-        return pushState.apply(window.history, arguments);
-    }
     globalConnect = ko.observable(new Connect());
     lobby = new Lobby();
     if (lobby.dynamicJoin) {
@@ -38,7 +36,9 @@ $(function() {
     ko.applyBindings(lobby, $("#homePageView")[0]);
 
     window.addEventListener('popstate', windowEvent);
-    window.addEventListener('pushstate', windowEvent);
+    $(document).on('pushstate', function(e) {
+        windowEvent(e.message)
+    });
 
     FB.init({
         appId : '128568713986892',

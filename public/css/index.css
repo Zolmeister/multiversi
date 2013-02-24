@@ -11,29 +11,24 @@ body, button {
     font-family: 'Avenir Next', 'Archivo Black', sans-serif;
     text-transform: uppercase;
 }
-.center{
-    margin: 0px auto;
-    width: 800px;
-    height: 100%;
-    margin-top:30px;
-}
+
 #homePageView {
     width: 800px;
-    position: absolute;
+    position:relative;
     left:50%;
     margin-left: -400px;
+    padding-top: 30px;
 }
 
 #roomView {
-    position: absolute;
+    position:absolute;
     left: 50%;
     top: 100%;
     width: 800px;
-    height: 100%;
     background: #fff;
     padding: 0;
-    margin-bottom: 120px;
     margin-left: -400px;
+    height: 100%;
 }
 .home-buttons {
     float: left;

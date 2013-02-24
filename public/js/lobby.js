@@ -10,6 +10,7 @@ function Lobby() {
     }
 
     this.windowEvent = function(e) {
+        console.log(e)
         var inRoom = self.inRoom();
 
         if (e.state === "lobby" && !inRoom) {
@@ -46,6 +47,13 @@ function Lobby() {
 
 Lobby.prototype.setRoom = function(roomId, board, me, grid) {
     if (window.history.state !== "room") {
+        console.log("STATERERERER")
+        //$.event.trigger("pushstate", {state:"room"})
+        $.event.trigger({
+            type: "pushstate",
+            message: {state:"room"},
+            time: new Date()
+        });
         window.history.pushState("room", "room", "/" + roomId)
     }
     this.room(new Room(roomId, board, me, grid));
