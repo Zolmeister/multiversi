@@ -29,7 +29,7 @@ function isInt(n) {
     return typeof n === "number" && parseFloat(n) == parseInt(n, 10) && !isNaN(n);
 }
 
-var roomCnt = Math.floor(Math.random()*10000)+10000;
+var roomCnt = Math.floor(Math.random()*10)+100;
 var nums = []
 var letters = []
 for (var i = 0; i<62; i++){
@@ -56,22 +56,26 @@ function shuffle(array) {
 
     return array;
 }
-shuffle(letters)
-
+shuffle(letters);
+function randomLetter(){
+    var index = Math.floor(Math.random()*letters.length);
+    return letters[index];
+}
 function nextRoomId() {
-    tmp = roomCnt
-    digits=[]
+    tmp = roomCnt;
+    digits=[];
     while(tmp>0){
-        remainder = tmp%62
-        digits.push(remainder)
-        tmp/=62
-        tmp=Math.floor(tmp)
+        remainder = tmp%62;
+        digits.push(remainder);
+        tmp/=62;
+        tmp=Math.floor(tmp);
     }
     
-    roomCnt++
+    roomCnt++;
     digits = digits.map(function(x){
-        return letters[nums.indexOf(x)]
+        return letters[nums.indexOf(x)];
     })
+    digits.unshift(randomLetter(), randomLetter());
     return digits.join("");
 }
 
