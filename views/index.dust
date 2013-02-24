@@ -63,10 +63,12 @@
                     <div class="players">
                         <div data-bind="foreach: players(), css: { waiting: !started() }">
                             <div class="player">
-
                                 <div data-bind="if: removed()">Waiting...</div>
                                 <div data-bind="if: !removed()">
                                     <span class="player-name" data-bind="text: name"></span>
+                                    <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">
+                                        ✎
+                                    </span>
                                     <div data-bind="visible: $root.started()">
                                         <span class="player-score" data-bind="text: score"></span>
                                         

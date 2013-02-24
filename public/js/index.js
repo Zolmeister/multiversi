@@ -65,10 +65,11 @@ function clickInviteFriends() {
 }
 
 function clickLeaveRoom() {
-    window.history.back()
+    window.history.back();
 }
 
 function openScreenNameOverlay() {
+    $("#screenNameInput").val(localStorage.name);
     $("#screenNameOverlay").show();
 }
 
@@ -103,7 +104,7 @@ function twitterSend(){
                  ',top='    + top    +
                  ',left='   + left;
 
-    window.open(url, 'twitte', opts);
+    window.open(url, 'twitter', opts);
 
     return false;
 }
