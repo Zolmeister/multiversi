@@ -64,8 +64,10 @@
                         <div class="player">
                             <div data-bind="if: removed()"><span class="waiting">Waiting...</span></div>
                             <div data-bind="if: !removed()">
-                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
-                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
+                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()!=id,
+                                    style: {'color': $parent.indexToColor($index()).activeColor}">&#11041;</span>
+                                <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id,
+                                    style: {'color': $parent.indexToColor($index()).activeColor}">&#11042;</span>
                                 <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">✎</span>
                                 <span class="player-name" data-bind="text: name"></span>
                                 <span class="player-score" data-bind="text: score, visible: $root.started()"></span>
