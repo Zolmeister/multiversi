@@ -267,7 +267,6 @@ Room.prototype.move = function(data, player, callback) {
     } else {
 
         // Next turn
-        // this.botMove();
         var self = this;
         setTimeout(function() { self.botMove(self); }, 500 + Math.ceil(Math.random() * 1000));
     }
@@ -328,7 +327,7 @@ Room.prototype.newGame = function(self) {
     if (settings.DEBUG && settings.BOARD) {
         self.board = util.getBoardFile(settings.BOARD);
     } else {
-        self.board = util.getBoard("pointcontrol");
+        self.board = util.getBoard("pointcontrol", self.board);
     }
     self.game = new Game(self.players, self.board);
 
