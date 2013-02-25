@@ -174,7 +174,7 @@ Render.prototype.setBoard = function(board) {
             "i": space[0],
             "j": space[1],
             "stroke" : "#000",
-			"strokeWidth" : "10px",
+			"stroke-width" : "5",
             "fill" : "#fff"
         });
 
