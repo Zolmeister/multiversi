@@ -68,6 +68,14 @@ function clickLeaveRoom() {
     window.history.back();
 }
 
+function addBot() {
+    globalConnect().roomAdmin("addBot", "");
+}
+
+function startGame(){
+    globalConnect().roomAdmin("start", "")
+}
+
 function openScreenNameOverlay() {
     $("#screenNameInput").val(localStorage.name);
     $("#screenNameOverlay").show();

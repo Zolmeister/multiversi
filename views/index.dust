@@ -52,11 +52,11 @@
                 </div>
                 
 				<div class="left-block">
-				    <button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
+				    <button class="leave-room" data-bind="click: clickLeaveRoom">Leave Room</button>
                     
                     <div class="admin-options" data-bind="if: iAmAdmin">
-                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
-                        <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
+                        <button data-bind="visible: !started(), click: addBot">Add a bot</button>
+                        <button data-bind="visible: !isPublic(), click: startGame">Start Game</button>
                     </div>
                         
                     <div class="players">
@@ -69,7 +69,9 @@
                                     <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id,
                                         style: {'color': $parent.indexToColor($index()).activeColor}">&#11042;</span>
                                     <span class="player-name">
-                                        <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">✎</span>
+                                        <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">
+                                            <div class="pencil"></div>
+                                        </span>
                                         <span data-bind="text: name"></span>
                                     </span>
                                     <span class="player-score" data-bind="text: score, visible: $root.started()"></span>
