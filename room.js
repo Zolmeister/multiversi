@@ -267,7 +267,9 @@ Room.prototype.move = function(data, player, callback) {
     } else {
 
         // Next turn
-        this.botMove();
+        // this.botMove();
+        var self = this;
+        setTimeout(function() { self.botMove(self); }, 500 + Math.ceil(Math.random() * 1000));
     }
 }
 /*
@@ -301,11 +303,14 @@ Room.prototype.addBot = function() {
     });
 }
 
-Room.prototype.botMove = function() {
-    var curPlayer = this.players[this.turn];
+Room.prototype.botMove = function(self) {
+    if (!self) {
+        self = this;
+    }
+    var curPlayer = self.players[self.turn];
     if (curPlayer.bot && !curPlayer.removed) {
-        var move = curPlayer.nextMove(util.deepCopy(this.game.grid));
-        this.move(move, curPlayer);
+        var move = curPlayer.nextMove(util.deepCopy(self.game.grid));
+        self.move(move, curPlayer);
     }
 }
 
