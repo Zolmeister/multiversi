@@ -29,7 +29,7 @@ button {
  
 ::-webkit-scrollbar-thumb {
     border-radius: 2px;
-    background-color: #000;
+    background-color: #111;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 
@@ -156,7 +156,7 @@ button {
 
 .admin-options button {
     font-weight: bold;
-    background: #000;
+    background: #111;
     color: #fff;
     width: 50%;
     padding: 1em 0;
@@ -196,7 +196,7 @@ svg {
     text-align: center;
     width: 100%;
     border: none;
-    background: #000;
+    background: #111;
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
@@ -309,7 +309,7 @@ svg {
     width: 20%;
     padding: .25em 0;
     margin: 0;
-    background: #000;
+    background: #111;
     color: #fff;
     border: solid black;
     border-width: 0 0 1px 0;
@@ -344,6 +344,6 @@ svg {
     padding: .5em;
     border: solid black;
     border-width: 0 0 2px 0;
-    background: #000;
+    background: #111;
     color: #fff;
 }
