@@ -62,6 +62,7 @@ body, button, input {
 
 /* Room View */
 #roomView {
+    position: relative;
     top: 100%;
     width: 90%;
     margin: 0px auto;
@@ -211,7 +212,6 @@ svg {
     height: 30%;
     text-transform: none;
     bottom: 0;
-    float: left;
     z-index: 1;
 }
 
