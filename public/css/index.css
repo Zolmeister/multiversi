@@ -64,7 +64,7 @@ body, button, input {
 #roomView {
     position: relative;
     top: 100%;
-    width: 90%;
+    width: 95%;
     margin: 0px auto;
     background: #fff;
     padding: 0;
@@ -76,7 +76,7 @@ body, button, input {
     width: 50px;
     height: 50px;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-left: -15%;
     background: url(/images/leave-room.png);
     /* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
     text-indent: -1000%;
@@ -93,8 +93,11 @@ body, button, input {
 
 .left-block {
     float: left;
-    width: 44%;
+    position: relative;
+    width: 35%;
     height: 100%;
+    margin-left: 5%;
+    padding-right: -10px;
 }
 
 
@@ -102,7 +105,7 @@ body, button, input {
 .waiting-room {
     font-size: 2em;
     float: left;
-    margin-top: 140px;
+    margin-top: 20%;
 }
 
 .share-url {
@@ -125,8 +128,9 @@ body, button, input {
 
 .admin-options {
     float: left;
-    width: 32%;
-    margin: 2em 4% 0;
+    width: 100%;
+    margin-left: 2em;
+    margin-top: 1%;
     position: absolute;
 }
 
@@ -152,14 +156,13 @@ svg {
 
 /* Players box */
 .players {
-    float: left;
-    width: 32%;
+    width: 100%;
     min-width: 200px;
-    margin-top: 120px;
-    margin-left: 120px;
-    height: 40%;
+    margin-top: 20%;
     position: relative;
-    z-index: 3;
+    z-index: 10000;
+    padding-bottom: 10px;
+    background-color: #FFF;
 }
 
 .player {
@@ -177,58 +180,77 @@ svg {
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-    margin-top: 1.5em;
+    height: 50px;
+    line-height: 50px;
+    pad-top: 10px;
+    position: relative;
+    z-index: 10000;
+}
+
+.pass-text {
+    display:table-cell;
+    vertical-align: middle;
 }
 
 .player-turn {
-    margin-left: -40px;
     position: absolute;
 }
 .player-name {
     text-transform: none !important;
     font-weight: bold;
     display:inline-block;
-    width: 200px;
+    width: 100%;
     max-height: 50px;
     line-height: 20px;
     word-wrap: break-word;
 }
 .player-score {
     position: absolute;
+    margin-left: -.5em;
 }
-
+.endgame{
+    position: absolute;
+    top: 100px;
+    font-size: 20px;
+    text-align: center;
+    width:100%;
+}
 .change-name {
     width: 26px;
     height: 26px;
     display:inline;
-    margin-right: 4px;
+    margin-right: 20px;
     margin-left:-26px;
 }
 
 /* Chat */
 #chatBox {
-    width: 32%;
-    min-width: 320px;
-    height: 30%;
+    width: 99.9%;
     text-transform: none;
-    bottom: 0;
-    z-index: 1;
+    bottom: 60px;
+    z-index: 100;
+    position: absolute;
+    height: 20%;
 }
 
 .chat-text {
     display: block;
-    height: 100%;
     width: 100%;
     margin: 0; padding: 0;
     overflow: auto; 
     border: none;
     box-shadow: none;
+    height: 100%;
+    position: absolute;
+    bottom: 40px;
 }
 
 .chat-form {
     display: block;
-    min-height: 50px;
     margin: 0;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
 }
 
 #chatBox input {
@@ -251,6 +273,8 @@ svg {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
     height: 20px;
     width: 100%;
+    z-index: 1000;
+    position: absolute;
 }
 
 #chatBox button {
@@ -272,7 +296,7 @@ svg {
     width: 100%;
     height: 100%;
     text-align: center;
-    z-index: 200;
+    z-index: 20000;
     background-color: rgba(255, 255, 255, .9);
 }
 
