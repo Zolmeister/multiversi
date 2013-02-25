@@ -222,10 +222,10 @@ svg {
     width: 99.9%;
     min-width: 320px;
     text-transform: none;
-    bottom: 40px;
+    bottom: 60px;
     z-index: 100;
     position: absolute;
-    height: 60%;
+    height: 30%;
 }
 
 .chat-text {
