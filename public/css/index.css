@@ -102,7 +102,7 @@ body, button, input {
 .waiting-room {
     font-size: 2em;
     float: left;
-    margin-top: 140px;
+    margin-top: 20%;
 }
 
 .share-url {
@@ -126,7 +126,8 @@ body, button, input {
 .admin-options {
     float: left;
     width: 32%;
-    margin: 2em 4% 0;
+    margin-left: 2em;
+    margin-top: 1%;
     position: absolute;
 }
 
@@ -155,7 +156,7 @@ svg {
     float: left;
     width: 32%;
     min-width: 200px;
-    margin-top: 120px;
+    margin-top: 20%;
     margin-left: 120px;
     height: 40%;
     position: relative;
@@ -227,7 +228,6 @@ svg {
 
 .chat-form {
     display: block;
-    min-height: 50px;
     margin: 0;
 }
 
