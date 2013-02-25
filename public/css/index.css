@@ -14,6 +14,10 @@ body, button, input {
     border: none;
 }
 
+button {
+    cursor: pointer;
+}
+
 /* HomePage View */
 #homePageView {
     width: 800px;
@@ -29,6 +33,7 @@ body, button, input {
     margin-top: -228px;
     margin-left: 294px;
     text-align: center;
+    cursor: pointer;
 }
 
 .home-button {
@@ -185,6 +190,7 @@ svg {
     pad-top: 10px;
     position: relative;
     z-index: 10000;
+    cursor: pointer;
 }
 
 .pass-text {
@@ -221,6 +227,7 @@ svg {
     display:inline;
     margin-right: 20px;
     margin-left:-26px;
+    cursor: pointer;
 }
 
 /* Chat */
