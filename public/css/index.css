@@ -221,11 +221,11 @@ svg {
 #chatBox {
     width: 99.9%;
     min-width: 320px;
-    height: 64%;
     text-transform: none;
     bottom: 40px;
     z-index: 100;
     position: absolute;
+    height: 60%;
 }
 
 .chat-text {
@@ -235,6 +235,7 @@ svg {
     overflow: auto; 
     border: none;
     box-shadow: none;
+    height: 100%;
 }
 
 .chat-form {
