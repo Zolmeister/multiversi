@@ -76,7 +76,7 @@ body, button, input {
     width: 50px;
     height: 50px;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-left: -40px;
     background: url(/images/leave-room.png);
     /* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
     text-indent: -1000%;
@@ -93,8 +93,10 @@ body, button, input {
 
 .left-block {
     float: left;
-    width: 44%;
+    width: 35%;
     height: 100%;
+    margin-left: 5%;
+    padding-right: -10px;
 }
 
 
@@ -153,10 +155,9 @@ svg {
 
 /* Players box */
 .players {
-    width: 70%;
+    width: 100%;
     min-width: 200px;
     margin-top: 20%;
-    left: 20%;
     position: relative;
     z-index: 3;
 }
@@ -170,17 +171,22 @@ svg {
 
 .pass-button {
     text-align: center;
-    width: 90%;
+    width: 100%;
     border: none;
     background: #000;
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-    margin-left: 5%;
+    height: 50px;
+    line-height: 50px;
+}
+
+.pass-text {
+    display:table-cell;
+    vertical-align: middle;
 }
 
 .player-turn {
-    margin-left: -60px;
     position: absolute;
 }
 .player-name {
@@ -194,6 +200,7 @@ svg {
 }
 .player-score {
     position: absolute;
+    margin-left: -.5em;
 }
 
 .change-name {
@@ -206,7 +213,7 @@ svg {
 
 /* Chat */
 #chatBox {
-    width: 70%;
+    width: 100%;
     min-width: 320px;
     height: 30%;
     text-transform: none;

@@ -77,7 +77,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pass-button" data-bind="visible: $root.started(), click: $root.passMove">Pass Turn</div>
+                    <div class="pass-button" data-bind="visible: $root.started(), click: $root.passMove">
+                        Pass Turn
+                    </div>
                     <div class="endgame" data-bind="visible: ended()">
                         New game in <span data-bind="text: nextGameTimer()"></span> seconds.
                     </div>
@@ -92,6 +94,7 @@
                         </form>
                     </div>
                 </div>
+                
                 <div class="right-block">
                     <div class="waiting-room" data-bind="visible: !started()">
                         <p>Waiting for all three players...</p>
