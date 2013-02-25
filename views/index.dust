@@ -52,11 +52,11 @@
                 </div>
                 
 				<div class="left-block">
-				    <button class="leave-room" onClick="clickLeaveRoom()">Leave Room</button>
+				    <button class="leave-room" data-bind="click: clickLeaveRoom">Leave Room</button>
                     
                     <div class="admin-options" data-bind="if: iAmAdmin">
-                        <button data-bind="visible: !started()" onClick='globalConnect().roomAdmin("addBot", "")'>Add a bot</button>
-                        <button onClick='globalConnect().roomAdmin("start", "")' data-bind="visible: !isPublic()">Start Game</button>
+                        <button data-bind="visible: !started(), click: addBot">Add a bot</button>
+                        <button data-bind="visible: !isPublic(), click: startGame">Start Game</button>
                     </div>
                         
                     <div class="players">
