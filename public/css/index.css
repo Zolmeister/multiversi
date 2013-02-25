@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Archivo+Black);
+@import url(http://fonts.googleapis.com/css?family=Karla:400,700);
 
 /* Globals */
 body, html {
@@ -8,25 +8,25 @@ body, html {
 }
 
 body, button, input {
-    font-family: 'Avenir Next', 'Archivo Black', sans-serif;
+    font-family: 'Karla', 'Avenir Next', Futura, Helvetica, Arial, sans-serif;
     text-transform: uppercase;
-	font-size: 16px;
-	border: none;
+    font-size: 16px;
+    border: none;
 }
 
 /* HomePage View */
 #homePageView {
     width: 800px;
-	height: 600px;
+    height: 600px;
     position: relative;
     left: 53%;
-	top: 50%;
+    top: 45%;
     margin: -300px 0 0 -400px;
 }
 
 .home-buttons {
     float: left;
-    margin-top: -229px;
+    margin-top: -228px;
     margin-left: 294px;
     text-align: center;
 }
@@ -62,62 +62,85 @@ body, button, input {
 
 /* Room View */
 #roomView {
-    position: absolute;
-    /* left: 50%; */
+    position: relative;
     top: 100%;
-    /* width: 800px; */
-    width: 100%;
+    width: 90%;
+    margin: 0px auto;
     background: #fff;
     padding: 0;
-    /* margin-left: -400px; */
     height: 100%;
 }
 
 .leave-room {
     display: block;
-	width: 50px;
-	height: 50px;
-	top: 20px;
-	left: 20px;
-	background: url(/images/leave-room.png);
-	/* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
-	text-indent: -1000%;
+    width: 50px;
+    height: 50px;
+    margin-top: 20px;
+    margin-left: 20px;
+    background: url(/images/leave-room.png);
+    /* Hides text while leaving it in case someone somehow has CSS disabled and is playing our game. */
+    text-indent: -1000%;
     /* When the button overlaps the board, clicks won't be received unless the button has higher z-index. */
     z-index: 2;
 }
 
-.main-content {
+/* Main content */
+.right-block {
     float: right;
     width: 56%;
-	padding: auto 20% auto;
+    height: 99%;
+}
+
+.left-block {
+    float: left;
+    width: 44%;
     height: 100%;
 }
 
 
-/* Main content */
 /* Waiting room */
 .waiting-room {
     font-size: 2em;
     float: left;
-	height: 100%;/
-	
-    /* width: 500px; */
+    margin-top: 140px;
 }
 
 .share-url {
-	padding: .5em;
-	margin: .5em .5em .5em -.5em;
-	background: #eee;
-	font-weight: bold;
+    padding: .5em;
+    margin: .5em .5em .5em -.5em;
+    background: #eee;
+    font-weight: bold;
     text-transform: none;
+}
+
+.twitter-share, .fb-share {
+    width: 48px;
+    height: 48px;
+    text-indent: -9999px;
+    margin: 2em 2em 0 0;
+}
+
+.twitter-share { background: url(/images/twitter-share.png); }
+.fb-share { background: url(/images/fb-share.png); }
+
+.admin-options {
+    float: left;
+    width: 32%;
+    margin: 2em 4% 0;
+    position: absolute;
+}
+
+.admin-options button {
+    font-weight: bold;
+    background: #000;
+    color: #fff;
+    width: 50%;
+    padding: 1em 0;
 }
 
 /* Game board */
 .gameboard {
     width: 90%;
-}
-
-#mv-canvas {
 }
 
 /* Makes SVG scale properly. */
@@ -129,106 +152,115 @@ svg {
 
 /* Players box */
 .players {
-	float: left;
+    float: left;
     width: 32%;
-	margin: 10% 4% 0;
-	height: 50%;
-	position: relative;
-	z-index: 3;
+    min-width: 200px;
+    margin-top: 120px;
+    margin-left: 120px;
+    height: 40%;
+    position: relative;
+    z-index: 3;
 }
 
 .player {
     font-size: 1.5em;
     line-height: 2em;
     text-align: center;
-	background: #fff;
+    background: #fff;
 }
 
 .pass-button {
     text-align: center;
     width: 100%;
-	padding: .5em 0;
     border: none;
     background: #000;
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-}
-
-.waiting {
-    float: none;
-    /* height: 100px; */
-    /* margin-bottom: 60px; */
-    /* margin-top: 60px; */
+    margin-top: 1.5em;
 }
 
 .player-turn {
-    float: left;
+    margin-left: -40px;
+    position: absolute;
 }
 .player-name {
     text-transform: none !important;
     font-weight: bold;
+    display:inline-block;
+    width: 200px;
+    max-height: 50px;
+    line-height: 20px;
+    word-wrap: break-word;
 }
 .player-score {
-	float: right;
+    position: absolute;
 }
 
 .change-name {
-    width: 32px;
-    height: 32px;
-	float: left;
-	text-indent: -9999px;
-	margin: 0;
-	background: url(/images/edit.png);
+    width: 26px;
+    height: 26px;
+    display:inline;
+    margin-right: 4px;
+    margin-left:-26px;
 }
 
 /* Chat */
 #chatBox {
     width: 32%;
-	height: 30%;
-	max-height: 30%;
-	margin: 0 0 4% 4%;
-	text-transform: none;
-	bottom: 0;
-	float: left;
-	position: absolute;
-	z-index: 1;
+    min-width: 320px;
+    height: 30%;
+    text-transform: none;
+    bottom: 0;
+    z-index: 1;
 }
 
 .chat-text {
-	display: block;
-	height: 100%;
+    display: block;
+    height: 100%;
     width: 100%;
-	margin: 0; padding: 0;
-    overflow: scroll;	
-	border: none;
-	box-shadow: none;
+    margin: 0; padding: 0;
+    overflow: auto; 
+    border: none;
+    box-shadow: none;
 }
 
 .chat-form {
-	display: block;
-	min-height: 50px;
-	margin: 0;
+    display: block;
+    min-height: 50px;
+    margin: 0;
 }
 
 #chatBox input {
-	text-transform: none;
-	font-size: 1em;
-	margin: 0;
-	padding: .25em 0;
+    text-transform: none;
+    font-size: 1em;
+    margin: 0;
+    padding: .25em 0;
     width: 80%;
-	border: solid black;
-	border-width: 0 0 2px 0;
+    border: solid black;
+    border-width: 0 0 2px 0;
+}
+
+.chat-gradient {
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+    height: 20px;
+    width: 100%;
 }
 
 #chatBox button {
-	width: 20%;
-	padding: .25em 0;
-	margin: 0;
-	background: #000;
-	color: #fff;
-	border: solid black;
-	border-width: 0 0 2px 0;
+    width: 20%;
+    padding: .25em 0;
+    margin: 0;
+    background: #000;
+    color: #fff;
+    border: solid black;
+    border-width: 0 0 1px 0;
 }
 
 #screenNameOverlay {
@@ -236,7 +268,7 @@ svg {
     position: fixed;
     left: 0;
     top: 0;
-	padding: 20% 0 0;
+    padding: 20% 0 0;
     width: 100%;
     height: 100%;
     text-align: center;
@@ -245,21 +277,21 @@ svg {
 }
 
 #screenNameOverlay input {
-	text-transform: none;
-	width: 500px;
-	font-size: 2em;
-	padding: .5em;
-	border: solid black;
-	border-width: 0 0 2px 0;
-	background: rgba(255, 255, 255, 0);
+    text-transform: none;
+    width: 500px;
+    font-size: 2em;
+    padding: .5em;
+    border: solid black;
+    border-width: 0 0 2px 0;
+    background: rgba(255, 255, 255, 0);
 }
 
 #screenNameOverlay button {
-	font-weight: bold;
-	font-size: 2em;
-	padding: .5em;
-	border: solid black;
-	border-width: 0 0 2px 0;
-	background: #000;
-	color: #fff;
+    font-weight: bold;
+    font-size: 2em;
+    padding: .5em;
+    border: solid black;
+    border-width: 0 0 2px 0;
+    background: #000;
+    color: #fff;
 }

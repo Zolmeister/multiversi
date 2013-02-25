@@ -173,8 +173,9 @@ Render.prototype.setBoard = function(board) {
         var point = this.paper.circle(c.x, c.y, 18).attr({
             "i": space[0],
             "j": space[1],
-            "stroke" : "",
-            "fill" : "#FFB00F"
+            "stroke" : "#000",
+			"stroke-width" : "5",
+            "fill" : "#fff"
         });
 
         this.controlPointSet.push(point);

@@ -117,7 +117,7 @@ var boardFiles = {
 };
 var boards = {};
 
-function getBoard(gametype) {
+function getBoard(gametype, exclude) {
     if (boardFiles[gametype]) {
         var filename = boardPrefix[gametype] + boardFiles[gametype][Math.floor(Math.random() * boardFiles[gametype].length)];
 
@@ -125,7 +125,12 @@ function getBoard(gametype) {
             boards[filename] = require(filename);
         }
 
-        return boards[filename];
+        var board = boards[filename];
+        if (exclude && board.name === exclude.name) {
+            return getBoard(gametype, exclude);
+        }
+
+        return board;
     }
 
     return undefined;
