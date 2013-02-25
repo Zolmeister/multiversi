@@ -220,7 +220,6 @@ svg {
 /* Chat */
 #chatBox {
     width: 99.9%;
-    min-width: 320px;
     text-transform: none;
     bottom: 60px;
     z-index: 100;
@@ -236,11 +235,16 @@ svg {
     border: none;
     box-shadow: none;
     height: 100%;
+    position: absolute;
+    bottom: 40px;
 }
 
 .chat-form {
     display: block;
     margin: 0;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
 }
 
 #chatBox input {
