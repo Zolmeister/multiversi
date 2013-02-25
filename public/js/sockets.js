@@ -14,7 +14,7 @@ var Connect = function() {
         var chat = $("#chat")
         var msg = $("<span class='msg'>").text(data.user+": "+data.msg)
         chat.html(chat.html()+msg.html()+"<br>")
-        chat.scrollTop(chat.height());
+        chat.scrollTop(9001);
     })
 
     this.join = function join(roomId) {
