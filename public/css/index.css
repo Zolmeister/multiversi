@@ -181,7 +181,8 @@ svg {
 }
 
 .waiting {
-    float: none;
+	width: 100%;
+	padding-left: 2.5em;
     /* height: 100px; */
     /* margin-bottom: 60px; */
     /* margin-top: 60px; */

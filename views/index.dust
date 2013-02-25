@@ -62,7 +62,7 @@
 					
                     <div data-bind="foreach: players(), css: { waiting: !started() }">
                         <div class="player">
-                            <div data-bind="if: removed()">Waiting...</div>
+                            <div data-bind="if: removed()"><span class="waiting">Waiting...</span></div>
                             <div data-bind="if: !removed()">
                                 <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()!=id">&#11041;</span>
                                 <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id">&#11042;</span>
