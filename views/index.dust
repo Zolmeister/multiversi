@@ -69,7 +69,9 @@
                                     <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id,
                                         style: {'color': $parent.indexToColor($index()).activeColor}">&#11042;</span>
                                     <span class="player-name">
-                                        <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">✎</span>
+                                        <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">
+                                            <div class="pencil"></div>
+                                        </span>
                                         <span data-bind="text: name"></span>
                                     </span>
                                     <span class="player-score" data-bind="text: score, visible: $root.started()"></span>

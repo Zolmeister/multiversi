@@ -222,12 +222,18 @@ svg {
     width:100%;
 }
 .change-name {
-    width: 26px;
-    height: 26px;
     display:inline;
-    margin-right: 20px;
-    margin-left:-26px;
+    margin-left:-40px;
+    margin-top:-9px;
     cursor: pointer;
+    position: absolute;
+}
+
+.pencil {
+    display: inline-block;
+    width:28px;
+    height:28px;
+    background-image: url('/images/edit.png');
 }
 
 /* Chat */
