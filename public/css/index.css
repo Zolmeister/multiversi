@@ -165,6 +165,11 @@ button {
 /* Game board */
 .gameboard {
     width: 90%;
+    height: 100%;
+}
+
+#mv-canvas {
+    height: 100%;
 }
 
 /* Makes SVG scale properly. */
