@@ -74,8 +74,23 @@ app.configure(function() {
                             if (err) {
                                 console.log(err);
                             } else {
-                                console.log("done compressing")
-                                launch()
+                                var libs = ['jquery.min', 'knockout-min', 'raphael-min','socket.io.min']
+                                 new compressor.minify({
+                                    type : 'yui-js',
+                                    fileIn : libs.map(function(f) {
+                                        return 'public/lib/' + f + '.js'
+                                    }),
+                                    fileOut : 'public/lib/libs.js',
+                                    callback : function(err) {
+                                        if(err){
+                                            console.log(err);
+                                        }
+                                        else{
+                                            console.log("done compressing")
+                                            launch()
+                                        }
+                                    }
+                                })
                             }
                         }
                     });

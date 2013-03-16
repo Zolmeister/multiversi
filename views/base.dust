@@ -31,10 +31,16 @@
 		{/icons}
 
 		{+base_js}
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+		
+		{?DEBUG}
+        <script src="/lib/jquery.min.js"></script>
+        <script src="/lib/knockout-min.js"></script>
+        <script src="/lib/socket.io.min.js"></script>
+        <script src="/lib/raphael-min.js"></script>
+        {:else}
+        <script src="/lib/libs.js"></script>
+        {/DEBUG}
+        
         <script src="http://connect.facebook.net/en_US/all.js"></script>
 		{/base_js}
 		{+js/}

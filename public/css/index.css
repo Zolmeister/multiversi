@@ -220,6 +220,10 @@ svg {
 
 .player-turn {
     position: absolute;
+    display:block;
+    width: 19px;
+    height: 22px;
+    margin-top: 9px;
 }
 .player-name {
     text-transform: none !important;
@@ -318,6 +322,7 @@ svg {
     color: #fff;
     border: solid black;
     border-width: 0 0 1px 0;
+    padding-bottom: 5px;
 }
 
 #screenNameOverlay {

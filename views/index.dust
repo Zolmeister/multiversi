@@ -65,9 +65,9 @@
                                 <div data-bind="if: removed()"><span class="waiting">Waiting...</span></div>
                                 <div data-bind="if: !removed()">
                                     <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()!=id,
-                                        style: {'color': $parent.indexToColor($index()).activeColor}">&#11041;</span>
+                                        style: {'background-image': $index()==0?'url(/images/0-off.png)': $index()==1?'url(/images/1-off.png)':'url(/images/2-off.png)'}"></span>
                                     <span class="player-turn" data-bind="visible: $root.started() && $root.currentPlayerId()==id,
-                                        style: {'color': $parent.indexToColor($index()).activeColor}">&#11042;</span>
+                                        style: {'background-image': $index()==0?'url(/images/0-on.png)': $index()==1?'url(/images/1-on.png)':'url(/images/2-on.png)'}"></span>
                                     <span class="player-name">
                                         <span class="change-name" data-bind="visible: $root.me()==id, click: openScreenNameOverlay">
                                             <div class="pencil"></div>
