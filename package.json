@@ -16,9 +16,6 @@
     },
     "devDependencies": {},
     "optionalDependencies": {},
-    "engines": {
-        "node": "*"
-    },
     "contributors": ["Zoli Kahan <zolikahan@gmail.com> (http://zolmeister.com)", "Brad Zeis <bradzeis@gmail.com>"],
     "description": "Multiversi",
     "homepage": "http://multiversi.zolmeister.com",
