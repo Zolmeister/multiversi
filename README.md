@@ -2,7 +2,7 @@
 
 [![Multiversi](https://raw.github.com/Zolmeister/multiversi/master/public/images/screenshot-680-420.png)](http://multiversi.zolmeister.com)
 ### Web: http://multiversi.zolmeister.com
-### iOS app: http://multiversi.es
+### iOS app: http://multiversi.es @bradzeis
 
 A 3-player Reversi (Othello) inspired board game. Jump over pieces and take over control points to win.
 
