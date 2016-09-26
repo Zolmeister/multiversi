@@ -10,7 +10,6 @@ var express = require('express')
 var app = express();
 var server = http.createServer(app);
 io = require('socket.io').listen(server);
-io.set('log level', 1);
 
 app.engine('dust', cons.dust);
 
@@ -22,9 +21,9 @@ app.configure(function() {
     app.set('view options', {
         layout : false
     });
-    
+
     app.disable('x-powered-by');
-    
+
     //disable layout default
     app.locals({
         layout : false
@@ -49,6 +48,7 @@ app.configure(function() {
         launch()
     });
 
+    // FIXME: does not compress files anymore
     app.configure('production', function() {
         console.log("compresing files");
         //TODO: use promises/make less pyramidy
@@ -56,7 +56,7 @@ app.configure(function() {
         //compress javascript using google closure compiler
         var files = ['settings', 'utils', 'sockets', 'rulesset', 'engine', 'player', 'render', 'input', 'room', 'lobby', 'index'];
         new compressor.minify({
-            type : 'yui-js',
+            type : 'no-compress',
             fileIn : files.map(function(f) {
                 return 'public/js/' + f + '.js'
             }),
@@ -67,7 +67,7 @@ app.configure(function() {
                 } else {
                     // compress CSS using Sqwish
                     new compressor.minify({
-                        type : 'sqwish',
+                        type : 'no-compress',
                         fileIn : ['public/css/base.css', 'public/css/index.css'],
                         fileOut : 'public/css/multiversi.css',
                         callback : function(err) {
@@ -76,7 +76,7 @@ app.configure(function() {
                             } else {
                                 var libs = ['jquery.min', 'knockout-min', 'raphael-min','socket.io.min']
                                  new compressor.minify({
-                                    type : 'yui-js',
+                                    type : 'no-compress',
                                     fileIn : libs.map(function(f) {
                                         return 'public/lib/' + f + '.js'
                                     }),

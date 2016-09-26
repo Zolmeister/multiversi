@@ -1,26 +1,28 @@
 {
-    "name": "Multiversi",
-    "version": "0.9.0",
-    "private": true,
-    "scripts": {
-        "start": "node app"
-    },
-    "dependencies": {
-        "express": "3.0.0rc5",
-        "consolidate": "*",
-        "dustjs-linkedin": "*",
-        "jasmine-node": "*",
-        "socket.io": "*",
-	"socket.io-client":"*",
-	"node-minify": "*"
-    },
-    "devDependencies": {},
-    "optionalDependencies": {},
-    "contributors": ["Zoli Kahan <zolikahan@gmail.com> (http://zolmeister.com)", "Brad Zeis <bradzeis@gmail.com>"],
-    "description": "Multiversi",
-    "homepage": "http://multiversi.zolmeister.com",
-    "repository": {
-        "type": "git",
-        "url": "ssh://git@bitbucket.org/megaton/multiversi.git"
-    }
+  "name": "Multiversi",
+  "version": "0.9.0",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "consolidate": "*",
+    "dustjs-linkedin": "*",
+    "express": "3.0.0rc5",
+    "jasmine-node": "*",
+    "node-minify": "*",
+    "socket.io": "^0.9.10"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "contributors": [
+    "Zoli Kahan <zolikahan@gmail.com> (http://zolmeister.com)",
+    "Brad Zeis <bradzeis@gmail.com>"
+  ],
+  "description": "Multiversi",
+  "homepage": "http://multiversi.zolmeister.com",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.org/megaton/multiversi.git"
+  }
 }

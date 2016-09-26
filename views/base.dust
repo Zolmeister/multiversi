@@ -27,11 +27,11 @@
 		<![endif]-->
 
 		{+icons}
-		<link rel="shortcut icon" href="/ico/favicon.ico">
+		<link rel="shortcut icon" href="/favicon.ico">
 		{/icons}
 
 		{+base_js}
-		
+
 		{?DEBUG}
         <script src="/lib/jquery.min.js"></script>
         <script src="/lib/knockout-min.js"></script>
@@ -40,8 +40,8 @@
         {:else}
         <script src="/lib/libs.js"></script>
         {/DEBUG}
-        
-        <script src="http://connect.facebook.net/en_US/all.js"></script>
+
+        <script src="https://connect.facebook.net/en_US/all.js"></script>
 		{/base_js}
 		{+js/}
 		{+tracking}
@@ -50,13 +50,13 @@
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-37236853-1']);
 		  _gaq.push(['_trackPageview']);
-		
+
 		  (function() {
 		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
-		
+
 		</script>
 		{/tracking}
 		{/head}
